@@ -122,10 +122,4 @@ public partial class Articulo
     public string? Grupoa { get; set; }
 
     public virtual ICollection<Bodega> Bodegas { get; set; } = new List<Bodega>();
-
-    public virtual ICollection<Ensamble> Ensambles { get; set; } = new List<Ensamble>();
-
-    public virtual ICollection<Logisticamovart> Logisticamovarts { get; set; } = new List<Logisticamovart>();
-
-    public virtual ICollection<Logisticaseriale> Logisticaseriales { get; set; } = new List<Logisticaseriale>();
 }
