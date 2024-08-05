@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<DfskContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DFSK")), ServiceLifetime.Transient);
+builder.Services.AddDbContext<ConcesionarioDfskContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConcesionarioDFSK")), ServiceLifetime.Transient);
 builder.Services.AddScoped<IArticulosRepository, ArticulosRepository>();
 var app = builder.Build();
 
