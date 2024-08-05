@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 using API_DFSK.Context;
+using API_DFSK.Interfaces.DFSK;
+using API_DFSK.Repository.DFSK;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<DfskContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DFSK")), ServiceLifetime.Transient);
+builder.Services.AddScoped<IArticulosRepository, ArticulosRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
