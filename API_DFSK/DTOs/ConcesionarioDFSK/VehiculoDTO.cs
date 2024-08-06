@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace API_DFSK.Models.ConcesionarioDFSK;
+namespace API_DFSK.DTOs.ConcesionarioDFSK;
 
-public partial class Vehiculo
+public partial class VehiculoDTO
 {
     public int IdVehiculo { get; set; }
 
@@ -19,5 +19,5 @@ public partial class Vehiculo
 
     public bool Estatus { get; set; }
 
-    public virtual ICollection<Repuesto> Repuestos { get; set; } = new List<Repuesto>();
+    //public virtual ICollection<Repuesto> Repuestos { get; set; } = new List<Repuesto>();
 }

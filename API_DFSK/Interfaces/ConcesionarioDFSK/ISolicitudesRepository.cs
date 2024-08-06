@@ -7,16 +7,15 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
 {
     public interface ISolicitudesRepository
     {
-        Task<List<Vehiculo>> GetVehiculos();
-        Task<Vehiculo> GetVehiculoByIdCodigo(int Id, string codigo);
-        Task<List<Repuesto>> GetRuestosByVehiculo(int Id, string codigo);
-        Task<Repuesto> GetRuestoCodigo(string codigo);
-        Task<Repuesto> GetRuestoById(int Id);
-        Task<List<Estado>> GetEstados();
-        Task<Estado> GetEstadoById(int Id);
-        Task<List<Vendedore>> GetVendedores();
-        Task<Vendedore> GetVendedorById(int Id);
-
+        Task<List<VehiculoDTO>> GetVehiculos();
+        Task<VehiculoDTO> GetVehiculoByIdCodigo(int Id, string codigo);
+        Task<List<RepuestoDTO>> GetRepuestosByVehiculo(int Id, string codigo);
+        Task<RepuestoDTO> GetRepuestoCodigo(string codigo);
+        Task<RepuestoDTO> GetRepuestoById(int Id);
+        Task<List<EstadoDTO>> GetEstados();
+        Task<EstadoDTO> GetEstadoById(int Id);
+        Task<List<VendedorDTO>> GetVendedores();
+        Task<VendedorDTO> GetVendedorById(int Id);
         Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idrepuesto, int idvendedor, int tipofecha);
         Task<SolicitudDTO> GetSolicitudById(int Id);
     }

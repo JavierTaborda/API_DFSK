@@ -10,7 +10,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
     public class SolicitudesRepository : ISolicitudesRepository
     {
         private readonly ConcesionarioDfskContext _context;
-        private readonly IMapper  _mapper;
+        private readonly IMapper _mapper;
 
         public SolicitudesRepository(ConcesionarioDfskContext context, IMapper mapper)
         {
@@ -19,43 +19,44 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
         //GET
-        public async Task<Estado> GetEstadoById(int Id)
+        public async Task<EstadoDTO> GetEstadoById(int Id)
         {
-            var estado = await _context.Estados.FirstOrDefaultAsync(e=>e.IdEstado==Id);
-            return estado ?? new Estado();
+
+            var estado = await _context.Estados.FirstOrDefaultAsync(e => e.IdEstado == Id);
+            return _mapper.Map<EstadoDTO>(estado) ?? new EstadoDTO();
         }
 
-        public async Task<List<Estado>> GetEstados()
+        public async Task<List<EstadoDTO>> GetEstados()
         {
             var estados = await _context.Estados.AsNoTracking().ToListAsync();
-            return estados ?? new List<Estado>();
+            return _mapper.Map<List<EstadoDTO>>(estados) ?? new List<EstadoDTO>();
         }
 
-        public async Task<Repuesto> GetRuestoById(int Id)
+        public async Task<RepuestoDTO> GetRepuestoById(int Id)
         {
-            var repuesto = await _context.Repuestos.FirstOrDefaultAsync(r=>r.IdRepuesto==Id);
-            return repuesto ?? new Repuesto();
+            var repuesto = await _context.Repuestos.FirstOrDefaultAsync(r => r.IdRepuesto == Id);
+            return _mapper.Map<RepuestoDTO>(repuesto) ?? new RepuestoDTO();
         }
 
-        public async Task<Repuesto> GetRuestoCodigo(string codigo)
+        public async Task<RepuestoDTO> GetRepuestoCodigo(string codigo)
         {
             var repuesto = await _context.Repuestos.FirstOrDefaultAsync(r => r.Codigo.Contains(codigo));
-            return repuesto ?? new Repuesto();
+            return _mapper.Map<RepuestoDTO>(repuesto) ?? new RepuestoDTO();
         }
 
-        public async Task<List<Repuesto>> GetRuestosByVehiculo(int Id, string codigo)
+        public async Task<List<RepuestoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
         {
-            var repuesto = await _context.Repuestos.Where(r => r.IdVehiculo==(Id) || r.IdVehiculoNavigation.Codigo.Contains(codigo))
+            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo.Contains(codigo))
                 .AsNoTracking()
                 .ToListAsync();
-            return repuesto ?? new List<Repuesto>();
+            return _mapper.Map<List<RepuestoDTO>>(repuestos) ?? new List<RepuestoDTO>();
         }
 
         public async Task<SolicitudDTO> GetSolicitudById(int Id)
         {
             var solicitud = await _context.Solicitudes
                 .Include(ven => ven.IdVendedorNavigation)
-                .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep=>rep.IdVehiculoNavigation)
+                .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.IdEstadoNavigation)
                 .FirstOrDefaultAsync(id => id.IdSolicitud == Id);
 
@@ -98,34 +99,35 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
 
-        public async Task<Vehiculo> GetVehiculoByIdCodigo(int Id, string codigo)
+        public async Task<VehiculoDTO> GetVehiculoByIdCodigo(int Id, string codigo)
         {
-            var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id=>id.IdVehiculo == Id || id.Codigo.Equals(codigo));
-                return vehiculo ?? new Vehiculo();
+            var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id || id.Codigo.Equals(codigo));
+            return _mapper.Map<VehiculoDTO>(vehiculo) ?? new VehiculoDTO();
         }
 
-        public async Task<List<Vehiculo>> GetVehiculos()
+        public async Task<List<VehiculoDTO>> GetVehiculos()
         {
-            var vehiculos = await _context.Vehiculos.Where(e=>e.Estatus==true)
+            var vehiculos = await _context.Vehiculos.Where(e => e.Estatus == true)
                 .AsNoTracking()
                 .ToListAsync();
-            return vehiculos ?? new List<Vehiculo>();
+            return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? new List<VehiculoDTO>();
         }
 
-        public async Task<Vendedore> GetVendedorById(int Id)
+        public async Task<VendedorDTO> GetVendedorById(int Id)
         {
-           var vendedor = await _context.Vendedores.FirstOrDefaultAsync(id=>id.IdVendedor==(Id));
-            return vendedor ??    new Vendedore();
+            var vendedor = await _context.Vendedores.FirstOrDefaultAsync(id => id.IdVendedor == (Id));
+            return _mapper.Map<VendedorDTO>(vendedor) ?? new VendedorDTO();
         }
 
-        public async Task<List<Vendedore>> GetVendedores()
+        public async Task<List<VendedorDTO>> GetVendedores()
         {
-            var vendedores = await _context.Vendedores.Where(e=>e.Estatus==true)
+            var vendedores = await _context.Vendedores.Where(e => e.Estatus == true)
                 .AsNoTracking()
                 .ToListAsync();
-            return vendedores ?? new List<Vendedore>();
+            return _mapper.Map<List<VendedorDTO>>(vendedores) ?? new List<VendedorDTO>();
         }
 
-        // UPDATES
+        // POST
+
     }
 }

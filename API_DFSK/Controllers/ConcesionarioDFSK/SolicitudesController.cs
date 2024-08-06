@@ -1,5 +1,7 @@
-﻿using API_DFSK.Interfaces.ConcesionarioDFSK;
+﻿using API_DFSK.DTOs.ConcesionarioDFSK;
+using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Interfaces.DFSK;
+using API_DFSK.Repository.ConcesionarioDFSK;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
@@ -8,6 +10,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
     [ApiController]
     public class SolicitudesController : ControllerBase
     {
+        //APIS DE SOLICITUDES Y ESTADOS DE SOLICITUDES
        
         private readonly ISolicitudesRepository _solicitudesRepo;
         public SolicitudesController(ISolicitudesRepository solicitudesRepo)
@@ -32,6 +35,26 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             var solictud = await _solicitudesRepo.GetSolicitudById(Id);
             return solictud == null?  BadRequest("Sin Solicitudes"):  Ok(solictud); 
+        }
+
+        [HttpGet("estados/{id}")]
+        public async Task<ActionResult<EstadoDTO>> GetEstadoById(int id)
+        {
+            var estado = await _solicitudesRepo.GetEstadoById(id);
+            if (estado == null)
+                return NotFound();
+
+            return Ok(estado);
+        } 
+
+        [HttpGet("estados/")]
+        public async Task<ActionResult<EstadoDTO>> GetEstados()
+        {
+            var estados = await _solicitudesRepo.GetEstados();
+            if (estados == null)
+                return NotFound();
+
+            return Ok(estados);
         }
 
     }

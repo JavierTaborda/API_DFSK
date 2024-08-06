@@ -26,6 +26,7 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
