@@ -7,15 +7,15 @@ public partial class Solicitude
 {
     public int IdSolicitud { get; set; }
 
-    public int? IdVendedor { get; set; }
+    public int IdVendedor { get; set; }
 
-    public int? IdRepuesto { get; set; }
+    public int IdRepuesto { get; set; }
 
     public double? Cantidad { get; set; }
 
     public DateTime? FechaSolicitud { get; set; }
 
-    public int? IdEstado { get; set; }
+    public int IdEstado { get; set; }
 
     public DateTime? FechaCompra { get; set; }
 
@@ -23,9 +23,9 @@ public partial class Solicitude
 
     public DateTime? FechaLlegada { get; set; }
 
-    public virtual Estado? IdEstadoNavigation { get; set; }
+    public virtual Estado IdEstadoNavigation { get; set; } = null!;
 
-    public virtual Repuesto? IdRepuestoNavigation { get; set; }
+    public virtual Repuesto IdRepuestoNavigation { get; set; } = null!;
 
-    public virtual Vendedore? IdVendedorNavigation { get; set; }
+    public virtual Vendedore IdVendedorNavigation { get; set; } = null!;
 }

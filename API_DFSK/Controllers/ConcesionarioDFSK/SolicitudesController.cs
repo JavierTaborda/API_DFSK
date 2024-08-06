@@ -26,5 +26,13 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             var listasolicitudes = await _solicitudesRepo.GetSolicitudes(f1,f2,idestado,idrepuesto,idvendedor,tipofecha);
             return Ok(listasolicitudes);
         }
+
+        [HttpGet("/{Id}")]
+        public async Task<IActionResult> GetSolicitud(int Id)
+        {
+            var solictud = await _solicitudesRepo.GetSolicitudById(Id);
+            return solictud == null?  BadRequest("Sin Solicitudes"):  Ok(solictud); 
+        }
+
     }
 }

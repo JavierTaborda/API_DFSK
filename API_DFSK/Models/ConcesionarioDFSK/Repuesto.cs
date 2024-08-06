@@ -13,9 +13,11 @@ public partial class Repuesto
 
     public string? Descripcion { get; set; }
 
-    public decimal? Precio { get; set; }
+    public double? Precio { get; set; }
 
     public int? IdVehiculo { get; set; }
+
+    public bool Estatus { get; set; }
 
     public virtual Vehiculo? IdVehiculoNavigation { get; set; }
 

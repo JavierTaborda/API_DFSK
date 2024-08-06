@@ -13,5 +13,9 @@ public partial class Vendedore
 
     public string? Email { get; set; }
 
+    public string? Telefono { get; set; }
+
+    public bool Estatus { get; set; }
+
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
 }

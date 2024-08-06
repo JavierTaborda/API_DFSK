@@ -17,5 +17,7 @@ public partial class Vehiculo
 
     public string? Vin { get; set; }
 
+    public bool Estatus { get; set; }
+
     public virtual ICollection<Repuesto> Repuestos { get; set; } = new List<Repuesto>();
 }

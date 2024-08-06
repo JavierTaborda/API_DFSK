@@ -26,7 +26,6 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -48,13 +47,12 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.HasKey(e => e.IdRepuesto).HasName("PK__Repuesto__75B30774EDDF74CD");
 
             entity.Property(e => e.Codigo)
-                .HasMaxLength(10)
-                .IsFixedLength();
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Descripcion).HasColumnType("text");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdVehiculoNavigation).WithMany(p => p.Repuestos)
                 .HasForeignKey(d => d.IdVehiculo)
@@ -65,20 +63,26 @@ public partial class ConcesionarioDfskContext : DbContext
         {
             entity.HasKey(e => e.IdSolicitud).HasName("PK__Solicitu__85E95DA75C3B08DD");
 
+            entity.Property(e => e.FechaCompra).HasColumnType("datetime");
+            entity.Property(e => e.FechaLlegada).HasColumnType("datetime");
+            entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
             entity.Property(e => e.Observacion)
                 .HasMaxLength(100)
                 .IsUnicode(false);
 
             entity.HasOne(d => d.IdEstadoNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdEstado)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Solicitudes_Estados");
 
             entity.HasOne(d => d.IdRepuestoNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdRepuesto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Solicitud__Repue__2D27B809");
 
             entity.HasOne(d => d.IdVendedorNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdVendedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Solicitud__Vende__2C3393D0");
         });
 
@@ -115,6 +119,9 @@ public partial class ConcesionarioDfskContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Telefono)
+                .HasMaxLength(15)
                 .IsUnicode(false);
         });
 

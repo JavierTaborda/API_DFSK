@@ -11,7 +11,7 @@ public partial class Estado
 
     public string? Descripcion { get; set; }
 
-    public bool? Estatus { get; set; }
+    public bool Estatus { get; set; }
 
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
 }
