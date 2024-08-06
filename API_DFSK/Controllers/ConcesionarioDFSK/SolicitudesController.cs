@@ -38,7 +38,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
 
         [HttpGet("estados/{id}")]
-        public async Task<ActionResult<EstadoDTO>> GetEstadoById(int id)
+        public async Task<IActionResult> GetEstadoById(int id)
         {
             var estado = await _solicitudesRepo.GetEstadoById(id);
             if (estado == null)
@@ -48,7 +48,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         } 
 
         [HttpGet("estados/")]
-        public async Task<ActionResult<EstadoDTO>> GetEstados()
+        public async Task<IActionResult> GetEstados()
         {
             var estados = await _solicitudesRepo.GetEstados();
             if (estados == null)
@@ -56,6 +56,25 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
             return Ok(estados);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PostSolicitud(List<SolicitudDTO> solicitud)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+             var result=await _solicitudesRepo.InsertSolicitud(solicitud);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Fallo el registro.");
+            }
+        }
+
 
     }
 }

@@ -19,6 +19,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
         //GET
+        #region GETS
         public async Task<EstadoDTO> GetEstadoById(int Id)
         {
 
@@ -126,8 +127,39 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .ToListAsync();
             return _mapper.Map<List<VendedorDTO>>(vendedores) ?? new List<VendedorDTO>();
         }
+        #endregion
 
         // POST
+        public async Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes)
+        {
+            var insert=_mapper.Map<List<Solicitude>>(solicitudes);
+            await _context.Solicitudes.AddRangeAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+     
+        public Task InsertRepuesto(List<RepuestoDTO> repuestos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task InsertEstado(List<EstadoDTO> Estados)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task InsertVehiculo(List<VehiculoDTO> vehiculos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task InsertVendedor(List<VendedorDTO> Vendedores)
+        {
+            throw new NotImplementedException();
+        }
+
+      
 
     }
 }
