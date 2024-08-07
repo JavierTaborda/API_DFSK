@@ -1,4 +1,5 @@
-﻿using API_DFSK.Interfaces.ConcesionarioDFSK;
+﻿using API_DFSK.DTOs.ConcesionarioDFSK;
+using API_DFSK.Interfaces.ConcesionarioDFSK;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
@@ -15,6 +16,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
 
         //API para repuestos y vehiculos
+        #region GETS
 
         [HttpGet("/{id:int}")]
         public async Task<IActionResult> GetRepuestoId(int id)
@@ -52,6 +54,25 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             var vehiculo = await _solicitudesRepo.GetVehiculoByIdCodigo(id, codigo);
             return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
         }
+        #endregion
+
+        //POST
+        //[HttpPost]
+        //public async Task<IActionResult> PostSolicitud(List<RepuestoDTO> repuesto)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var result = await _solicitudesRepo.InsertSolicitud(solicitud);
+        //    if (result)
+        //    {
+        //        return Ok();
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Fallo el registro.");
+        //    }
+        //}
 
     }
 }

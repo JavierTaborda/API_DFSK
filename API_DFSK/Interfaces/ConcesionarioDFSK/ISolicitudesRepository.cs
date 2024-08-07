@@ -24,9 +24,18 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
 
         //POST
         Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes);
-        Task InsertRepuesto(List<RepuestoDTO> repuestos);
-        Task InsertVehiculo(List<VehiculoDTO> vehiculos);
-        Task InsertEstado(List<EstadoDTO> Estados);
-        Task InsertVendedor(List<VendedorDTO> Vendedores);
+        Task<bool> InsertSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
+        Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos);
+        Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
+        Task<bool> InsertEstado(List<EstadoDTO> Estados);
+        Task<bool> InsertVendedor(List<VendedorDTO> Vendedores);
+
+        //PUTS
+        Task<bool> UpdateSolicitud(List<SolicitudDTO> solicitudes);
+        Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
+        Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos);
+        Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos);
+        Task<EstadoDTO> UpdateEstado(EstadoDTO Estados);
+        Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores);
     }
 }

@@ -18,6 +18,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             _solicitudesRepo = solicitudesRepo;
         }
 
+        #region GETS
 
         [HttpGet("{f1}/{f2}/{idestado}/{idrepuesto}/{idvendedor}/{tipofecha}")]
         public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idrepuesto, int idvendedor, int tipofecha)
@@ -30,7 +31,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return Ok(listasolicitudes);
         }
 
-        [HttpGet("/{Id}")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> GetSolicitud(int Id)
         {
             var solictud = await _solicitudesRepo.GetSolicitudById(Id);
@@ -56,7 +57,9 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
             return Ok(estados);
         }
+        #endregion
 
+        //POST
 
         [HttpPost]
         public async Task<IActionResult> PostSolicitud(List<SolicitudDTO> solicitud)
@@ -65,6 +68,22 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
              var result=await _solicitudesRepo.InsertSolicitud(solicitud);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Fallo el registro.");
+            }
+        } 
+        [HttpPost("Repuesto")]
+        public async Task<IActionResult> PostSolicitudRepuestoNuevo(SolicitudRepuestoDTO solicitud)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+             var result=await _solicitudesRepo.InsertSolicitudRepuesto(solicitud);
             if (result)
             {
                 return Ok();

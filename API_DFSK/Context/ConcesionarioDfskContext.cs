@@ -26,7 +26,7 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -57,7 +57,8 @@ public partial class ConcesionarioDfskContext : DbContext
 
             entity.HasOne(d => d.IdVehiculoNavigation).WithMany(p => p.Repuestos)
                 .HasForeignKey(d => d.IdVehiculo)
-                .HasConstraintName("FK__Repuestos__Vehic__29572725");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Repuestos_Vehiculos");
         });
 
         modelBuilder.Entity<Solicitude>(entity =>

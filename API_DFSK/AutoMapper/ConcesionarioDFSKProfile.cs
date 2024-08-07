@@ -12,7 +12,21 @@ namespace API_DFSK.AutoMapper
             .ForMember(dest => dest.Repuesto, opt => opt.MapFrom(src => src.IdRepuestoNavigation.Nombre))
             .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdVendedorNavigation.Nombre))
             .ForMember(dest => dest.Vehiculo, opt => opt.MapFrom(src => src.IdRepuestoNavigation.IdVehiculoNavigation.Marca + " " + src.IdRepuestoNavigation.IdVehiculoNavigation.Modelo))
-            .ReverseMap();
+            ;
+
+            //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
+            CreateMap<SolicitudDTO, Solicitude>();
+
+            CreateMap<SolicitudRepuestoDTO, Solicitude>()
+                .ForMember(dest => dest.IdRepuesto, opt => opt.MapFrom(src => src.IdRepuesto))
+                .ForPath(dest => dest.IdRepuestoNavigation.IdVehiculo, opt => opt.MapFrom(src => src.IdVehiculo))
+                .ForPath(dest => dest.IdRepuestoNavigation.Nombre, opt => opt.MapFrom(src => src.Nombre))
+                .ForPath(dest => dest.IdRepuestoNavigation.Descripcion, opt => opt.MapFrom(src => src.Descripcion))
+                .ForPath(dest => dest.IdRepuestoNavigation.Precio, opt => opt.MapFrom(src => src.Precio))
+                .ForPath(dest => dest.IdRepuestoNavigation.Estatus, opt => opt.MapFrom(src => src.Estatus))
+                .ForPath(dest => dest.IdRepuestoNavigation.Marca, opt => opt.MapFrom(src => src.Marca))
+                .ReverseMap();
+
             
             CreateMap<Estado, EstadoDTO>().ReverseMap();
 

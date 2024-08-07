@@ -3,7 +3,9 @@ using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
 using AutoMapper;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace API_DFSK.Repository.ConcesionarioDFSK
 {
@@ -130,36 +132,148 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         #endregion
 
         // POST
+
+        #region POST
         public async Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes)
         {
-            var insert=_mapper.Map<List<Solicitude>>(solicitudes);
+            var insert = _mapper.Map<List<Solicitude>>(solicitudes);
             await _context.Solicitudes.AddRangeAsync(insert);
             await _context.SaveChangesAsync();
             return true;
         }
-     
-        public Task InsertRepuesto(List<RepuestoDTO> repuestos)
+        public async Task<bool> InsertSolicitudRepuesto(SolicitudRepuestoDTO solicitud)
         {
-            throw new NotImplementedException();
+            var insert = _mapper.Map<Solicitude>(solicitud);
+            await _context.Solicitudes.AddAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos)
+        {
+            var insert = _mapper.Map<List<Repuesto>>(repuestos);
+            await _context.Repuestos.AddRangeAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+
         }
 
-        public Task InsertEstado(List<EstadoDTO> Estados)
+        public async Task<bool> InsertEstado(List<EstadoDTO> Estados)
         {
-            throw new NotImplementedException();
+            var insert = _mapper.Map<List<Estado>>(Estados);
+            await _context.Estados.AddRangeAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+
         }
 
-
-        public Task InsertVehiculo(List<VehiculoDTO> vehiculos)
+        public async Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos)
         {
-            throw new NotImplementedException();
+            var insert = _mapper.Map<List<Vehiculo>>(vehiculos);
+            await _context.Vehiculos.AddRangeAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+        public async  Task<bool> InsertVendedor(List<VendedorDTO> Vendedores)
+        {
+            var insert = _mapper.Map<List<Vendedore>>(Vendedores);
+            await _context.Vendedores.AddRangeAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+
         }
 
-        public Task InsertVendedor(List<VendedorDTO> Vendedores)
+        #endregion
+
+        //PUTS
+        #region PUTS
+        public async Task<bool> UpdateSolicitud(List<SolicitudDTO> solicitudes)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<List<Solicitude>>(solicitudes);
+            _context.UpdateRange(entity);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-      
+        public async Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud)
+        {
+            var soli = await _context.Solicitudes.FindAsync(solicitud.IdSolicitud);
+            if (soli == null)
+            {
+                return null;
+            }
 
+            var entity = _mapper.Map<List<Solicitude>>(solicitud);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var result = _mapper.Map<SolicitudRepuestoDTO>(entity);
+            return result;
+        }
+
+        public async Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos)
+        {
+            var rep = await _context.Repuestos.FindAsync(repuestos.IdRepuesto);
+            if (rep == null)
+            {
+                return null;
+            }
+
+            var entity = _mapper.Map<List<Repuesto>>(repuestos);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var result = _mapper.Map<RepuestoDTO>(entity);
+            return result;
+        }
+
+        public async Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos)
+        {
+            var veh = await _context.Vehiculos.FindAsync(vehiculos.IdVehiculo);
+            if (veh == null)
+            {
+                return null;
+            }
+
+            var entity = _mapper.Map<List<Vehiculo>>(vehiculos);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var result = _mapper.Map<VehiculoDTO>(entity);
+            return result;
+        }
+
+        public async Task<EstadoDTO> UpdateEstado(EstadoDTO Estados)
+        {
+            var est = await _context.Estados.FindAsync(Estados.IdEstado);
+            if (est == null)
+            {
+                return null;
+            }
+
+            var entity = _mapper.Map<List<Estado>>(Estados);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var result = _mapper.Map<EstadoDTO>(entity);
+            return result;
+        }
+
+        public async Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores)
+        {
+            var ven = await _context.Vendedores.FindAsync(Vendedores.IdVendedor);
+            if (ven == null)
+            {
+                return null;
+            }
+
+            var entity = _mapper.Map<List<Vendedore>>(Vendedores);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var result = _mapper.Map<VendedorDTO>(entity);
+            return result;
+        }
+        #endregion
     }
 }
