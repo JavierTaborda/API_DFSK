@@ -197,13 +197,14 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud)
         {
-            var soli = await _context.Solicitudes.FindAsync(solicitud.IdSolicitud);
+            var soli = await _context.Solicitudes.AsNoTracking().FirstOrDefaultAsync(s=>s.IdSolicitud==solicitud.IdSolicitud);
+            
             if (soli == null)
             {
                 return null;
             }
 
-            var entity = _mapper.Map<List<Solicitude>>(solicitud);
+            var entity = _mapper.Map<Solicitude>(solicitud);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 
@@ -213,29 +214,29 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos)
         {
-            var rep = await _context.Repuestos.FindAsync(repuestos.IdRepuesto);
-            if (rep == null)
+            var entity = await _context.Repuestos.FindAsync(repuestos.IdRepuesto);
+            if (entity == null)
             {
                 return null;
-            }
-
-            var entity = _mapper.Map<List<Repuesto>>(repuestos);
+            }           
+            _mapper.Map(repuestos, entity);
+            entity.IdVehiculoNavigation = null;//Limpiar para no insertar 
             _context.Update(entity);
             await _context.SaveChangesAsync();
-
             var result = _mapper.Map<RepuestoDTO>(entity);
+           
             return result;
         }
 
         public async Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos)
         {
-            var veh = await _context.Vehiculos.FindAsync(vehiculos.IdVehiculo);
-            if (veh == null)
+            var entity = await _context.Vehiculos.FindAsync(vehiculos.IdVehiculo);
+            if (entity == null)
             {
                 return null;
             }
 
-            var entity = _mapper.Map<List<Vehiculo>>(vehiculos);
+            _mapper.Map(vehiculos, entity);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 
@@ -245,13 +246,13 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<EstadoDTO> UpdateEstado(EstadoDTO Estados)
         {
-            var est = await _context.Estados.FindAsync(Estados.IdEstado);
-            if (est == null)
+            var entity = await _context.Estados.FindAsync(Estados.IdEstado);
+            if (entity == null)
             {
                 return null;
             }
 
-            var entity = _mapper.Map<List<Estado>>(Estados);
+            _mapper.Map(Estados, entity);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 
@@ -261,13 +262,13 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores)
         {
-            var ven = await _context.Vendedores.FindAsync(Vendedores.IdVendedor);
-            if (ven == null)
+            var entity = await _context.Vendedores.FindAsync(Vendedores.IdVendedor);
+            if (entity == null)
             {
                 return null;
             }
 
-            var entity = _mapper.Map<List<Vendedore>>(Vendedores);
+            _mapper.Map(Vendedores, entity);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 

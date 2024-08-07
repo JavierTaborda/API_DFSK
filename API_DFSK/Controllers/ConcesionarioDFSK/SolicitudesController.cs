@@ -1,6 +1,7 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Interfaces.DFSK;
+using API_DFSK.Models.ConcesionarioDFSK;
 using API_DFSK.Repository.ConcesionarioDFSK;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
     [ApiController]
     public class SolicitudesController : ControllerBase
     {
-        //APIS DE SOLICITUDES Y ESTADOS DE SOLICITUDES
+        //APIS DE SOLICITUDES 
        
         private readonly ISolicitudesRepository _solicitudesRepo;
         public SolicitudesController(ISolicitudesRepository solicitudesRepo)
@@ -38,45 +39,24 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return solictud == null?  BadRequest("Sin Solicitudes"):  Ok(solictud); 
         }
 
-        [HttpGet("estados/{id}")]
-        public async Task<IActionResult> GetEstadoById(int id)
-        {
-            var estado = await _solicitudesRepo.GetEstadoById(id);
-            if (estado == null)
-                return NotFound();
 
-            return Ok(estado);
-        } 
-
-        [HttpGet("estados/")]
-        public async Task<IActionResult> GetEstados()
-        {
-            var estados = await _solicitudesRepo.GetEstados();
-            if (estados == null)
-                return NotFound();
-
-            return Ok(estados);
-        }
         #endregion
 
         //POST
+        #region POST
 
         [HttpPost]
         public async Task<IActionResult> PostSolicitud(List<SolicitudDTO> solicitud)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) //Chequea los Required de los DTO
                 return BadRequest(ModelState);
 
              var result=await _solicitudesRepo.InsertSolicitud(solicitud);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+            
+            return result == false ? BadRequest("Fallo el registro") : Ok();
+       
         } 
+        //Inserta Solicitud + Un nuevo Repuesto
         [HttpPost("Repuesto")]
         public async Task<IActionResult> PostSolicitudRepuestoNuevo(SolicitudRepuestoDTO solicitud)
         {
@@ -93,7 +73,27 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest("Fallo el registro.");
             }
         }
+#endregion
 
+        //PUTS
+
+        //Edita Solicitud + Un nuevo Repuesto
+        [HttpPut("Repuesto")]
+        public async  Task<IActionResult> PutSolicitudRepuesto([FromBody] SolicitudRepuestoDTO solicitud)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _solicitudesRepo.UpdateSolicitudRepuesto(solicitud);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+  
 
     }
 }

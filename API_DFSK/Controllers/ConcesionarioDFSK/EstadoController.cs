@@ -1,43 +1,45 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VendedoresController : ControllerBase
+    public class EstadoController : ControllerBase
     {
         private readonly ISolicitudesRepository _solicitudesRepo;
-        public VendedoresController(ISolicitudesRepository solicitudesRepo)
+        public EstadoController(ISolicitudesRepository solicitudesRepo)
         {
             _solicitudesRepo = solicitudesRepo;
         }
-
-        //GETS
-        [HttpGet]       
-         public async Task<IActionResult> GetVendedores()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEstadoById(int id)
         {
-            var vendedores = await _solicitudesRepo.GetVendedores();
-            return vendedores == null ? BadRequest("Sin Datos") : Ok(vendedores);
+            var estado = await _solicitudesRepo.GetEstadoById(id);
+            if (estado == null)
+                return NotFound();
+
+            return Ok(estado);
         }
 
-        [HttpGet("{id:int})")]
-        public async Task<IActionResult> GetVendedor(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetEstados()
         {
-            var vendedor = await _solicitudesRepo.GetVendedorById(id);
-            return vendedor == null ? BadRequest("Sin Datos") : Ok(vendedor);
-        }
+            var estados = await _solicitudesRepo.GetEstados();
+            if (estados == null)
+                return NotFound();
 
+            return Ok(estados);
+        }
         //POST
         [HttpPost]
-        public async Task<IActionResult> PostVendedores(List<VendedorDTO> vendedors)
+        public async Task<IActionResult> PostEstados(List<EstadoDTO> estados)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _solicitudesRepo.InsertVendedor(vendedors);
+            var result = await _solicitudesRepo.InsertEstado(estados);
             if (result)
             {
                 return Ok();
@@ -48,13 +50,14 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             }
         }
 
+
         //PUTS
         [HttpPut]
-        public async Task<IActionResult> PutVendedores(VendedorDTO vendedor)
+        public async Task<IActionResult> PutEstados(EstadoDTO estado)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _solicitudesRepo.UpdateVendedor(vendedor);
+            var result = await _solicitudesRepo.UpdateEstado(estado);
 
             if (result == null)
             {
@@ -63,7 +66,5 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
             return Ok(result);
         }
-
-
     }
 }

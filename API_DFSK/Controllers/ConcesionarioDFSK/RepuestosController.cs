@@ -1,5 +1,6 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
+using API_DFSK.Models.ConcesionarioDFSK;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
@@ -39,40 +40,47 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return repuesto == null ? BadRequest("Sin Datos") : Ok(repuesto);
         }
 
-        //VEHICULOS
 
-        [HttpGet("/Vehiculos")]
-        public async Task<IActionResult> GetVehiculos()
-        {
-            var vehiculos = await _solicitudesRepo.GetVehiculos();
-            return vehiculos == null ? BadRequest("Sin Datos") : Ok(vehiculos);
-        }
-
-        [HttpGet("/Vehiculos/{id:int}/{codigo}")]
-        public async Task<IActionResult> GetVehiculo(int id, string codigo)
-        {
-            var vehiculo = await _solicitudesRepo.GetVehiculoByIdCodigo(id, codigo);
-            return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
-        }
         #endregion
 
         //POST
-        //[HttpPost]
-        //public async Task<IActionResult> PostSolicitud(List<RepuestoDTO> repuesto)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
 
-        //    var result = await _solicitudesRepo.InsertSolicitud(solicitud);
-        //    if (result)
-        //    {
-        //        return Ok();
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("Fallo el registro.");
-        //    }
-        //}
+        [HttpPost]
+        public async Task<IActionResult> PostRepuestos(List<RepuestoDTO> repuesto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _solicitudesRepo.InsertRepuesto(repuesto);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Fallo el registro.");
+            }
+        }
+
+
+        //PUT
+        [HttpPut]
+        public async Task<IActionResult> PutRepuesto(RepuestoDTO repuesto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _solicitudesRepo.UpdateRepuesto(repuesto);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+       
+
 
     }
 }
