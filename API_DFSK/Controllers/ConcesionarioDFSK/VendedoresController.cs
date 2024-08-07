@@ -20,7 +20,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
          public async Task<IActionResult> GetVendedores()
         {
             var vendedores = await _solicitudesRepo.GetVendedores();
-            return vendedores == null ? BadRequest("Sin Datos") : Ok(vendedores);
+            return !vendedores.Any() ? BadRequest("Sin Datos") : Ok(vendedores);
         }
 
         [HttpGet("{id:int})")]

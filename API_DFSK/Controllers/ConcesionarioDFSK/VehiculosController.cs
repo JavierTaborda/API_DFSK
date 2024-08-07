@@ -21,7 +21,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         public async Task<IActionResult> GetVehiculos()
         {
             var vehiculos = await _solicitudesRepo.GetVehiculos();
-            return vehiculos == null ? BadRequest("Sin Datos") : Ok(vehiculos);
+            return !vehiculos.Any() ? BadRequest("Sin Datos") : Ok(vehiculos);
         }
 
         [HttpGet("{id:int}/{codigo}")]
