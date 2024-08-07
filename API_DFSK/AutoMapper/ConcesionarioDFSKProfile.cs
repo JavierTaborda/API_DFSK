@@ -29,10 +29,11 @@ namespace API_DFSK.AutoMapper
 
             
             CreateMap<Estado, EstadoDTO>().ReverseMap();
+            CreateMap<Repuesto, RepuestoDTO>().ReverseMap();
 
-            CreateMap<Repuesto, RepuestoDTO>()
-                .ForMember(dest => dest.Modelo, opt => opt.MapFrom(src => src.IdVehiculoNavigation.Modelo))
-                .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.IdVehiculoNavigation.Marca))
+            CreateMap<Repuesto, RepuestoVehiculoDTO>()
+                .ForMember(dest => dest.ModeloVehiculo, opt => opt.MapFrom(src => src.IdVehiculoNavigation.Modelo))
+                .ForMember(dest => dest.MarcaVehiculo, opt => opt.MapFrom(src => src.IdVehiculoNavigation.Marca))
                 .ReverseMap();
 
             CreateMap<Vehiculo, VehiculoDTO>().ReverseMap();

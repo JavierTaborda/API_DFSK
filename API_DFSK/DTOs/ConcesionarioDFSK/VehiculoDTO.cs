@@ -6,8 +6,8 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK;
 
 public partial class VehiculoDTO
 {
-    [Required(ErrorMessage = "Campo  Vehiculo Requerido.")]
-    [Range(1, int.MaxValue, ErrorMessage = "El valor de IdVehiculo debe ser mayor que 0.")]
+ 
+    [Range(0, int.MaxValue, ErrorMessage = "El valor de IdVehiculo debe ser mayor que 0.")]
     public int IdVehiculo { get; set; }
 
     public string? Codigo { get; set; }

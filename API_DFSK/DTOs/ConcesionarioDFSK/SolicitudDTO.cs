@@ -7,8 +7,8 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
     {
         public int IdSolicitud { get; set; }
         
-        [Required(ErrorMessage = "Campo  Requerido.")]
-        [Range(1, int.MaxValue, ErrorMessage = "El valor de IdVendedor debe ser mayor que 0.")]
+       
+        [Range(0, int.MaxValue, ErrorMessage = "El valor de IdVendedor debe ser mayor que 0.")]
         public int IdVendedor { get; set; }
 
         [Required(ErrorMessage = "Campo  Requerido.")]

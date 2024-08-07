@@ -22,40 +22,45 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         //GET
         #region GETS
-        public async Task<EstadoDTO> GetEstadoById(int Id)
+        public async Task<EstadoDTO?> GetEstadoById(int Id)
         {
 
             var estado = await _context.Estados.FirstOrDefaultAsync(e => e.IdEstado == Id);
-            return _mapper.Map<EstadoDTO>(estado) ?? new EstadoDTO();
+            return _mapper.Map<EstadoDTO?>(estado);
         }
 
         public async Task<List<EstadoDTO>> GetEstados()
         {
             var estados = await _context.Estados.AsNoTracking().ToListAsync();
-            return _mapper.Map<List<EstadoDTO>>(estados) ?? new List<EstadoDTO>();
+            return _mapper.Map<List<EstadoDTO>>(estados);
         }
 
-        public async Task<RepuestoDTO> GetRepuestoById(int Id)
+        public async Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id)
         {
-            var repuesto = await _context.Repuestos.FirstOrDefaultAsync(r => r.IdRepuesto == Id);
-            return _mapper.Map<RepuestoDTO>(repuesto) ?? new RepuestoDTO();
+            var repuesto = await _context.Repuestos
+                .Include(v=>v.IdVehiculoNavigation)
+                .FirstOrDefaultAsync(r => r.IdRepuesto == Id);
+            return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
         }
 
-        public async Task<RepuestoDTO> GetRepuestoCodigo(string codigo)
+        public async Task<RepuestoVehiculoDTO?> GetRepuestoCodigo(string codigo)
         {
-            var repuesto = await _context.Repuestos.FirstOrDefaultAsync(r => r.Codigo.Contains(codigo));
-            return _mapper.Map<RepuestoDTO>(repuesto) ?? new RepuestoDTO();
+            var repuesto = await _context.Repuestos
+                .Include(v => v.IdVehiculoNavigation)
+                .FirstOrDefaultAsync(r => r.Codigo.Contains(codigo));
+            return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
         }
 
-        public async Task<List<RepuestoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
+        public async Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
         {
             var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo.Contains(codigo))
+                .Include(v => v.IdVehiculoNavigation)
                 .AsNoTracking()
                 .ToListAsync();
-            return _mapper.Map<List<RepuestoDTO>>(repuestos) ?? new List<RepuestoDTO>();
+            return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? new List<RepuestoVehiculoDTO>();
         }
 
-        public async Task<SolicitudDTO> GetSolicitudById(int Id)
+        public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
             var solicitud = await _context.Solicitudes
                 .Include(ven => ven.IdVendedorNavigation)
@@ -102,10 +107,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
 
-        public async Task<VehiculoDTO> GetVehiculoByIdCodigo(int Id, string codigo)
+        public async Task<VehiculoDTO?> GetVehiculoByIdCodigo(int Id, string codigo)
         {
             var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id || id.Codigo.Equals(codigo));
-            return _mapper.Map<VehiculoDTO>(vehiculo) ?? new VehiculoDTO();
+            return _mapper.Map<VehiculoDTO>(vehiculo);
         }
 
         public async Task<List<VehiculoDTO>> GetVehiculos()
@@ -116,10 +121,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? new List<VehiculoDTO>();
         }
 
-        public async Task<VendedorDTO> GetVendedorById(int Id)
+        public async Task<VendedorDTO?> GetVendedorById(int Id)
         {
             var vendedor = await _context.Vendedores.FirstOrDefaultAsync(id => id.IdVendedor == (Id));
-            return _mapper.Map<VendedorDTO>(vendedor) ?? new VendedorDTO();
+            return _mapper.Map<VendedorDTO>(vendedor);
         }
 
         public async Task<List<VendedorDTO>> GetVendedores()
@@ -150,7 +155,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
         public async Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos)
         {
-            var insert = _mapper.Map<List<Repuesto>>(repuestos);
+            var insert = _mapper.Map<List<Repuesto>>(repuestos);            
             await _context.Repuestos.AddRangeAsync(insert);
             await _context.SaveChangesAsync();
             return true;

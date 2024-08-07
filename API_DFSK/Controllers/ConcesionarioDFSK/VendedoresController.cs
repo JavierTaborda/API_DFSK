@@ -38,14 +38,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
             var result = await _solicitudesRepo.InsertVendedor(vendedors);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+            return result ? Ok(result): BadRequest("Fallo el registro.");
+
         }
 
         //PUTS
@@ -55,13 +49,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var result = await _solicitudesRepo.UpdateVendedor(vendedor);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result == null ? NotFound() : Ok(result);
+           
         }
 
 

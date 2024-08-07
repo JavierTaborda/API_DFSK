@@ -14,12 +14,6 @@ namespace API_DFSK.Controllers.Articulos
             _articuloRepo = articulosRepo;
         }
 
-        [HttpGet("HolaMundo")]
-        public IActionResult GetHolaMundo()
-        {
-            var hola = "Hola Mundo";
-            return Ok(hola);
-        }
 
         [HttpGet]
         public async Task<IActionResult> GetArticulos()

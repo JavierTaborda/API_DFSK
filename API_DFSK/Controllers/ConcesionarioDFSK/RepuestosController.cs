@@ -19,25 +19,25 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         //API para repuestos y vehiculos
         #region GETS
 
-        [HttpGet("/{id:int}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetRepuestoId(int id)
         {
             var repuesto= await _solicitudesRepo.GetRepuestoById(id);
             return repuesto == null ? BadRequest("Sin Datos") : Ok(repuesto);
         }       
         
-        [HttpGet("/cod/{codigo}")]
+        [HttpGet("cod/{codigo}")]
         public async Task<IActionResult> GetRepuestoCodigo(string codigo)
         {
             var repuesto = await _solicitudesRepo.GetRepuestoCodigo(codigo);
-            return repuesto == null ? BadRequest("Sin Datos") : Ok(codigo);
+            return repuesto == null ? BadRequest("Sin Datos") : Ok(repuesto);
         } 
 
-        [HttpGet("/byvehiculo/{id:int}/{codigo}")]
+        [HttpGet("byvehiculo/{id:int}/{codigo}")]
         public async Task<IActionResult> GetRepuestoByVehiculo(int id,string codigo)
         {
             var repuesto = await _solicitudesRepo.GetRepuestosByVehiculo(id,codigo);
-            return repuesto == null ? BadRequest("Sin Datos") : Ok(repuesto);
+            return !repuesto.Any()  ? BadRequest("Sin Datos") : Ok(repuesto);
         }
 
 
@@ -52,14 +52,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
             var result = await _solicitudesRepo.InsertRepuesto(repuesto);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+            return result  ?  Ok(result):BadRequest("Fallo el registro.");
         }
 
 
@@ -69,14 +62,9 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            
             var result = await _solicitudesRepo.UpdateRepuesto(repuesto);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result == null ? NotFound():Ok(result);
         }
 
        

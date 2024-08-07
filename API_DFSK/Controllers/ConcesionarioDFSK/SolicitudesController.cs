@@ -53,9 +53,10 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
              var result=await _solicitudesRepo.InsertSolicitud(solicitud);
             
-            return result == false ? BadRequest("Fallo el registro") : Ok();
+            return !result ? BadRequest("Fallo el registro") : Ok();
        
         } 
+
         //Inserta Solicitud + Un nuevo Repuesto
         [HttpPost("Repuesto")]
         public async Task<IActionResult> PostSolicitudRepuestoNuevo(SolicitudRepuestoDTO solicitud)
@@ -64,16 +65,10 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
              var result=await _solicitudesRepo.InsertSolicitudRepuesto(solicitud);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+             return  result ? Ok() : BadRequest("Error en registro.");
+            
         }
-#endregion
+        #endregion
 
         //PUTS
 
@@ -85,15 +80,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
             var result = await _solicitudesRepo.UpdateSolicitudRepuesto(solicitud);
 
-            if (result == null)
-            {
-                return NotFound();
-            }
+            return result==null ? NotFound() : Ok(result);
 
-            return Ok(result);
         }
-
-  
-
     }
 }

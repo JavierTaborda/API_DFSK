@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API_DFSK.DTOs.ConcesionarioDFSK;
 
-public partial class RepuestoDTO
+public partial class RepuestoVehiculoDTO
 {
    
     [Range(0, int.MaxValue, ErrorMessage = "El valor de IdRepuesto debe ser mayor que 0.")]
@@ -18,13 +18,14 @@ public partial class RepuestoDTO
 
     public double? Precio { get; set; }
 
-    public int? IdVehiculo { get; set; }   
-    public string? Marca { get; set; }
+    public int? IdVehiculo { get; set; }
 
     [Required(ErrorMessage = "Campo  Estatus Requerido.")]
     public bool Estatus { get; set; }
+    public string? Marca { get; set; }
+    public string? MarcaVehiculo { get; set; }
 
-
+    public string? ModeloVehiculo { get; set; }
 
 
 }

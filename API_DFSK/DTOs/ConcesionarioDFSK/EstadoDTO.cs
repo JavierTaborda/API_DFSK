@@ -5,8 +5,8 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
 {
     public class EstadoDTO
     {
-        [Required(ErrorMessage = "Campo  Requerido.")]
-        [Range(1, int.MaxValue, ErrorMessage = "El valor de {0} debe ser mayor que 0.")]
+      
+        [Range(0, int.MaxValue, ErrorMessage = "El valor de {0} debe ser mayor que 0.")]
         public int IdEstado { get; set; }
 
         public string? Nombre { get; set; }

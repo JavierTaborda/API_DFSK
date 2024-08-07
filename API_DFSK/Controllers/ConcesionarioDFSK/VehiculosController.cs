@@ -39,14 +39,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
             var result = await _solicitudesRepo.InsertVehiculo(vehiculos);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+            return result ? Ok(): BadRequest("Fallo el registro.");
+            
         }
 
         //PUTS
@@ -56,13 +50,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var result = await _solicitudesRepo.UpdateVehiculo(vehiculo);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result == null ? NotFound() : Ok(result);
+            
         }
     }
 }

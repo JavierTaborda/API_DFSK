@@ -1,5 +1,6 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
+using API_DFSK.Models.ConcesionarioDFSK;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
@@ -17,20 +18,14 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         public async Task<IActionResult> GetEstadoById(int id)
         {
             var estado = await _solicitudesRepo.GetEstadoById(id);
-            if (estado == null)
-                return NotFound();
-
-            return Ok(estado);
+            return estado == null ? NotFound() : Ok(estado);     
         }
 
         [HttpGet]
         public async Task<IActionResult> GetEstados()
         {
-            var estados = await _solicitudesRepo.GetEstados();
-            if (estados == null)
-                return NotFound();
-
-            return Ok(estados);
+            var estados = await _solicitudesRepo.GetEstados();    
+            return !estados.Any() ? NotFound() : Ok(estados);
         }
         //POST
         [HttpPost]
@@ -40,14 +35,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
             var result = await _solicitudesRepo.InsertEstado(estados);
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Fallo el registro.");
-            }
+            return result  ? Ok(): BadRequest("Fallo el registro.");
+
         }
 
 
@@ -58,13 +47,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var result = await _solicitudesRepo.UpdateEstado(estado);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result == null ? NotFound() : Ok(result);
         }
     }
 }
