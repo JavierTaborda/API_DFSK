@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using API_DFSK.Models.ConcesionarioDFSK;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_DFSK.Context;
 
-public partial class ConcesionarioDfskContext : DbContext
+public partial class ConcesionarioDfskContext : IdentityDbContext
 {
     public ConcesionarioDfskContext()
     {
@@ -29,6 +30,8 @@ public partial class ConcesionarioDfskContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
         modelBuilder.Entity<Estado>(entity =>
