@@ -36,7 +36,7 @@ namespace API_DFSK.Repository.DFSK
         public async Task<List<ArticulosBodegaApi>> GetArticulosExistenciaBodega()
         {
             var articulosbodega = await _context.ArticulosBodegaApis
-                .Where(ex => ex.Existencia > 0)
+                .Where(e => e.Existencia > 0 && ( e.Articulo.StartsWith("8") ||  e.Articulo.StartsWith("9")))
                 .OrderByDescending(e => e.Existencia)
                 .AsNoTracking()
                 .ToListAsync();
