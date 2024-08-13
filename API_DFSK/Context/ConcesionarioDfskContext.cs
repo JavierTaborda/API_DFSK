@@ -20,13 +20,15 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Repuesto> Repuestos { get; set; }
 
+    public virtual DbSet<ResumenSolicitud> ResumenSolicituds { get; set; }
+
     public virtual DbSet<Solicitude> Solicitudes { get; set; }
 
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -51,6 +53,9 @@ public partial class ConcesionarioDfskContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Descripcion).HasColumnType("text");
+            entity.Property(e => e.Marca)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -59,6 +64,19 @@ public partial class ConcesionarioDfskContext : DbContext
                 .HasForeignKey(d => d.IdVehiculo)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Repuestos_Vehiculos");
+        });
+
+        modelBuilder.Entity<ResumenSolicitud>(entity =>
+        {
+            entity.HasKey(e => e.IdResumenSolicitud);
+
+            entity.ToTable("ResumenSolicitud");
+
+            entity.Property(e => e.FechaCierre).HasColumnType("datetime");
+            entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+            entity.Property(e => e.Observacion)
+                .HasMaxLength(500)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Solicitude>(entity =>
@@ -80,12 +98,17 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.HasOne(d => d.IdRepuestoNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdRepuesto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Solicitud__Repue__2D27B809");
+                .HasConstraintName("FK_Solicitudes_Repuestos");
+
+            entity.HasOne(d => d.IdResumenSolicitudNavigation).WithMany(p => p.Solicitudes)
+                .HasForeignKey(d => d.IdResumenSolicitud)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitudes_ResumenSolicitud");
 
             entity.HasOne(d => d.IdVendedorNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdVendedor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Solicitud__Vende__2C3393D0");
+                .HasConstraintName("FK_Solicitudes_Vendedores");
         });
 
         modelBuilder.Entity<Vehiculo>(entity =>

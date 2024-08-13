@@ -23,9 +23,13 @@ public partial class Solicitude
 
     public DateTime? FechaLlegada { get; set; }
 
+    public int IdResumenSolicitud { get; set; }
+
     public virtual Estado IdEstadoNavigation { get; set; } = null!;
 
     public virtual Repuesto IdRepuestoNavigation { get; set; } = null!;
+
+    public virtual ResumenSolicitud IdResumenSolicitudNavigation { get; set; } = null!;
 
     public virtual Vendedore IdVendedorNavigation { get; set; } = null!;
 }

@@ -12,13 +12,14 @@ public partial class Repuesto
     public string? Nombre { get; set; }
 
     public string? Descripcion { get; set; }
-    public string? Marca { get; set; }
 
     public double? Precio { get; set; }
 
     public int IdVehiculo { get; set; }
 
     public bool Estatus { get; set; }
+
+    public string? Marca { get; set; }
 
     public virtual Vehiculo IdVehiculoNavigation { get; set; } = null!;
 

@@ -38,7 +38,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id)
         {
             var repuesto = await _context.Repuestos
-                .Include(v=>v.IdVehiculoNavigation)
+                .Include(v => v.IdVehiculoNavigation)
                 .FirstOrDefaultAsync(r => r.IdRepuesto == Id);
             return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
         }
@@ -155,7 +155,20 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
         public async Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos)
         {
-            var insert = _mapper.Map<List<Repuesto>>(repuestos);            
+            List<RepuestoDTO> addrepuestos = new List<RepuestoDTO>();
+
+            var existingCodigos = await _context.Repuestos.AsNoTracking().Select(r => r.Codigo).ToListAsync();
+
+            foreach (var r in repuestos)
+            {
+                if (!existingCodigos.Contains(r.Codigo))
+                {
+                    addrepuestos.Add(r);
+                }
+            }
+
+          
+            var insert = _mapper.Map<List<Repuesto>>(addrepuestos);
             await _context.Repuestos.AddRangeAsync(insert);
             await _context.SaveChangesAsync();
             return true;
@@ -179,7 +192,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return true;
 
         }
-        public async  Task<bool> InsertVendedor(List<VendedorDTO> Vendedores)
+        public async Task<bool> InsertVendedor(List<VendedorDTO> Vendedores)
         {
             var insert = _mapper.Map<List<Vendedore>>(Vendedores);
             await _context.Vendedores.AddRangeAsync(insert);
@@ -202,8 +215,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud)
         {
-            var soli = await _context.Solicitudes.AsNoTracking().FirstOrDefaultAsync(s=>s.IdSolicitud==solicitud.IdSolicitud);
-            
+            var soli = await _context.Solicitudes.AsNoTracking().FirstOrDefaultAsync(s => s.IdSolicitud == solicitud.IdSolicitud);
+
             if (soli == null)
             {
                 return null;
@@ -223,13 +236,13 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             if (entity == null)
             {
                 return null;
-            }           
+            }
             _mapper.Map(repuestos, entity);
             entity.IdVehiculoNavigation = null;//Limpiar para no insertar 
             _context.Update(entity);
             await _context.SaveChangesAsync();
             var result = _mapper.Map<RepuestoDTO>(entity);
-           
+
             return result;
         }
 
