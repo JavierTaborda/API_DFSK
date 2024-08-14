@@ -1,6 +1,7 @@
 ﻿using API_DFSK.Context;
 using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Models;
+using API_DFSK.Models.DFSK;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -14,28 +15,19 @@ namespace API_DFSK.Repository.DFSK
             _context = context;
         }
 
-        public async Task<List<Articulo>> GetArticulos()
+    
+        public async Task<List<ApiArticulosGrupo>> GetAllArticulosBodega()
         {
-            var articulos = await _context.Articulos
-                           .OrderByDescending(a => a.Articulo1)
-                           .Take(50)
-                           .AsNoTracking()
-                           .ToListAsync();
-
-            return articulos;
-        }
-        public async Task<List<ArticulosBodegaApi>> GetAllArticulosBodega()
-        {
-            var articulos = await _context.ArticulosBodegaApis
+            var articulos = await _context.ApiArticulosGrupos
                 .AsNoTracking()
                 .ToListAsync();
 
             return articulos;
         }
 
-        public async Task<List<ArticulosBodegaApi>> GetArticulosExistenciaBodega()
+        public async Task<List<ApiArticulosGrupo>> GetArticulosExistenciaBodega()
         {
-            var articulosbodega = await _context.ArticulosBodegaApis
+            var articulosbodega = await _context.ApiArticulosGrupos
                 .Where(e => e.Existencia > 0 && ( e.Articulo.StartsWith("8") ||  e.Articulo.StartsWith("9")))
                 .OrderByDescending(e => e.Existencia)
                 .AsNoTracking()
@@ -43,27 +35,27 @@ namespace API_DFSK.Repository.DFSK
             return articulosbodega;
         }
 
-        public async Task<List<ArticulosBodegaApi>> GetArticuloBodegaByCodigo(string Codigo)
+        public async Task<List<ApiArticulosGrupo>> GetArticuloBodegaByCodigo(string Codigo)
         {
-            var articulosbodega = await _context.ArticulosBodegaApis
+            var articulosbodega = await _context.ApiArticulosGrupos
                .Where(c => c.Articulo.Contains(Codigo))
                .AsNoTracking()
                .ToListAsync();
             return articulosbodega;
         }
 
-        public async Task<List<ArticulosBodegaApi>> GetArticuloBodegaByMarca(string Marca)
+        public async Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarca(string Marca)
         {
-            var articulosbodega = await _context.ArticulosBodegaApis
+            var articulosbodega = await _context.ApiArticulosGrupos
                          .Where(c => c.Marca.Contains(Marca))
                          .AsNoTracking()
                          .ToListAsync();
             return articulosbodega;
         }
 
-        public async Task<List<ArticulosBodegaApi>> GetArticuloBodegaByNombre(string Nombre)
+        public async Task<List<ApiArticulosGrupo>> GetArticuloBodegaByNombre(string Nombre)
         {
-            var articulosbodega = await _context.ArticulosBodegaApis
+            var articulosbodega = await _context.ApiArticulosGrupos
                   .Where(c => c.Descripcion.Contains(Nombre))
                   .AsNoTracking()
                   .ToListAsync();

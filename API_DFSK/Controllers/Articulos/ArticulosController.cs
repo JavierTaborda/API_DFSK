@@ -17,12 +17,7 @@ namespace API_DFSK.Controllers.Articulos
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> GetArticulos()
-        {
-            var articulos = await _articuloRepo.GetArticulos();
-            return Ok(articulos);
-        } 
+       
         
         [HttpGet("Existencia")]
         public async Task<IActionResult> GetArticulosExistencia()

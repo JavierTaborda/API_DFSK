@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace API_DFSK.Models;
+namespace API_DFSK.Models.DFSK;
 
-public partial class Codigo
+public partial class ApiCodigosMarca
 {
-    public decimal Codigo1 { get; set; }
+    public decimal Codigo { get; set; }
 
     public string Descripcion { get; set; } = null!;
 
