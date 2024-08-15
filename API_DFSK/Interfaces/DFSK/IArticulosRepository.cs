@@ -9,6 +9,8 @@ namespace API_DFSK.Interfaces.DFSK
         Task<List<ApiArticulosGrupo>> GetArticulosExistenciaBodega();
         Task<List<ApiArticulosGrupo>> GetArticuloBodegaByCodigo(string Codigo);
         Task<List<ApiArticulosGrupo>> GetArticuloBodegaByNombre(string Nombre);
-        Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarca(string Marca);
+        Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Nombre);
+        Task<List<ApiCodigosMarca>> GetCodigosByMarca();
+        Task<List<ApiCodigosGrupo>> GetCodigosByGrupo();
     }
 }

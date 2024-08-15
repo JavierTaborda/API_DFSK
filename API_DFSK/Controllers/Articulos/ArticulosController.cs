@@ -1,6 +1,7 @@
 ﻿using API_DFSK.Interfaces.DFSK;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 
 namespace API_DFSK.Controllers.Articulos
@@ -47,11 +48,29 @@ namespace API_DFSK.Controllers.Articulos
             return Ok(articulosbodega);
         }
 
-        [HttpGet("Bodega/Marca/{Marca}")]
-        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca)
+        [HttpGet("Bodega/Marca/{Marca}/{Grupo}/{Nombre}")]
+        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca, string Grupo, string Nombre)
         {
-            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarca(Marca);
+            var marcaDecodificada = WebUtility.UrlDecode(Marca);
+            var grupoDecodificada = WebUtility.UrlDecode(Grupo);
+            var nombreDecodificada = WebUtility.UrlDecode(Nombre);
+
+            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarcayGrupo(marcaDecodificada, grupoDecodificada, nombreDecodificada);
             return Ok(articulosbodega);
+        }
+
+        [HttpGet("CodigosMarca")]
+        public async Task<IActionResult> GetCodigosByMarca()
+        {
+            var codigosmarca = await _articuloRepo.GetCodigosByMarca();
+            return Ok(codigosmarca);
+        }
+
+        [HttpGet("CodigosGrupo")]
+        public async Task<IActionResult> GetCodigosByGrupo()
+        {
+            var coodigosgrupo = await _articuloRepo.GetCodigosByGrupo();
+            return Ok(coodigosgrupo);
         }
     }
 }
