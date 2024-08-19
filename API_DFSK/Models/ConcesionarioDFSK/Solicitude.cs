@@ -7,8 +7,6 @@ public partial class Solicitude
 {
     public int IdSolicitud { get; set; }
 
-    public int IdVendedor { get; set; }
-
     public int IdRepuesto { get; set; }
 
     public double? Cantidad { get; set; }
@@ -25,11 +23,13 @@ public partial class Solicitude
 
     public int IdResumenSolicitud { get; set; }
 
+    public int IdResponsableSolicitud { get; set; }
+
     public virtual Estado IdEstadoNavigation { get; set; } = null!;
 
     public virtual Repuesto IdRepuestoNavigation { get; set; } = null!;
 
-    public virtual ResumenSolicitud IdResumenSolicitudNavigation { get; set; } = null!;
+    public virtual ResponsableSolicitud IdResponsableSolicitudNavigation { get; set; } = null!;
 
-    public virtual Vendedore IdVendedorNavigation { get; set; } = null!;
+    public virtual ResumenSolicitud IdResumenSolicitudNavigation { get; set; } = null!;
 }

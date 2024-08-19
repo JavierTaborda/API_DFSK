@@ -6,10 +6,12 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
     public class SolicitudDTO
     {
         public int IdSolicitud { get; set; }
-        
+        public int IdResumenSolicitud { get; set; }
+
        
-        [Range(0, int.MaxValue, ErrorMessage = "El valor de IdVendedor debe ser mayor que 0.")]
-        public int IdVendedor { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "El valor de Responsablle debe ser mayor que 0.")]
+
+        public int IdResponsableSolicitud { get; set; }
 
         [Required(ErrorMessage = "Campo  Requerido.")]
         [Range(1, int.MaxValue, ErrorMessage = "El valor de IdRepuesto debe ser mayor que 0.")]

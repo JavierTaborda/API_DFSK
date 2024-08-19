@@ -46,12 +46,12 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         #region POST
 
         [HttpPost]
-        public async Task<IActionResult> PostSolicitud(List<SolicitudDTO> solicitud)
+        public async Task<IActionResult> PostSolicitud(ResumenSolicitudDTO solicitud)
         {
             if (!ModelState.IsValid) //Chequea los Required de los DTO
                 return BadRequest(ModelState);
 
-             var result=await _solicitudesRepo.InsertSolicitud(solicitud);
+             var result=await _solicitudesRepo.InsertResumenSolicitud(solicitud);
             
             return !result ? BadRequest("Fallo el registro") : Ok();
        

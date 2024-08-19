@@ -63,7 +63,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
             var solicitud = await _context.Solicitudes
-                .Include(ven => ven.IdVendedorNavigation)
+                .Include(ven => ven.IdResumenSolicitudNavigation.IdVendedorNavigation)
                 .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.IdEstadoNavigation)
                 .FirstOrDefaultAsync(id => id.IdSolicitud == Id);
@@ -77,7 +77,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         {
 
             IQueryable<Solicitude> query = _context.Solicitudes
-                .Include(ven => ven.IdVendedorNavigation)
+                .Include(ven => ven.IdResumenSolicitudNavigation.IdVendedorNavigation)
                 .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.IdEstadoNavigation)
                 .AsNoTracking();
@@ -99,7 +99,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             query = query.Where(f => f.IdEstado == idestado
                                      && f.IdRepuesto == idrepuesto
-                                     && f.IdVendedor == idvendedor);
+                                     && f.IdResumenSolicitudNavigation.IdVendedor == idvendedor);
 
             var solicitudes = await query.ToListAsync();
 
@@ -139,6 +139,14 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         // POST
 
         #region POST
+
+        public async Task<bool> InsertResumenSolicitud(ResumenSolicitudDTO Solicitud)
+        {
+            var insert = _mapper.Map<ResumenSolicitud>(Solicitud);
+            await _context.ResumenSolicituds.AddAsync(insert);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes)
         {
             var insert = _mapper.Map<List<Solicitude>>(solicitudes);
@@ -293,6 +301,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<VendedorDTO>(entity);
             return result;
         }
+
+
         #endregion
     }
 }

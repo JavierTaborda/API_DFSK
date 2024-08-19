@@ -17,5 +17,5 @@ public partial class Vendedore
 
     public bool Estatus { get; set; }
 
-    public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
+    public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
 }

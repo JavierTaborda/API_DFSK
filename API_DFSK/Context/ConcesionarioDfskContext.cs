@@ -20,6 +20,8 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Repuesto> Repuestos { get; set; }
 
+    public virtual DbSet<ResponsableSolicitud> ResponsableSolicituds { get; set; }
+
     public virtual DbSet<ResumenSolicitud> ResumenSolicituds { get; set; }
 
     public virtual DbSet<Solicitude> Solicitudes { get; set; }
@@ -27,7 +29,6 @@ public partial class ConcesionarioDfskContext : DbContext
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,6 +67,17 @@ public partial class ConcesionarioDfskContext : DbContext
                 .HasConstraintName("FK_Repuestos_Vehiculos");
         });
 
+        modelBuilder.Entity<ResponsableSolicitud>(entity =>
+        {
+            entity.HasKey(e => e.IdResponsableSolicitud);
+
+            entity.ToTable("ResponsableSolicitud");
+
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<ResumenSolicitud>(entity =>
         {
             entity.HasKey(e => e.IdResumenSolicitud);
@@ -77,6 +89,11 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.Observacion)
                 .HasMaxLength(500)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.IdVendedorNavigation).WithMany(p => p.ResumenSolicituds)
+                .HasForeignKey(d => d.IdVendedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ResumenSolicitud_Vendedores");
         });
 
         modelBuilder.Entity<Solicitude>(entity =>
@@ -100,15 +117,15 @@ public partial class ConcesionarioDfskContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Solicitudes_Repuestos");
 
+            entity.HasOne(d => d.IdResponsableSolicitudNavigation).WithMany(p => p.Solicitudes)
+                .HasForeignKey(d => d.IdResponsableSolicitud)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Solicitudes_ResponsableSolicitud");
+
             entity.HasOne(d => d.IdResumenSolicitudNavigation).WithMany(p => p.Solicitudes)
                 .HasForeignKey(d => d.IdResumenSolicitud)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Solicitudes_ResumenSolicitud");
-
-            entity.HasOne(d => d.IdVendedorNavigation).WithMany(p => p.Solicitudes)
-                .HasForeignKey(d => d.IdVendedor)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Solicitudes_Vendedores");
         });
 
         modelBuilder.Entity<Vehiculo>(entity =>
