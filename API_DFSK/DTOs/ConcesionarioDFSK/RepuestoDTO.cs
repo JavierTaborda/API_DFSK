@@ -21,6 +21,8 @@ public partial class RepuestoDTO
     public int? IdVehiculo { get; set; }   
     public string? Marca { get; set; }
 
+    public bool EnInventario { get; set; }
+
     [Required(ErrorMessage = "Campo  Estatus Requerido.")]
     public bool Estatus { get; set; }
 

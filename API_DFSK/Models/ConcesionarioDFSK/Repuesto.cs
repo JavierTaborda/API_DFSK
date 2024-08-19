@@ -20,6 +20,7 @@ public partial class Repuesto
     public bool Estatus { get; set; }
 
     public string? Marca { get; set; }
+    public bool EnInventario { get; set; }
 
     public virtual Vehiculo IdVehiculoNavigation { get; set; } = null!;
 
