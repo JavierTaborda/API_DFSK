@@ -106,6 +106,17 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<SolicitudDTO>>(solicitudes) ?? new List<SolicitudDTO>();
         }
 
+        public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes()
+        {
+            var resumen = await _context.ResumenSolicituds
+                .AsNoTracking() 
+                .Include(ven => ven.IdVendedorNavigation)
+                .Include(f => f.Solicitudes).ThenInclude(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
+                .Include(rep => rep.Solicitudes).ThenInclude(e=>e.IdEstadoNavigation)
+                .ToListAsync();
+
+            return _mapper.Map<List<ResumenSolicitudDTO>>(resumen);
+        }
 
         public async Task<VehiculoDTO?> GetVehiculoByIdCodigo(int Id, string codigo)
         {
@@ -301,6 +312,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<VendedorDTO>(entity);
             return result;
         }
+
 
 
         #endregion
