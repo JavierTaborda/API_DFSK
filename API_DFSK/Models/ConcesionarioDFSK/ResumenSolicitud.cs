@@ -7,7 +7,7 @@ public partial class ResumenSolicitud
 {
     public int IdResumenSolicitud { get; set; }
 
-    public DateTime? FechaSolicitud { get; set; }
+    public DateTime? FechaCreacion{ get; set; }
 
     public bool Estatus { get; set; }
 

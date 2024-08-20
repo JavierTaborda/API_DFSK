@@ -17,6 +17,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
         [Range(1, int.MaxValue, ErrorMessage = "El valor de IdRepuesto debe ser mayor que 0.")]
         public int IdRepuesto { get; set; }
         public double? Cantidad { get; set; }
+        public double? Precio { get; set; }
 
         [Required(ErrorMessage = "Campo  Requerido.")]
         [Range(1, int.MaxValue, ErrorMessage = "El valor de IdEstado debe ser mayor que 0.")]

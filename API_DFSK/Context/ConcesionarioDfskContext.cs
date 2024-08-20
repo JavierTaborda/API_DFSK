@@ -85,7 +85,7 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.ToTable("ResumenSolicitud");
 
             entity.Property(e => e.FechaCierre).HasColumnType("datetime");
-            entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+            entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.Observacion)
                 .HasMaxLength(500)
                 .IsUnicode(false);
