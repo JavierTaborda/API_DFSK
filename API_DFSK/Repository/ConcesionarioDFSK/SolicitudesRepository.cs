@@ -118,10 +118,18 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<ResumenSolicitudDTO>>(resumen);
         }
 
-        public async Task<VehiculoDTO?> GetVehiculoByIdCodigo(int Id, string codigo)
+        public async Task<VehiculoDTO> GetVehiculoById(int Id)
         {
-            var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id || id.Codigo.Equals(codigo));
+            var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id );
             return _mapper.Map<VehiculoDTO>(vehiculo);
+        }
+        public async Task<List<VehiculoDTO>> GetVehiculoByCodigo( string codigo)
+        {
+            var vehiculo = await _context.Vehiculos
+                .Where(co => co.Codigo.Contains(codigo))
+                .AsNoTracking()
+                .ToListAsync();
+            return _mapper.Map<List<VehiculoDTO>>(vehiculo);
         }
 
         public async Task<List<VehiculoDTO>> GetVehiculos()
