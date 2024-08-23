@@ -26,6 +26,7 @@ namespace API_DFSK.AutoMapper
                 .ForPath(dest => dest.IdRepuestoNavigation.Precio, opt => opt.MapFrom(src => src.Precio))
                 .ForPath(dest => dest.IdRepuestoNavigation.Estatus, opt => opt.MapFrom(src => src.Estatus))
                 .ForPath(dest => dest.IdRepuestoNavigation.Marca, opt => opt.MapFrom(src => src.Marca))
+                .ForPath(dest => dest.IdRepuestoNavigation.Descripcion, opt => opt.MapFrom(src => src.Descripcion))
                 .ReverseMap();
 
             

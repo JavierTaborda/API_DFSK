@@ -22,4 +22,6 @@ public partial class ApiArticulosBodega
     public decimal? Venta { get; set; }
 
     public string? Modelo { get; set; }
+
+    public string? Ano { get; set; }
 }

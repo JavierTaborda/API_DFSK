@@ -132,9 +132,11 @@ public partial class ConcesionarioDfskContext : DbContext
         {
             entity.HasKey(e => e.IdVehiculo).HasName("PK__Vehiculo__AA088620633F3CD2");
 
-            entity.HasIndex(e => e.Vin, "UQ__Vehiculo__C5DF234C699ED050").IsUnique();
 
             entity.Property(e => e.Codigo)
+                .HasMaxLength(10)
+                 .IsUnicode(false);
+            entity.Property(e => e.Descripcion)
                 .HasMaxLength(10)
                 .IsFixedLength();
             entity.Property(e => e.Marca)
@@ -143,10 +145,7 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.Modelo)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Vin)
-                .HasMaxLength(17)
-                .IsUnicode(false)
-                .HasColumnName("VIN");
+           
         });
 
         modelBuilder.Entity<Vendedore>(entity =>

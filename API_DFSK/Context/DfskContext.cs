@@ -24,6 +24,7 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<ApiCodigosMarca> ApiCodigosMarcas { get; set; }
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApiArticulosBodega>(entity =>
@@ -32,6 +33,10 @@ public partial class DfskContext : DbContext
                 .HasNoKey()
                 .ToView("API_ARTICULOS_BODEGA");
 
+            entity.Property(e => e.Ano)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
             entity.Property(e => e.Articulo)
                 .HasMaxLength(10)
                 .IsUnicode(false)
@@ -71,6 +76,10 @@ public partial class DfskContext : DbContext
                 .HasNoKey()
                 .ToView("API_ARTICULOS_GRUPO");
 
+            entity.Property(e => e.Ano)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
             entity.Property(e => e.Articulo)
                 .HasMaxLength(10)
                 .IsUnicode(false)

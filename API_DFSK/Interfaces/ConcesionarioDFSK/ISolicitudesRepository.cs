@@ -38,6 +38,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
         Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos);
         Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos);
+        Task<VehiculoDTO> AddUpdateVehiculo(VehiculoDTO vehiculos);
         Task<EstadoDTO> UpdateEstado(EstadoDTO Estados);
         Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores);
     }

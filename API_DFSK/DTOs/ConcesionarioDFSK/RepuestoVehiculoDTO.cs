@@ -26,6 +26,7 @@ public partial class RepuestoVehiculoDTO
     public string? MarcaVehiculo { get; set; }
 
     public string? ModeloVehiculo { get; set; }
+    public string? DescripcionVehiculo { get; set; }
 
 
 }

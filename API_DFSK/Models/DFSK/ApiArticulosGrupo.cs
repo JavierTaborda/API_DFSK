@@ -22,4 +22,6 @@ public partial class ApiArticulosGrupo
     public decimal? Venta { get; set; }
 
     public string Grupo { get; set; } = null!;
+
+    public string? Ano { get; set; }
 }

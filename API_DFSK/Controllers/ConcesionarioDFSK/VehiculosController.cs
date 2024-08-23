@@ -59,5 +59,14 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return result == null ? NotFound() : Ok(result);
             
         }
+        [HttpPut("AddUpdate")]
+        public async Task<IActionResult> PutAddVehiculo(VehiculoDTO vehiculo)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _solicitudesRepo.AddUpdateVehiculo(vehiculo);
+            return result == null ? NotFound() : Ok(result);
+            
+        }
     }
 }

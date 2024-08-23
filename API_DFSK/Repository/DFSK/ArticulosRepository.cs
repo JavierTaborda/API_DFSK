@@ -43,6 +43,13 @@ namespace API_DFSK.Repository.DFSK
                .ToListAsync();
             return articulosbodega;
         }
+        public async Task<List<ApiArticulosGrupo>> GetVehiculosBodegaByCodigo(string Codigo)
+        {
+            var articulosbodega = await _context.ApiArticulosGrupos.AsNoTracking()
+                .Where(c => c.Articulo.Equals(Codigo) && c.Ano != null).ToListAsync();
+               
+            return articulosbodega;
+        }
 
         public async Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Nombre)
         {

@@ -37,7 +37,14 @@ namespace API_DFSK.Controllers.Articulos
         [HttpGet("Bodega/Codigo/{Codigo}")]
         public async Task<IActionResult> GetArticuloBodegaByCodigo(string Codigo)
         {
-            var articulosbodega = await _articuloRepo.GetArticuloBodegaByCodigo(Codigo);
+            var result = await _articuloRepo.GetArticuloBodegaByCodigo(Codigo);
+            return result == null ? NotFound("Sin Vehiculos.") : Ok(result);
+        }
+        
+        [HttpGet("Bodega/Vehiculos/{Codigo}")]
+        public async Task<IActionResult> GetVehiculosBodegaByCodigo(string Codigo)
+        {
+            var articulosbodega = await _articuloRepo.GetVehiculosBodegaByCodigo(Codigo);
             return Ok(articulosbodega);
         }
 
