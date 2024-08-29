@@ -1,4 +1,5 @@
-﻿using API_DFSK.Interfaces.DFSK;
+﻿using API_DFSK.DTOs.DFSK;
+using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Models.DFSK;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace API_DFSK.Controllers.CrearTXT
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostResumentxt(Resumentxt txt)
+        public async Task<IActionResult> PostResumentxt(ResumentxtDTO txt)
         {
             var resumentxt = await _txtRepo.CreateTXT(txt);
             return Ok(resumentxt);

@@ -28,6 +28,7 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<Resumentxt> Resumentxts { get; set; }
 
+ 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApiArticulosBodega>(entity =>
@@ -189,6 +190,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Colorsecundario)
                 .HasMaxLength(2)
                 .IsUnicode(false)
+                .HasDefaultValue("  ")
                 .HasColumnName("COLORSECUNDARIO");
             entity.Property(e => e.Correlativoempresa)
                 .HasMaxLength(7)
@@ -350,6 +352,10 @@ public partial class DfskContext : DbContext
             entity.ToTable("RESUMENTXT");
 
             entity.Property(e => e.Idresumentxt).HasColumnName("IDRESUMENTXT");
+            entity.Property(e => e.Fecha)
+                .HasComment("Fecha de Creacion")
+                .HasColumnType("datetime")
+                .HasColumnName("FECHA");
             entity.Property(e => e.Fechaenvio)
                 .HasMaxLength(8)
                 .IsUnicode(false)
@@ -418,6 +424,10 @@ public partial class DfskContext : DbContext
                 .HasDefaultValue("                                                                                                                                                                                                                                      *")
                 .HasComment("RESTO DE LA LINEA INICIAL")
                 .HasColumnName("RESTOLINEA");
+            entity.Property(e => e.Usuario)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("USUARIO");
         });
 
         OnModelCreatingPartial(modelBuilder);

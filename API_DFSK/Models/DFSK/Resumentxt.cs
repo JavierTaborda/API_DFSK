@@ -8,6 +8,13 @@ public partial class Resumentxt
     public int Idresumentxt { get; set; }
 
     /// <summary>
+    /// Fecha de Creacion
+    /// </summary>
+    public DateTime? Fecha { get; set; }
+
+    public string? Usuario { get; set; }
+
+    /// <summary>
     /// fijo alfanumerico de txt
     /// </summary>
     public string Re { get; set; } = null!;
@@ -50,7 +57,7 @@ public partial class Resumentxt
     /// <summary>
     /// RESTO DE LA LINEA INICIAL
     /// </summary>
-    public string Restolinea { get; set; } = null!;
+    public string? Restolinea { get; set; }
 
     /// <summary>
     /// FIJO ALFANUMERICO DE LINEA FINAL

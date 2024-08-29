@@ -1,5 +1,7 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
+using API_DFSK.DTOs.DFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
+using API_DFSK.Models.DFSK;
 using AutoMapper;
 namespace API_DFSK.AutoMapper
 {
@@ -40,6 +42,11 @@ namespace API_DFSK.AutoMapper
 
             CreateMap<Vehiculo, VehiculoDTO>().ReverseMap();
             CreateMap<Vendedore, VendedorDTO>().ReverseMap();
+
+            CreateMap<Resumentxt, ResumentxtDTO>().ReverseMap();
+            CreateMap<LineatxtDTO, Lineatxt>().ReverseMap();
+
+
         }
     }
 }
