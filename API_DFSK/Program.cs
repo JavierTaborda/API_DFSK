@@ -20,6 +20,7 @@ builder.Services.AddDbContext<DfskContext>(options => options.UseSqlServer(build
 builder.Services.AddDbContext<ConcesionarioDfskContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConcesionarioDFSKSecret")), ServiceLifetime.Transient);
 builder.Services.AddScoped<IArticulosRepository, ArticulosRepository>();
 builder.Services.AddScoped<ISolicitudesRepository, SolicitudesRepository>();
+builder.Services.AddScoped<ICrearTXTRepository, CrearTXTRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddCors(options =>
