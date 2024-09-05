@@ -28,7 +28,8 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<Resumentxt> Resumentxts { get; set; }
 
- 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApiArticulosBodega>(entity =>
@@ -160,7 +161,7 @@ public partial class DfskContext : DbContext
         {
             entity.HasKey(e => e.Idlineatxt).HasName("PK__LINEATXT__41DEF0C63683159D");
 
-            entity.ToTable("LINEATXT");
+            entity.ToTable("LINEATXT", tb => tb.HasTrigger("trg_UpdateCorrelativoEmpresa"));
 
             entity.Property(e => e.Idlineatxt).HasColumnName("IDLINEATXT");
             entity.Property(e => e.Anofabrica)
@@ -171,6 +172,9 @@ public partial class DfskContext : DbContext
                 .HasMaxLength(4)
                 .IsUnicode(false)
                 .HasColumnName("ANOMODELO");
+            entity.Property(e => e.Aprobado)
+                .HasDefaultValue(true)
+                .HasColumnName("APROBADO");
             entity.Property(e => e.Capacidadcarga)
                 .HasMaxLength(5)
                 .IsUnicode(false)
@@ -195,6 +199,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Correlativoempresa)
                 .HasMaxLength(7)
                 .IsUnicode(false)
+                .HasDefaultValue("")
                 .HasColumnName("CORRELATIVOEMPRESA");
             entity.Property(e => e.Diametrorueda)
                 .HasMaxLength(3)
@@ -211,6 +216,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Fechahomo)
                 .HasMaxLength(8)
                 .IsUnicode(false)
+                .HasDefaultValue("        ")
                 .HasColumnName("FECHAHOMO");
             entity.Property(e => e.Fechaplanigra)
                 .HasMaxLength(8)
@@ -219,6 +225,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Fecrafplaca)
                 .HasMaxLength(8)
                 .IsUnicode(false)
+                .HasDefaultValue("20231231")
                 .HasColumnName("FECRAFPLACA");
             entity.Property(e => e.Ffactadqui)
                 .HasMaxLength(8)
@@ -237,6 +244,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Movimiento)
                 .HasMaxLength(2)
                 .IsUnicode(false)
+                .HasDefaultValue("MA")
                 .HasColumnName("MOVIMIENTO");
             entity.Property(e => e.Nfactadqui)
                 .HasMaxLength(15)
@@ -253,10 +261,12 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Numhomo)
                 .HasMaxLength(15)
                 .IsUnicode(false)
+                .HasDefaultValue("               ")
                 .HasColumnName("NUMHOMO");
             entity.Property(e => e.Nummodificacion)
                 .HasMaxLength(2)
                 .IsUnicode(false)
+                .HasDefaultValue("00")
                 .HasColumnName("NUMMODIFICACION");
             entity.Property(e => e.Numplanigra)
                 .HasMaxLength(15)
@@ -269,11 +279,12 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Numrafplaca)
                 .HasMaxLength(8)
                 .IsUnicode(false)
+                .HasDefaultValue("CBMLN117")
                 .HasColumnName("NUMRAFPLACA");
             entity.Property(e => e.Numsecplaca)
                 .HasMaxLength(2)
                 .IsUnicode(false)
-                .HasDefaultValueSql("((1))")
+                .HasDefaultValue("01")
                 .HasColumnName("NUMSECPLACA");
             entity.Property(e => e.Peso)
                 .HasMaxLength(5)
@@ -283,13 +294,15 @@ public partial class DfskContext : DbContext
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasColumnName("PLACA");
-            entity.Property(e => e.Puertaentrada)
+            entity.Property(e => e.Puertoentrada)
                 .HasMaxLength(2)
                 .IsUnicode(false)
-                .HasColumnName("PUERTAENTRADA");
+                .HasDefaultValue("PL")
+                .HasColumnName("PUERTOENTRADA");
             entity.Property(e => e.Rif)
                 .HasMaxLength(10)
                 .IsUnicode(false)
+                .HasDefaultValue("J500741456")
                 .HasColumnName("RIF");
             entity.Property(e => e.Serialcarroceria)
                 .HasMaxLength(18)
@@ -323,7 +336,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Tipcombustible)
                 .HasMaxLength(3)
                 .IsUnicode(false)
-                .HasDefaultValueSql("((5))")
+                .HasDefaultValue("005")
                 .HasColumnName("TIPCOMBUSTIBLE");
             entity.Property(e => e.Tipoabc)
                 .HasMaxLength(3)
@@ -349,7 +362,7 @@ public partial class DfskContext : DbContext
         {
             entity.HasKey(e => e.Idresumentxt);
 
-            entity.ToTable("RESUMENTXT");
+            entity.ToTable("RESUMENTXT", tb => tb.HasTrigger("trg_UpdateNumEnvio"));
 
             entity.Property(e => e.Idresumentxt).HasColumnName("IDRESUMENTXT");
             entity.Property(e => e.Fecha)
@@ -364,6 +377,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Fechafin)
                 .HasMaxLength(8)
                 .IsUnicode(false)
+                .HasDefaultValue("20231231")
                 .HasComment("FECHA FIN DEL CONVENIO")
                 .HasColumnName("FECHAFIN");
             entity.Property(e => e.Horaenvio)
@@ -374,6 +388,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Inicialempresa)
                 .HasMaxLength(2)
                 .IsUnicode(false)
+                .HasDefaultValue("IM")
                 .HasComment("INICIALES DE LA EMPRESA (IM)")
                 .HasColumnName("INICIALEMPRESA");
             entity.Property(e => e.Ma)
@@ -394,11 +409,13 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Nombreempresa)
                 .HasMaxLength(50)
                 .IsUnicode(false)
+                .HasDefaultValue("IMB MOVILIDAD, C.A.                               ")
                 .HasComment("NOMBRE DE EMPRESA")
                 .HasColumnName("NOMBREEMPRESA");
             entity.Property(e => e.Numenvio)
                 .HasMaxLength(7)
                 .IsUnicode(false)
+                .HasDefaultValue("")
                 .HasComment("NUMERO DE ENVIO")
                 .HasColumnName("NUMENVIO");
             entity.Property(e => e.Rc)
@@ -416,6 +433,7 @@ public partial class DfskContext : DbContext
             entity.Property(e => e.Refeciv)
                 .HasMaxLength(8)
                 .IsUnicode(false)
+                .HasDefaultValue("CBMLN117")
                 .HasComment("NUMERO DE REFECIV")
                 .HasColumnName("REFECIV");
             entity.Property(e => e.Restolinea)

@@ -28,7 +28,7 @@ namespace API_DFSK.Repository.DFSK
         public async Task<List<ApiArticulosGrupo>> GetArticulosExistenciaBodega()
         {
             var articulosbodega = await _context.ApiArticulosGrupos
-                .Where(e => e.Existencia > 0 && ( e.Articulo.StartsWith("8") ||  e.Articulo.StartsWith("9")))
+                .Where(e => e.Existencia >= 0 && ( e.Articulo.StartsWith("8") ||  e.Articulo.StartsWith("9")))
                 .OrderByDescending(e => e.Existencia)
                 .AsNoTracking()
                 .ToListAsync();
@@ -68,7 +68,7 @@ namespace API_DFSK.Repository.DFSK
             }
            
             var articulosbodega = await _context.ApiArticulosGrupos
-                         .Where(c => c.Marca.Contains(queryMarca) && c.Grupo.Contains(queryGrupo) && c.Descripcion.Contains(queryNombre))
+                         .Where(c => c.Marca.Contains(queryMarca) && c.Grupo.Contains(queryGrupo) && c.Descripcion.Contains(queryNombre) && (c.Articulo.StartsWith("8") || c.Articulo.StartsWith("9")))
                          .AsNoTracking()
                          .ToListAsync();
             return articulosbodega;

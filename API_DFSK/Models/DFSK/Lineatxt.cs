@@ -11,7 +11,7 @@ public partial class Lineatxt
 
     public string Movimiento { get; set; } = null!;
 
-    public string Correlativoempresa { get; set; } = null!;
+    public string? Correlativoempresa { get; set; }
 
     public string Nummodificacion { get; set; } = null!;
 
@@ -53,7 +53,7 @@ public partial class Lineatxt
 
     public string Rif { get; set; } = null!;
 
-    public string Puertaentrada { get; set; } = null!;
+    public string Puertoentrada { get; set; } = null!;
 
     public string Numplanigra { get; set; } = null!;
 
@@ -92,6 +92,8 @@ public partial class Lineatxt
     public string Serialcarrozado { get; set; } = null!;
 
     public string Tipcombustible { get; set; } = null!;
+
+    public bool Aprobado { get; set; }
 
     public virtual Resumentxt IdresumentxtNavigation { get; set; } = null!;
 }

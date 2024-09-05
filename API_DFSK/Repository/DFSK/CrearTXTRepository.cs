@@ -26,8 +26,7 @@ namespace API_DFSK.Repository.DFSK
             await _context.Resumentxts.AddAsync(insert);
             await _context.SaveChangesAsync();
             return _mapper.Map<ResumentxtDTO>(insert);
-
-          
+        
         }
 
         public async Task<ResumentxtDTO> GetTXT(int Id)

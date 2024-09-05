@@ -27,7 +27,7 @@ public partial class Resumentxt
     /// <summary>
     /// NUMERO DE ENVIO
     /// </summary>
-    public string Numenvio { get; set; } = null!;
+    public string? Numenvio { get; set; }
 
     /// <summary>
     /// FECHA DEL ENVIO
