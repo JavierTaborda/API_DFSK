@@ -10,7 +10,6 @@ public partial class Solicitude
     public int IdRepuesto { get; set; }
 
     public double? Cantidad { get; set; }
-    public double? Precio { get; set; }
 
     public DateTime? FechaSolicitud { get; set; }
 
@@ -25,6 +24,8 @@ public partial class Solicitude
     public int IdResumenSolicitud { get; set; }
 
     public int IdResponsableSolicitud { get; set; }
+
+    public double? Precio { get; set; }
 
     public virtual Estado IdEstadoNavigation { get; set; } = null!;
 

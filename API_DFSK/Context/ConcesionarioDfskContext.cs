@@ -24,11 +24,14 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<ResumenSolicitud> ResumenSolicituds { get; set; }
 
+    public virtual DbSet<Rol> Rols { get; set; }
+
     public virtual DbSet<Solicitude> Solicitudes { get; set; }
 
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -96,6 +99,21 @@ public partial class ConcesionarioDfskContext : DbContext
                 .HasConstraintName("FK_ResumenSolicitud_Vendedores");
         });
 
+        modelBuilder.Entity<Rol>(entity =>
+        {
+            entity.HasKey(e => e.IdRol);
+
+            entity.ToTable("Rol");
+
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.RolName)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Rol");
+        });
+
         modelBuilder.Entity<Solicitude>(entity =>
         {
             entity.HasKey(e => e.IdSolicitud).HasName("PK__Solicitu__85E95DA75C3B08DD");
@@ -132,26 +150,27 @@ public partial class ConcesionarioDfskContext : DbContext
         {
             entity.HasKey(e => e.IdVehiculo).HasName("PK__Vehiculo__AA088620633F3CD2");
 
-
             entity.Property(e => e.Codigo)
-                .HasMaxLength(10)
-                 .IsUnicode(false);
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Descripcion)
-                .HasMaxLength(10)
-                .IsFixedLength();
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Marca)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Modelo)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-           
         });
 
         modelBuilder.Entity<Vendedore>(entity =>
         {
             entity.HasKey(e => e.IdVendedor).HasName("PK__Vendedor__2033EECC06D7C763");
 
+            entity.Property(e => e.Clave)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Codigo)
                 .HasMaxLength(10)
                 .IsFixedLength();
@@ -164,6 +183,10 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.Telefono)
                 .HasMaxLength(15)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Vendedores)
+                .HasForeignKey(d => d.IdRol)
+                .HasConstraintName("FK_Vendedores_Rol");
         });
 
         OnModelCreatingPartial(modelBuilder);
