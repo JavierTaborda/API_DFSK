@@ -16,7 +16,7 @@ namespace API_DFSK.Custom
             _configuration = configuration;
         }
 
-        public string encryptSHA256(string text)
+        public string EncryptSHA256(string text)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
@@ -33,7 +33,7 @@ namespace API_DFSK.Custom
             }
         }
 
-        public string createJWT(Vendedore model)
+        public string CreateJWT(Vendedore model)
         {
             var userClaims = new[]
             {
@@ -41,7 +41,7 @@ namespace API_DFSK.Custom
                 new Claim(ClaimTypes.Email, model.Email!),
                 new Claim(ClaimTypes.Name, model.Nombre!),
                 new Claim("Codigo", model.Codigo!),
-                new Claim("Rol", model.IdRolNavigation!.RolName!)
+                new Claim(ClaimTypes.Role, model.IdRolNavigation!.RolName!)
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));

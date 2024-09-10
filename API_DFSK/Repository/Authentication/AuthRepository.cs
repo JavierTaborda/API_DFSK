@@ -25,13 +25,13 @@ namespace API_DFSK.Repository.Authentication
             var usuarioEncontrado = await _context.Vendedores
                 .Include(r=>r.IdRolNavigation)
                 .Where(l => ((l.Codigo == login.User) || (l.Email==login.User)) &&
-                l.Clave == _utilities.encryptSHA256(login.Clave!)
+                l.Clave == _utilities.EncryptSHA256(login.Password!)
                 ).FirstOrDefaultAsync();
 
             if (usuarioEncontrado == null)
                 return "";
             else
-                return _utilities.createJWT(usuarioEncontrado);
+                return _utilities.CreateJWT(usuarioEncontrado);
 
         }
 
@@ -44,7 +44,7 @@ namespace API_DFSK.Repository.Authentication
 
             if (vendedor.Result == null)
             {
-                user.Clave = _utilities.encryptSHA256(user.Clave!);//Encriptarclave
+                user.Clave = _utilities.EncryptSHA256(user.Clave!);//Encriptarclave
 
                 var insert = _mapper.Map<Vendedore>(user);
                 await _context.Vendedores.AddAsync(insert);
