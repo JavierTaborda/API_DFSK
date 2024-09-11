@@ -4,6 +4,7 @@ using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Repository.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.Auth
@@ -31,7 +32,7 @@ namespace API_DFSK.Controllers.Auth
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var token = await _authRepo.Login(login);
-            return Ok(token);
+            return !String.IsNullOrEmpty(token) ? Ok(token) : BadRequest("Datos Incorrectos");
         }
 
     }
