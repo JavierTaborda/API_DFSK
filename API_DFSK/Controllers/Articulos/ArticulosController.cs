@@ -18,8 +18,13 @@ namespace API_DFSK.Controllers.Articulos
         }
 
 
-       
-        
+        [HttpGet("Online")]
+        public async Task<IActionResult> Online()
+        {
+            return Ok(true);
+        }
+
+
         [HttpGet("Existencia")]
         public async Task<IActionResult> GetArticulosExistencia()
         {

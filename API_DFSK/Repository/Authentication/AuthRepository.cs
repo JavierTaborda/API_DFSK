@@ -24,7 +24,7 @@ namespace API_DFSK.Repository.Authentication
         {
             var usuarioEncontrado = await _context.Vendedores
                 .Include(r=>r.IdRolNavigation)
-                .Where(l => ((l.Codigo == login.User) || (l.Email==login.User)) &&
+                .Where(l => ((l.Codigo == login.Username) || (l.Email==login.Username)) &&
                 l.Clave == _utilities.EncryptSHA256(login.Password!)
                 ).FirstOrDefaultAsync();
 

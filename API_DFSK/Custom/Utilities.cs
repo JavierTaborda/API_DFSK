@@ -37,11 +37,11 @@ namespace API_DFSK.Custom
         {
             var userClaims = new[]
             {
-                new Claim (ClaimTypes.NameIdentifier, model.IdVendedor.ToString()),
-                new Claim(ClaimTypes.Email, model.Email!),
-                new Claim(ClaimTypes.Name, model.Nombre!),
-                new Claim("Codigo", model.Codigo!),
-                new Claim(ClaimTypes.Role, model.IdRolNavigation!.RolName!)
+                new Claim ("user", model.IdVendedor.ToString()),
+                new Claim("mail", model.Email!),
+                new Claim("name", model.Nombre!),
+                new Claim("codigo", model.Codigo!),
+                new Claim("role", model.IdRolNavigation!.RolName!)
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
