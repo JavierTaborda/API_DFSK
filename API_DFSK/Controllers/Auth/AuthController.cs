@@ -20,7 +20,7 @@ namespace API_DFSK.Controllers.Auth
         {
            _authRepo=authRepo;
     }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Registrar(UserVendedorDTO user)
         {

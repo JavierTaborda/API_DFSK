@@ -19,8 +19,8 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<EstadoDTO?> GetEstadoById(int Id);
         Task<List<VendedorDTO>> GetVendedores();
         Task<VendedorDTO?> GetVendedorById(int Id);
-        Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes();
-        Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idrepuesto, int idvendedor, int tipofecha);
+        Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor);
+        Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor);
         Task<SolicitudDTO?> GetSolicitudById(int Id);
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using API_DFSK.Interfaces.DFSK;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -8,6 +9,7 @@ namespace API_DFSK.Controllers.Articulos
 {
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
+    [Authorize]
     [ApiController]
     public class ArticulosController : ControllerBase
     {

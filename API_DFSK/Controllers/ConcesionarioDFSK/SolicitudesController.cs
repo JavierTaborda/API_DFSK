@@ -3,13 +3,16 @@ using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
 using API_DFSK.Repository.ConcesionarioDFSK;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
+    
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
+    [Authorize]
     [ApiController]
     public class SolicitudesController : ControllerBase
     {
@@ -23,21 +26,21 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
         #region GETS
 
-        [HttpGet]
-        public async Task<IActionResult> GetResumen()
+        [HttpGet("{f1}/{f2}/{estado}/{vendedor:int}")]
+        public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int idvendedor)
         {
-            var resumen = await _solicitudesRepo.GetResumenSolicitudes();
+            var resumen = await _solicitudesRepo.GetResumenSolicitudes(f1, f2, estado, idvendedor);
             return Ok(resumen);
         }
 
-        [HttpGet("{f1}/{f2}/{idestado}/{idrepuesto}/{idvendedor}/{tipofecha}")]
-        public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idrepuesto, int idvendedor, int tipofecha)
+        [HttpGet("{f1}/{f2}/{idestado}/{idvendedor}")]
+        public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor)
         {
             if (f1 > f2)
             {
                 return BadRequest("La fecha inicial no puede ser mayor que la fecha final.");
             }
-            var listasolicitudes = await _solicitudesRepo.GetSolicitudes(f1, f2, idestado, idrepuesto, idvendedor, tipofecha);
+            var listasolicitudes = await _solicitudesRepo.GetSolicitudes(f1, f2, idestado, idvendedor);
             return Ok(listasolicitudes);
         }
 

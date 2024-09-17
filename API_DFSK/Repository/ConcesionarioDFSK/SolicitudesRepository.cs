@@ -53,7 +53,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
         {
-            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo.Contains(codigo))
+            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo!.Contains(codigo))
                 .Include(v => v.IdVehiculoNavigation)
                 .AsNoTracking()
                 .ToListAsync();
@@ -73,7 +73,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             return _mapper.Map<SolicitudDTO>(solicitud);
         }
-        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idrepuesto, int idvendedor, int tipofecha)
+        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor )
         {
 
             IQueryable<Solicitude> query = _context.Solicitudes
@@ -82,23 +82,24 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .Include(rep => rep.IdEstadoNavigation)
                 .AsNoTracking();
 
-            switch (tipofecha)
-            {
-                case 0:
-                    query = query.Where(f => f.FechaSolicitud.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
-                    break;
-                case 1:
-                    query = query.Where(f => f.FechaCompra.Value.Date >= f1.Date && f.FechaCompra.Value.Date <= f2.Date);
-                    break;
-                case 2:
-                    query = query.Where(f => f.FechaLlegada.Value.Date >= f1.Date && f.FechaLlegada.Value.Date <= f2.Date);
-                    break;
-                default:
-                    throw new ArgumentException("tipofecha no válido");
-            }
+                  query = query.Where(f => f.FechaSolicitud.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
 
-            query = query.Where(f => f.IdEstado == idestado
-                                     && f.IdRepuesto == idrepuesto
+            //switch (tipofecha)
+            //{
+            //    case 0:
+            //        query = query.Where(f => f.FechaSolicitud.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
+            //        break;
+            //    case 1:
+            //        query = query.Where(f => f.FechaCompra.Value.Date >= f1.Date && f.FechaCompra.Value.Date <= f2.Date);
+            //        break;
+            //    case 2:
+            //        query = query.Where(f => f.FechaLlegada.Value.Date >= f1.Date && f.FechaLlegada.Value.Date <= f2.Date);
+            //        break;
+            //    default:
+            //        throw new ArgumentException("tipofecha no válido");
+            //}
+
+            query = query.Where(f => f.IdEstado == idestado                                
                                      && f.IdResumenSolicitudNavigation.IdVendedor == idvendedor);
 
             var solicitudes = await query.ToListAsync();
@@ -106,14 +107,29 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<SolicitudDTO>>(solicitudes) ?? new List<SolicitudDTO>();
         }
 
-        public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes()
+        public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor)
         {
-            var resumen = await _context.ResumenSolicituds
+            IQueryable<ResumenSolicitud> query = _context.ResumenSolicituds
                 .AsNoTracking()
                 .Include(ven => ven.IdVendedorNavigation)
                 .Include(f => f.Solicitudes).ThenInclude(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
-                .ToListAsync();
+                .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation);
+
+            query=query.Where(f=>f.FechaCreacion!.Value.Date>=f1.Date &&  f.FechaCreacion!.Value.Date<=f2.Date);
+           
+            if (estado!="Todos") {
+                bool esta;
+                if (bool.TryParse(estado, out esta))
+                {
+                    query = query.Where(f => f.Estatus == esta);
+                }
+            }
+            if (idvendedor > 0)
+            {
+                query = query.Where(v => v.IdVendedor == idvendedor);
+            }
+            var resumen = await query.ToListAsync();
 
             return _mapper.Map<List<ResumenSolicitudDTO>>(resumen);
         }

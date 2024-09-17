@@ -49,7 +49,7 @@ namespace API_DFSK.Custom
 
             var jwtConfig = new JwtSecurityToken(
                 claims: userClaims,
-                expires:DateTime.UtcNow.AddMinutes(30),
+                expires:DateTime.UtcNow.AddMinutes(60),
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwtConfig);

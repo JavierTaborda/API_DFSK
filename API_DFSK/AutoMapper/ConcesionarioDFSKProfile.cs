@@ -11,6 +11,7 @@ namespace API_DFSK.AutoMapper
         public ConcesionarioDFSKProfile()
         {
             CreateMap<Solicitude, SolicitudDTO>()
+            .ForMember(dest => dest.Responsable, opt => opt.MapFrom(src => src.IdResponsableSolicitudNavigation.Nombre))
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.IdEstadoNavigation.Nombre))
             .ForMember(dest => dest.Repuesto, opt => opt.MapFrom(src => src.IdRepuestoNavigation.Nombre))
             .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdResumenSolicitudNavigation.IdVendedorNavigation.Nombre))
@@ -19,7 +20,10 @@ namespace API_DFSK.AutoMapper
 
             //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
             CreateMap<SolicitudDTO, Solicitude>();
-            CreateMap<ResumenSolicitudDTO, ResumenSolicitud>().ReverseMap();
+            CreateMap<ResumenSolicitud, ResumenSolicitudDTO>()
+                            .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdVendedorNavigation.Nombre))
+
+                .ReverseMap();
 
             CreateMap<SolicitudRepuestoDTO, Solicitude>()
                 .ForMember(dest => dest.IdRepuesto, opt => opt.MapFrom(src => src.IdRepuesto))

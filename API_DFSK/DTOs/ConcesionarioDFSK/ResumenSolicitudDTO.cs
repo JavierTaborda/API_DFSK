@@ -15,6 +15,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
         public string? Observacion { get; set; }
 
         public int IdVendedor { get; set; }
+        public string? Vendedor { get; set; }
 
         public virtual ICollection<SolicitudDTO> Solicitudes { get; set; } = new List<SolicitudDTO>();
     }

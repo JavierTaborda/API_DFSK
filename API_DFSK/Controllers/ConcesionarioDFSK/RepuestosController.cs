@@ -1,12 +1,14 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RepuestosController : ControllerBase
     {
 

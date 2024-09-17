@@ -31,6 +31,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
         public string? Repuesto { get; set; }
         public string? Vendedor { get; set; }
         public string? Vehiculo { get; set; }
+        public string? Responsable { get; set; }
 
     }
 }
