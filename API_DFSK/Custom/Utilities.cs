@@ -11,11 +11,22 @@ namespace API_DFSK.Custom
     public class Utilities
     {
         private readonly IConfiguration _configuration;
+        private readonly Dictionary<string, string> _refreshTokens = new Dictionary<string, string>();
+
         public Utilities(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
+        public class AuthResponse
+        {
+            public string? Token { get; set; }
+            public string? RefreshToken { get; set; }
+        }
+        public class RefreshTokenInfo
+        {
+            public string UserId { get; set; }
+            public DateTime Expiration { get; set; }
+        }
         public string EncryptSHA256(string text)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -33,7 +44,7 @@ namespace API_DFSK.Custom
             }
         }
 
-        public string CreateJWT(Vendedore model)
+        public AuthResponse CreateJWT(Vendedore model)
         {
             var userClaims = new[]
             {
@@ -49,11 +60,28 @@ namespace API_DFSK.Custom
 
             var jwtConfig = new JwtSecurityToken(
                 claims: userClaims,
-                expires:DateTime.UtcNow.AddMinutes(60),
+                expires:DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials
                 );
-            return new JwtSecurityTokenHandler().WriteToken(jwtConfig);
-        }
+            var token = new JwtSecurityTokenHandler().WriteToken(jwtConfig);
+            var refreshToken = Guid.NewGuid().ToString();
+            _refreshTokens[refreshToken] = model.IdVendedor.ToString();
 
+            return new AuthResponse
+            {
+                Token = token,
+                RefreshToken = refreshToken
+            };
+        }
+        public bool ValidateRefreshToken(string refreshToken, out string userId)
+        {
+            userId = null;
+            if (_refreshTokens.TryGetValue(refreshToken, out var storedUserId))
+            {
+                userId = storedUserId;
+                return true;
+            }
+            return false;
+        }
     }
 }

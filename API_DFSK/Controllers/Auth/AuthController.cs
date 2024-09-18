@@ -1,4 +1,5 @@
-﻿using API_DFSK.DTOs;
+﻿using API_DFSK.Custom;
+using API_DFSK.DTOs;
 using API_DFSK.Interfaces.Authentication;
 using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Repository.Authentication;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_DFSK.Controllers.Auth
 {
@@ -20,8 +22,8 @@ namespace API_DFSK.Controllers.Auth
         {
            _authRepo=authRepo;
     }
-        [Authorize]
-        [HttpPost]
+        [Authorize (Roles ="Admin")]
+        [HttpPost("Registrar")]
         public async Task<IActionResult> Registrar(UserVendedorDTO user)
         {
             var registro = await _authRepo.Registro(user);
@@ -32,7 +34,14 @@ namespace API_DFSK.Controllers.Auth
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var token = await _authRepo.Login(login);
-            return !String.IsNullOrEmpty(token) ? Ok(token) : BadRequest("Datos Incorrectos");
+            return token != null ? Ok(token) : BadRequest("Datos Incorrectos");
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken( RefreshTokenDTO refreshToken)
+        {
+            var token = await _authRepo.RefreshToken(refreshToken);
+            return token != null ? Ok(token) : BadRequest("refresh Token Invalido");
         }
 
     }
