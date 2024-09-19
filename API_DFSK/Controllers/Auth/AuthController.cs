@@ -22,7 +22,7 @@ namespace API_DFSK.Controllers.Auth
         {
            _authRepo=authRepo;
     }
-        [Authorize (Roles ="Admin")]
+        [Authorize (Roles ="admin")]
         [HttpPost("Registrar")]
         public async Task<IActionResult> Registrar(UserVendedorDTO user)
         {

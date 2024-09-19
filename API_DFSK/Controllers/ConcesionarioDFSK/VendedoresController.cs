@@ -33,6 +33,15 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return vendedor == null ? BadRequest("Sin Datos") : Ok(vendedor);
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet("Roles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var roles = await _solicitudesRepo.GetRoles();
+            return roles == null ? BadRequest("Sin Datos") : Ok(roles);
+        }
+
+
         //POST
         [HttpPost]
         public async Task<IActionResult> PostVendedores(List<VendedorDTO> vendedors)

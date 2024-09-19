@@ -21,7 +21,8 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<VendedorDTO?> GetVendedorById(int Id);
         Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor);
         Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor);
-        Task<SolicitudDTO?> GetSolicitudById(int Id);
+        Task<SolicitudDTO?> GetSolicitudById(int Id);     
+        Task<List<RolDTO>> GetRoles();
         #endregion
 
         //POST
@@ -31,6 +32,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
         Task<bool> InsertEstado(List<EstadoDTO> Estados);
         Task<bool> InsertVendedor(List<VendedorDTO> Vendedores);
+ 
         Task<bool> InsertResumenSolicitud(ResumenSolicitudDTO Solicitud);
 
         //PUTS

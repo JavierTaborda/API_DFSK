@@ -169,6 +169,13 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .ToListAsync();
             return _mapper.Map<List<VendedorDTO>>(vendedores) ?? new List<VendedorDTO>();
         }
+        public async Task<List<RolDTO>> GetRoles()
+        {
+            var roles = await _context.Rols.Where(e => e.Estado == true)
+                .AsNoTracking()
+                .ToListAsync();
+            return _mapper.Map<List<RolDTO>>(roles) ?? new List<RolDTO>();
+        }
         #endregion
 
         // POST
@@ -242,7 +249,9 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             await _context.SaveChangesAsync();
             return true;
 
-        }
+        }        
+        
+
 
         #endregion
 
