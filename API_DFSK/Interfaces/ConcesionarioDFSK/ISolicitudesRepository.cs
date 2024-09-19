@@ -13,6 +13,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<List<VehiculoDTO>> GetVehiculoByCodigo(string Codigo);
         Task<VehiculoDTO?> GetVehiculoById(int Id);
         Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo);
+        Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos);
         Task<RepuestoVehiculoDTO?> GetRepuestoCodigo(string codigo);
         Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id);
         Task<List<EstadoDTO>> GetEstados();
@@ -23,6 +24,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor);
         Task<SolicitudDTO?> GetSolicitudById(int Id);     
         Task<List<RolDTO>> GetRoles();
+        Task<Dictionary<string, int>> GetIdsSolicitudIncial();
         #endregion
 
         //POST

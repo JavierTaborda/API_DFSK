@@ -31,7 +31,7 @@ namespace API_DFSK.Repository.Authentication
                 ).FirstOrDefaultAsync();
 
             if (usuarioEncontrado == null)
-                return null;
+                return null!;
             else
                 return _utilities.CreateJWT(usuarioEncontrado);
 
@@ -45,10 +45,10 @@ namespace API_DFSK.Repository.Authentication
                 var user = await  _context.Vendedores.Include(r => r.IdRolNavigation).FirstOrDefaultAsync(u => u.IdVendedor == int.Parse(userId));
                 if (user != null)
                 {
-                    return _utilities.CreateJWT(user).Token;
+                    return _utilities.CreateJWT(user).Token!;
                 }
             }
-            return null;
+            return null!;
         }
 
         public async Task<bool> Registro(UserVendedorDTO user)

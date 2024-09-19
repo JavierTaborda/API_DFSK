@@ -21,9 +21,10 @@ namespace API_DFSK.AutoMapper
             //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
             CreateMap<SolicitudDTO, Solicitude>();
             CreateMap<ResumenSolicitud, ResumenSolicitudDTO>()
-                            .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdVendedorNavigation.Nombre))
+                            .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdVendedorNavigation.Nombre));
+            CreateMap<ResumenSolicitudDTO, ResumenSolicitud>();
 
-                .ReverseMap();
+
 
             CreateMap<SolicitudRepuestoDTO, Solicitude>()
                 .ForMember(dest => dest.IdRepuesto, opt => opt.MapFrom(src => src.IdRepuesto))

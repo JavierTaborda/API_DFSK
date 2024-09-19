@@ -29,6 +29,10 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         [HttpGet("{f1}/{f2}/{estado}/{vendedor:int}")]
         public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int idvendedor)
         {
+            if (f1 > f2)
+            {
+                return BadRequest("La fecha inicial no puede ser mayor que la fecha final.");
+            }
             var resumen = await _solicitudesRepo.GetResumenSolicitudes(f1, f2, estado, idvendedor);
             return Ok(resumen);
         }
@@ -49,6 +53,13 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             var solictud = await _solicitudesRepo.GetSolicitudById(Id);
             return solictud == null ? BadRequest("Sin Solicitudes") : Ok(solictud);
+        }  
+        
+        [HttpGet("DatosIniciales")]
+        public async Task<IActionResult> GetDatosIniciales()
+        {
+            var result = await _solicitudesRepo.GetIdsSolicitudIncial();
+            return result == null ? BadRequest("Sin Datos en Estados y Responsable") : Ok(result);
         }
 
 

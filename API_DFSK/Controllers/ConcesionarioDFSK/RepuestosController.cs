@@ -1,8 +1,10 @@
 ﻿using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
@@ -55,6 +57,17 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
             var result = await _solicitudesRepo.InsertRepuesto(repuesto);
             return result  ?  Ok(result):BadRequest("Fallo el registro.");
+        }
+        [HttpPost("codigos")]
+        public async Task<IActionResult> RecibirCodigos([FromBody] List<CodigosRepuestosDTO> request)
+        {
+            if (request == null || !request.Any())
+            {
+                return BadRequest("Lista de códigos vacía o nula");
+            }
+
+            var result = await _solicitudesRepo.GetRepuestoList(request);
+            return result.Any() ? Ok(result) : BadRequest("Ocurrio un error");
         }
 
 

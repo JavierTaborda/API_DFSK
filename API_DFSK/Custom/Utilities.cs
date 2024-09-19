@@ -5,36 +5,37 @@ using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Collections.Concurrent;
 
 namespace API_DFSK.Custom
 {
     public class Utilities
     {
         private readonly IConfiguration _configuration;
-        private readonly Dictionary<string, string> _refreshTokens = new Dictionary<string, string>();
+        private readonly ConcurrentDictionary<string, RefreshTokenInfo> _refreshTokens = new ConcurrentDictionary<string, RefreshTokenInfo>();
 
         public Utilities(IConfiguration configuration)
         {
             _configuration = configuration;
         }
+
         public class AuthResponse
         {
             public string? Token { get; set; }
             public string? RefreshToken { get; set; }
         }
+
         public class RefreshTokenInfo
         {
             public string UserId { get; set; }
             public DateTime Expiration { get; set; }
         }
+
         public string EncryptSHA256(string text)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                //Crear Array de bytes
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(text));
-
-                //Array a un string
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < bytes.Length; i++)
                 {
@@ -48,7 +49,7 @@ namespace API_DFSK.Custom
         {
             var userClaims = new[]
             {
-                new Claim ("user", model.IdVendedor.ToString()),
+                new Claim("user", model.IdVendedor.ToString()),
                 new Claim("mail", model.Email!),
                 new Claim("name", model.Nombre!),
                 new Claim("codigo", model.Codigo!),
@@ -56,16 +57,22 @@ namespace API_DFSK.Custom
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
-            var credentials = new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             var jwtConfig = new JwtSecurityToken(
                 claims: userClaims,
-                expires:DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: credentials
-                );
+            );
             var token = new JwtSecurityTokenHandler().WriteToken(jwtConfig);
+            
             var refreshToken = Guid.NewGuid().ToString();
-            _refreshTokens[refreshToken] = model.IdVendedor.ToString();
+            var refreshTokenInfo = new RefreshTokenInfo
+            {
+                UserId = model.IdVendedor.ToString(),
+                Expiration = DateTime.UtcNow.AddDays(5) // Set refresh token expiration
+            };
+            _refreshTokens[refreshToken] = refreshTokenInfo;
 
             return new AuthResponse
             {
@@ -73,15 +80,28 @@ namespace API_DFSK.Custom
                 RefreshToken = refreshToken
             };
         }
+
         public bool ValidateRefreshToken(string refreshToken, out string userId)
         {
-            userId = null;
-            if (_refreshTokens.TryGetValue(refreshToken, out var storedUserId))
+            userId = null!;
+            if (_refreshTokens.TryGetValue(refreshToken, out var refreshTokenInfo))
             {
-                userId = storedUserId;
-                return true;
+                if (refreshTokenInfo.Expiration > DateTime.UtcNow)
+                {
+                    userId = refreshTokenInfo.UserId;
+                    return true;
+                }
+                else
+                {
+                    _refreshTokens.TryRemove(refreshToken, out _); 
+                }
             }
             return false;
+        }
+
+        public void RevokeRefreshToken(string refreshToken)
+        {
+            _refreshTokens.TryRemove(refreshToken, out _);
         }
     }
 }

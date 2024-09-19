@@ -3,6 +3,7 @@ using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
 using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         {
             var repuesto = await _context.Repuestos
                 .Include(v => v.IdVehiculoNavigation)
-                .FirstOrDefaultAsync(r => r.Codigo.Contains(codigo));
+                .FirstOrDefaultAsync(r => r.Codigo!.Contains(codigo));
             return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
         }
 
@@ -59,6 +60,66 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .ToListAsync();
             return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? new List<RepuestoVehiculoDTO>();
         }
+
+        //consultar codigos e insertarsi no existen
+        public async Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos)
+        {
+            var codigoList = codigos.Select(c => c.Codigo).ToList();
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var repuestos = await _context.Repuestos
+                    .Where(r => codigoList.Contains(r.Codigo))
+                    //.Include(v => v.IdVehiculoNavigation)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var vehiculo = await _context.Vehiculos
+                    .Where(c => c.Modelo!.Contains("Sin Modelo"))
+                    .Select(id => id.IdVehiculo)
+                    .FirstOrDefaultAsync();
+
+                var existingCodigos = repuestos.Select(r => r.Codigo).ToList();
+                var newCodigos = codigoList.Except(existingCodigos).ToList();
+                var insertCodigos = codigos.Where(c => newCodigos.Contains(c.Codigo)).ToList();
+
+                foreach (var c in insertCodigos)
+                {
+                    var newRepuesto = new Repuesto
+                    {
+                        IdRepuesto = 0,
+                        Codigo = c.Codigo,
+                        Nombre = c.Nombre,
+                        Descripcion = "",
+                        Precio = 0,
+                        IdVehiculo = vehiculo,
+                        Estatus = true,
+                        Marca = c.Marca,
+                        EnInventario = true
+                    };
+                    _context.Repuestos.Add(newRepuesto);
+                    repuestos.Add(newRepuesto);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var result = await _context.Repuestos
+              .Where(r => codigoList.Contains(r.Codigo))
+              //.Include(v => v.IdVehiculoNavigation)
+              .AsNoTracking()
+              .ToListAsync();
+                return _mapper.Map<List<RepuestoDTO>>(result)!;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                // Log the exception (ex) here
+                throw;
+            }
+        }
+
 
         public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
@@ -73,7 +134,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             return _mapper.Map<SolicitudDTO>(solicitud);
         }
-        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor )
+        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor)
         {
 
             IQueryable<Solicitude> query = _context.Solicitudes
@@ -82,7 +143,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .Include(rep => rep.IdEstadoNavigation)
                 .AsNoTracking();
 
-                  query = query.Where(f => f.FechaSolicitud.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
+            query = query.Where(f => f.FechaSolicitud!.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
 
             //switch (tipofecha)
             //{
@@ -99,7 +160,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             //        throw new ArgumentException("tipofecha no válido");
             //}
 
-            query = query.Where(f => f.IdEstado == idestado                                
+            query = query.Where(f => f.IdEstado == idestado
                                      && f.IdResumenSolicitudNavigation.IdVendedor == idvendedor);
 
             var solicitudes = await query.ToListAsync();
@@ -116,9 +177,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
                 .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation);
 
-            query=query.Where(f=>f.FechaCreacion!.Value.Date>=f1.Date &&  f.FechaCreacion!.Value.Date<=f2.Date);
-           
-            if (estado!="Todos") {
+            query = query.Where(f => f.FechaCreacion!.Value.Date >= f1.Date && f.FechaCreacion!.Value.Date <= f2.Date);
+
+            if (estado != "Todos")
+            {
                 bool esta;
                 if (bool.TryParse(estado, out esta))
                 {
@@ -142,7 +204,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<List<VehiculoDTO>> GetVehiculoByCodigo(string codigo)
         {
             var vehiculo = await _context.Vehiculos
-                .Where(co => co.Codigo.Contains(codigo))
+                .Where(co => co.Codigo!.Contains(codigo))
                 .AsNoTracking()
                 .ToListAsync();
             return _mapper.Map<List<VehiculoDTO>>(vehiculo);
@@ -176,6 +238,33 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .ToListAsync();
             return _mapper.Map<List<RolDTO>>(roles) ?? new List<RolDTO>();
         }
+
+        public async Task<Dictionary<string, int>> GetIdsSolicitudIncial()
+        {
+            var idestadoinicial = await _context.Estados
+                    .Where(c => c.Descripcion!.Contains("Registro Inicial"))
+                    .Select(id => id.IdEstado)
+                    .FirstOrDefaultAsync();
+
+            var idresponsableinicial = await _context.ResponsableSolicituds
+             .Where(c => c.Nombre!.Contains("Sin Definir"))
+             .Select(id => id.IdResponsableSolicitud)
+             .FirstOrDefaultAsync();
+
+            Dictionary<string, int> ids = new Dictionary<string, int>();
+            if (idestadoinicial != 0)
+            {
+                ids.Add("Estado", idestadoinicial);
+            }
+
+
+            if (idresponsableinicial != 0)
+            {
+                ids.Add("Responsable", idresponsableinicial);
+            }
+            return ids;
+        }
+
         #endregion
 
         // POST
@@ -249,8 +338,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             await _context.SaveChangesAsync();
             return true;
 
-        }        
-        
+        }
+
 
 
         #endregion
@@ -365,6 +454,9 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<VendedorDTO>(entity);
             return result;
         }
+
+
+
 
 
 
