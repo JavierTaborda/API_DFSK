@@ -19,7 +19,7 @@ namespace API_DFSK.Controllers.Articulos
             _articuloRepo = articulosRepo;
         }
 
-
+        [AllowAnonymous]
         [HttpGet("Online")]
         public async Task<IActionResult> Online()
         {
