@@ -26,7 +26,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
         #region GETS
 
-        [HttpGet("{f1}/{f2}/{estado}/{vendedor:int}")]
+        [HttpGet("{f1}/{f2}/{estado}/{idvendedor:int}")]
         public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int idvendedor)
         {
             if (f1 > f2)
@@ -37,7 +37,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return Ok(resumen);
         }
 
-        [HttpGet("{f1}/{f2}/{idestado}/{idvendedor}")]
+        [HttpGet("List/{f1}/{f2}/{idestado}/{idvendedor}")]
         public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor)
         {
             if (f1 > f2)

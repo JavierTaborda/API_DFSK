@@ -24,25 +24,52 @@ namespace API_DFSK.Repository.Authentication
         }
         public async Task<AuthResponse> Login(LoginDTO login)
         {
+            var usuario = await _context.Vendedores
+                .AsNoTracking()
+                .Where(l => ((l.Codigo == login.Username) || (l.Email == login.Username)))
+                .FirstOrDefaultAsync();
+
+            if (usuario == null)
+                return null!;
+
+            if (!usuario.Estatus)
+            {
+                return new AuthResponse
+                {
+                    Token = "Desactivado",
+                    RefreshToken = "Desactivado"
+                };
+            }
+
+
             var usuarioEncontrado = await _context.Vendedores
-                .Include(r=>r.IdRolNavigation)
-                .Where(l => ((l.Codigo == login.Username) || (l.Email==login.Username)) &&
-                l.Clave == _utilities.EncryptSHA256(login.Password!)
-                ).FirstOrDefaultAsync();
+          .Include(r => r.IdRolNavigation)
+          .Where(l => ((l.Codigo == login.Username) || (l.Email == login.Username))
+          && l.Clave == _utilities.EncryptSHA256(login.Password!)
+          && l.Estatus
+          )
+          .FirstOrDefaultAsync();
 
             if (usuarioEncontrado == null)
-                return null!;
-            else
-                return _utilities.CreateJWT(usuarioEncontrado);
+            {
+
+                return new AuthResponse
+                {
+                    Token = "Password",
+                    RefreshToken = "Password"
+                };
+            }
+
+            return _utilities.CreateJWT(usuarioEncontrado);
 
         }
-        
+
         public async Task<string> RefreshToken(RefreshTokenDTO refreshtoken)
         {
-            
+
             if (_utilities.ValidateRefreshToken(refreshtoken.refreshToken!, out var userId))
             {
-                var user = await  _context.Vendedores.Include(r => r.IdRolNavigation).FirstOrDefaultAsync(u => u.IdVendedor == int.Parse(userId));
+                var user = await _context.Vendedores.Include(r => r.IdRolNavigation).FirstOrDefaultAsync(u => u.IdVendedor == int.Parse(userId));
                 if (user != null)
                 {
                     return _utilities.CreateJWT(user).Token!;

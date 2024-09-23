@@ -43,6 +43,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
 
         //POST
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> PostVendedores(List<VendedorDTO> vendedors)
         {
@@ -55,6 +56,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
 
         //PUTS
+
         [HttpPut]
         public async Task<IActionResult> PutVendedores(VendedorDTO vendedor)
         {

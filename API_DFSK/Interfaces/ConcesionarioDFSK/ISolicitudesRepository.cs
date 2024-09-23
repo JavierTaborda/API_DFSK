@@ -30,7 +30,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         //POST
         Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes);
         Task<bool> InsertSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
-        Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos);
+        Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto);
         Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
         Task<bool> InsertEstado(List<EstadoDTO> Estados);
         Task<bool> InsertVendedor(List<VendedorDTO> Vendedores);

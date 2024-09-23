@@ -49,14 +49,15 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
         //POST
 
+       
         [HttpPost]
-        public async Task<IActionResult> PostRepuestos(List<RepuestoDTO> repuesto)
+        public async Task<IActionResult> PostRepuestos(RepuestoDTO repuesto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var result = await _solicitudesRepo.InsertRepuesto(repuesto);
-            return result  ?  Ok(result):BadRequest("Fallo el registro.");
+            return result.IdRepuesto>0  ?  Ok(result):BadRequest(result);
         }
         [HttpPost("codigos")]
         public async Task<IActionResult> RecibirCodigos([FromBody] List<CodigosRepuestosDTO> request)

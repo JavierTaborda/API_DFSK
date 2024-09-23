@@ -41,6 +41,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
 
         //POST
+        [Authorize(Roles = "admin, subadmin")]
         [HttpPost]
         public async Task<IActionResult> PostVehiculos(List<VehiculoDTO> vehiculos)
         {
@@ -52,10 +53,11 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             
         }
 
-       
+
 
 
         //PUTS
+        [Authorize(Roles = "admin, subadmin")]
         [HttpPut]
         public async Task<IActionResult> PutVehiculo(VehiculoDTO vehiculo)
         {
@@ -65,6 +67,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return result == null ? NotFound() : Ok(result);
             
         }
+        [Authorize(Roles = "admin, subadmin")]
         [HttpPut("AddUpdate")]
         public async Task<IActionResult> PutAddVehiculo(VehiculoDTO vehiculo)
         {

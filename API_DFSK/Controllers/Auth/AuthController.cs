@@ -20,9 +20,9 @@ namespace API_DFSK.Controllers.Auth
 
         public AuthController(IAuth authRepo)
         {
-           _authRepo=authRepo;
-    }
-        [Authorize (Roles ="admin")]
+            _authRepo = authRepo;
+        }
+        [Authorize(Roles = "admin")]
         [HttpPost("Registrar")]
         public async Task<IActionResult> Registrar(UserVendedorDTO user)
         {
@@ -34,11 +34,27 @@ namespace API_DFSK.Controllers.Auth
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var token = await _authRepo.Login(login);
-            return token != null ? Ok(token) : BadRequest("Datos Incorrectos");
+
+            if (token == null)
+            {
+                return BadRequest("Usuario no encontrado");
+            }
+            else if (token.Token == "Desactivado")
+            {
+                return BadRequest("Este usuario se encuentra desactivado, comuníquese con el administrador.");
+            }
+            else if (token.Token == "Password")
+            {
+                return BadRequest("Contrseña incorrecta");
+            }
+            else
+            {
+                return Ok(token);
+            }
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken( RefreshTokenDTO refreshToken)
+        public async Task<IActionResult> RefreshToken(RefreshTokenDTO refreshToken)
         {
             var token = await _authRepo.RefreshToken(refreshToken);
             return token != null ? Ok(token) : BadRequest("refresh Token Invalido");

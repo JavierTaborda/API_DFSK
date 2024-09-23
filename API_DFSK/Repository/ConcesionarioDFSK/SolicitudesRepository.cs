@@ -86,20 +86,23 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
                 foreach (var c in insertCodigos)
                 {
-                    var newRepuesto = new Repuesto
+                    if (!await _context.Repuestos.AnyAsync(r => r.Codigo == c.Codigo))
                     {
-                        IdRepuesto = 0,
-                        Codigo = c.Codigo,
-                        Nombre = c.Nombre,
-                        Descripcion = "",
-                        Precio = 0,
-                        IdVehiculo = vehiculo,
-                        Estatus = true,
-                        Marca = c.Marca,
-                        EnInventario = true
-                    };
-                    _context.Repuestos.Add(newRepuesto);
-                    repuestos.Add(newRepuesto);
+                        var newRepuesto = new Repuesto
+                        {
+                            IdRepuesto = 0,
+                            Codigo = c.Codigo,
+                            Nombre = c.Nombre,
+                            Descripcion = "",
+                            Precio = 0,
+                            IdVehiculo = vehiculo,
+                            Estatus = true,
+                            Marca = c.Marca,
+                            EnInventario = true
+                        };
+                        _context.Repuestos.Add(newRepuesto);
+                        repuestos.Add(newRepuesto);
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -292,27 +295,28 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<bool> InsertRepuesto(List<RepuestoDTO> repuestos)
+        public async Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto)
         {
-            List<RepuestoDTO> addrepuestos = new List<RepuestoDTO>();
+            var existingCodigo = await _context.Repuestos
+                .AsNoTracking()
+                .Where(c => c.Codigo == repuesto.Codigo && c.Nombre==repuesto.Nombre && c.Marca==repuesto.Marca && c.IdVehiculo==repuesto.IdVehiculo )
+                .Select(r => r.Codigo)
+                .FirstOrDefaultAsync();
 
-            var existingCodigos = await _context.Repuestos.AsNoTracking().Select(r => r.Codigo).ToListAsync();
-
-            foreach (var r in repuestos)
+            if (existingCodigo == null)
             {
-                if (!existingCodigos.Contains(r.Codigo))
-                {
-                    addrepuestos.Add(r);
-                }
+                var insert = _mapper.Map<Repuesto>(repuesto);
+                await _context.Repuestos.AddAsync(insert);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<RepuestoDTO>(insert);
             }
-
-
-            var insert = _mapper.Map<List<Repuesto>>(addrepuestos);
-            await _context.Repuestos.AddRangeAsync(insert);
-            await _context.SaveChangesAsync();
-            return true;
-
+            else
+            {
+              
+                throw new InvalidOperationException("Ya existe este código de repuesto.");
+            }
         }
+
 
         public async Task<bool> InsertEstado(List<EstadoDTO> Estados)
         {
