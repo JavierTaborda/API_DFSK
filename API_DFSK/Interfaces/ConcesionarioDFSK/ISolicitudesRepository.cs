@@ -18,12 +18,10 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id);
         Task<List<EstadoDTO>> GetEstados();
         Task<EstadoDTO?> GetEstadoById(int Id);
-        Task<List<VendedorDTO>> GetVendedores();
-        Task<VendedorDTO?> GetVendedorById(int Id);
+    
         Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor);
         Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor);
         Task<SolicitudDTO?> GetSolicitudById(int Id);     
-        Task<List<RolDTO>> GetRoles();
         Task<Dictionary<string, int>> GetIdsSolicitudIncial();
         #endregion
 
@@ -33,7 +31,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto);
         Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
         Task<bool> InsertEstado(List<EstadoDTO> Estados);
-        Task<bool> InsertVendedor(List<VendedorDTO> Vendedores);
+     
  
         Task<bool> InsertResumenSolicitud(ResumenSolicitudDTO Solicitud);
 
@@ -44,6 +42,5 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos);
         Task<VehiculoDTO> AddUpdateVehiculo(VehiculoDTO vehiculos);
         Task<EstadoDTO> UpdateEstado(EstadoDTO Estados);
-        Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores);
     }
 }

@@ -10,16 +10,10 @@ using System.Collections.Generic;
 
 namespace API_DFSK.Repository.ConcesionarioDFSK
 {
-    public class SolicitudesRepository : ISolicitudesRepository
+    public class SolicitudesRepository(ConcesionarioDfskContext context, IMapper mapper) : ISolicitudesRepository
     {
-        private readonly ConcesionarioDfskContext _context;
-        private readonly IMapper _mapper;
-
-        public SolicitudesRepository(ConcesionarioDfskContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly ConcesionarioDfskContext _context=context;
+        private readonly IMapper _mapper=mapper;
 
         //GET
         #region GETS
@@ -58,7 +52,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .Include(v => v.IdVehiculoNavigation)
                 .AsNoTracking()
                 .ToListAsync();
-            return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? new List<RepuestoVehiculoDTO>();
+            return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? [];
         }
 
         //consultar codigos e insertar si no existen
@@ -167,7 +161,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             var solicitudes = await query.ToListAsync();
 
-            return _mapper.Map<List<SolicitudDTO>>(solicitudes) ?? new List<SolicitudDTO>();
+            return _mapper.Map<List<SolicitudDTO>>(solicitudes) ?? [];
         }
 
         public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int iduser)
@@ -183,8 +177,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             if (estado != "Todos")
             {
-                bool esta;
-                if (bool.TryParse(estado, out esta))
+                if (bool.TryParse(estado, out bool esta))
                 {
                     query = query.Where(f => f.Estatus == esta);
                 }
@@ -217,29 +210,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var vehiculos = await _context.Vehiculos
                 .AsNoTracking()
                 .ToListAsync();
-            return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? new List<VehiculoDTO>();
+            return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? [];
         }
 
-        public async Task<VendedorDTO?> GetVendedorById(int Id)
-        {
-            var vendedor = await _context.Vendedores.FirstOrDefaultAsync(id => id.IdVendedor == (Id));
-            return _mapper.Map<VendedorDTO>(vendedor);
-        }
-
-        public async Task<List<VendedorDTO>> GetVendedores()
-        {
-            var vendedores = await _context.Vendedores.Where(e => e.Estatus == true)
-                .AsNoTracking()
-                .ToListAsync();
-            return _mapper.Map<List<VendedorDTO>>(vendedores) ?? new List<VendedorDTO>();
-        }
-        public async Task<List<RolDTO>> GetRoles()
-        {
-            var roles = await _context.Rols.Where(e => e.Estado == true && e.RolName!="admin")
-                .AsNoTracking()
-                .ToListAsync();
-            return _mapper.Map<List<RolDTO>>(roles) ?? new List<RolDTO>();
-        }
+  
 
         public async Task<Dictionary<string, int>> GetIdsSolicitudIncial()
         {
@@ -253,7 +227,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
              .Select(id => id.IdResponsableSolicitud)
              .FirstOrDefaultAsync();
 
-            Dictionary<string, int> ids = new Dictionary<string, int>();
+            Dictionary<string, int> ids = [];
             if (idestadoinicial != 0)
             {
                 ids.Add("Estado", idestadoinicial);
@@ -442,24 +416,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return result;
         }
 
-        public async Task<VendedorDTO> UpdateVendedor(VendedorDTO Vendedores)
-        {
-            var entity = await _context.Vendedores.FindAsync(Vendedores.IdVendedor);
-            if (entity == null)
-            {
-                return null!;
-            }
-
-            _mapper.Map(Vendedores, entity);
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-
-            var result = _mapper.Map<VendedorDTO>(entity);
-            return result;
-        }
-
-
-
+  
         #endregion
     }
 }

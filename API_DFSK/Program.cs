@@ -63,6 +63,7 @@ builder.Services.AddDbContext<ConcesionarioDfskContext>(options => options.UseSq
 //repositorys
 builder.Services.AddScoped<IArticulosRepository, ArticulosRepository>();
 builder.Services.AddScoped<ISolicitudesRepository, SolicitudesRepository>();
+builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 builder.Services.AddScoped<ICrearTXTRepository, CrearTXTRepository>();
 builder.Services.AddScoped<IAuth, AuthRepository>();
 

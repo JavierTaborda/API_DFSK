@@ -23,5 +23,5 @@ public partial class Usuario
 
     public virtual Rol IdRolNavigation { get; set; } = null!;
 
-    public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
+    public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = [];
 }
