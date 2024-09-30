@@ -20,8 +20,4 @@ public partial class Vendedore
     public int? IdRol { get; set; }
 
     public bool Estatus { get; set; }
-
-    public virtual Rol? IdRolNavigation { get; set; }
-
-    public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
 }

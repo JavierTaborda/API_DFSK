@@ -11,7 +11,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         #region gets 
         Task<List<VehiculoDTO>> GetVehiculos();
         Task<List<VehiculoDTO>> GetVehiculoByCodigo(string Codigo);
-        Task<VehiculoDTO?> GetVehiculoById(int Id);
+        Task<VehiculoDTO> GetVehiculoById(int Id);
         Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo);
         Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos);
         Task<RepuestoVehiculoDTO?> GetRepuestoCodigo(string codigo);

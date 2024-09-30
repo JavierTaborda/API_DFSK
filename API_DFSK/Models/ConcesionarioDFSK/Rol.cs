@@ -13,5 +13,5 @@ public partial class Rol
 
     public bool Estado { get; set; }
 
-    public virtual ICollection<Vendedore> Vendedores { get; set; } = new List<Vendedore>();
+    public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }

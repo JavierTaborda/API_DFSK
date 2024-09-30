@@ -24,9 +24,9 @@ namespace API_DFSK.Repository.Authentication
         }
         public async Task<AuthResponse> Login(LoginDTO login)
         {
-            var usuario = await _context.Vendedores
+            var usuario = await _context.Usuarios
                 .AsNoTracking()
-                .Where(l => ((l.Codigo == login.Username) || (l.Email == login.Username)))
+                .Where(l => ((l.Username == login.Username) || (l.Email == login.Username)))
                 .FirstOrDefaultAsync();
 
             if (usuario == null)
@@ -42,9 +42,9 @@ namespace API_DFSK.Repository.Authentication
             }
 
 
-            var usuarioEncontrado = await _context.Vendedores
+            var usuarioEncontrado = await _context.Usuarios
           .Include(r => r.IdRolNavigation)
-          .Where(l => ((l.Codigo == login.Username) || (l.Email == login.Username))
+          .Where(l => ((l.Username == login.Username) || (l.Email == login.Username))
           && l.Clave == _utilities.EncryptSHA256(login.Password!)
           && l.Estatus
           )
@@ -69,7 +69,7 @@ namespace API_DFSK.Repository.Authentication
 
             if (_utilities.ValidateRefreshToken(refreshtoken.refreshToken!, out var userId))
             {
-                var user = await _context.Vendedores.Include(r => r.IdRolNavigation).FirstOrDefaultAsync(u => u.IdVendedor == int.Parse(userId));
+                var user = await _context.Usuarios.Include(r => r.IdRolNavigation).FirstOrDefaultAsync(u => u.IdUsuario == int.Parse(userId));
                 if (user != null)
                 {
                     return _utilities.CreateJWT(user).Token!;
@@ -78,19 +78,19 @@ namespace API_DFSK.Repository.Authentication
             return null!;
         }
 
-        public async Task<bool> Registro(UserVendedorDTO user)
+        public async Task<bool> Registro(UserDTO user)
         {
-            var vendedor = _context.Vendedores
+            var usuario = _context.Usuarios
                 .Include(l => l.IdRolNavigation)
-                .Where(l => l.Codigo == user.Codigo)
+                .Where(l => l.Username == user.Username)
                 .FirstOrDefaultAsync();
 
-            if (vendedor.Result == null)
+            if (usuario.Result == null)
             {
                 user.Clave = _utilities.EncryptSHA256(user.Clave!);//Encriptarclave
 
-                var insert = _mapper.Map<Vendedore>(user);
-                await _context.Vendedores.AddAsync(insert);
+                var insert = _mapper.Map<Usuario>(user);
+                await _context.Usuarios.AddAsync(insert);
                 await _context.SaveChangesAsync();
 
                 return true;

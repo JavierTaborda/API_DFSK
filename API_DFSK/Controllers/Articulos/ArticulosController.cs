@@ -21,9 +21,9 @@ namespace API_DFSK.Controllers.Articulos
 
         [AllowAnonymous]
         [HttpGet("Online")]
-        public async Task<IActionResult> Online()
+        public  IActionResult Online()
         {
-            return Ok(true);
+            return   Ok(true);
         }
 
 

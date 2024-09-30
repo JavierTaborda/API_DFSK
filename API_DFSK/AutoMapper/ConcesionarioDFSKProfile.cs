@@ -14,14 +14,14 @@ namespace API_DFSK.AutoMapper
             .ForMember(dest => dest.Responsable, opt => opt.MapFrom(src => src.IdResponsableSolicitudNavigation.Nombre))
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.IdEstadoNavigation.Nombre))
             .ForMember(dest => dest.Repuesto, opt => opt.MapFrom(src => src.IdRepuestoNavigation.Nombre))
-            .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdResumenSolicitudNavigation.IdVendedorNavigation.Nombre))
+            .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdResumenSolicitudNavigation.IdUsuarioNavigation.Nombre))
             .ForMember(dest => dest.Vehiculo, opt => opt.MapFrom(src => src.IdRepuestoNavigation.IdVehiculoNavigation.Marca + " " + src.IdRepuestoNavigation.IdVehiculoNavigation.Modelo))
             ;
 
             //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
             CreateMap<SolicitudDTO, Solicitude>();
             CreateMap<ResumenSolicitud, ResumenSolicitudDTO>()
-                            .ForMember(dest => dest.Vendedor, opt => opt.MapFrom(src => src.IdVendedorNavigation.Nombre));
+                            .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdUsuarioNavigation.Nombre));
             CreateMap<ResumenSolicitudDTO, ResumenSolicitud>();
 
 
@@ -55,13 +55,14 @@ namespace API_DFSK.AutoMapper
 
 
             //Auth
-            CreateMap<UserVendedorDTO, Vendedore>()
-                .ForMember(dest => dest.Codigo, src => src.MapFrom(sr => sr.Codigo))
+            CreateMap<UserDTO, Usuario>()
+                .ForMember(dest => dest.Username, src => src.MapFrom(sr => sr.Username))
                 .ForMember(dest => dest.Nombre, src => src.MapFrom(sr => sr.Nombre))
                 .ForMember(dest => dest.Email, src => src.MapFrom(sr => sr.Email))
                 .ForMember(dest => dest.Telefono, src => src.MapFrom(sr => sr.Telefono))
                 .ForMember(dest => dest.Clave, src => src.MapFrom(sr => sr.Clave))
-                .ForMember(dest => dest.IdRol, src => src.MapFrom(sr => sr.IdRol));
+                .ForMember(dest => dest.IdRol, src => src.MapFrom(sr => sr.IdRol))
+                .ForMember(dest => dest.Estatus, src => src.MapFrom(sr => sr.Estatus));
                 //.ForMember(dest => dest.IdRolNavigation.RolName, src => src.MapFrom(sr => sr.Rol));
 
 

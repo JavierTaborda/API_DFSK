@@ -15,9 +15,9 @@ public partial class ResumenSolicitud
 
     public string? Observacion { get; set; }
 
-    public int IdVendedor { get; set; }
+    public int IdUsuario { get; set; }
 
-    public virtual Vendedore IdVendedorNavigation { get; set; } = null!;
+    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
 }

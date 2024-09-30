@@ -1,8 +1,8 @@
 ﻿namespace API_DFSK.DTOs
 {
-    public class UserVendedorDTO
+    public class UserDTO
     {
-        public string? Codigo { get; set; }
+        public string? Username { get; set; }
 
         public string? Nombre { get; set; }
 
@@ -11,6 +11,7 @@
         public string? Telefono { get; set; }
 
         public string? Clave { get; set; }
+        public string? Estatus { get; set; }
 
         public int IdRol {  get; set; }
 

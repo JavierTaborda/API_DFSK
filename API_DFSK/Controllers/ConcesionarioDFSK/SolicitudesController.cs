@@ -27,24 +27,24 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         #region GETS
 
         [HttpGet("{f1}/{f2}/{estado}/{idvendedor:int}")]
-        public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int idvendedor)
+        public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int iduser)
         {
             if (f1 > f2)
             {
                 return BadRequest("La fecha inicial no puede ser mayor que la fecha final.");
             }
-            var resumen = await _solicitudesRepo.GetResumenSolicitudes(f1, f2, estado, idvendedor);
+            var resumen = await _solicitudesRepo.GetResumenSolicitudes(f1, f2, estado, iduser);
             return Ok(resumen);
         }
 
         [HttpGet("List/{f1}/{f2}/{idestado}/{idvendedor}")]
-        public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor)
+        public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int iduser)
         {
             if (f1 > f2)
             {
                 return BadRequest("La fecha inicial no puede ser mayor que la fecha final.");
             }
-            var listasolicitudes = await _solicitudesRepo.GetSolicitudes(f1, f2, idestado, idvendedor);
+            var listasolicitudes = await _solicitudesRepo.GetSolicitudes(f1, f2, idestado, iduser);
             return Ok(listasolicitudes);
         }
 

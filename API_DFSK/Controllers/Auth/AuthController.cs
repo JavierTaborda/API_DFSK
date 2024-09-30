@@ -24,7 +24,7 @@ namespace API_DFSK.Controllers.Auth
         }
         [Authorize(Roles = "admin")]
         [HttpPost("Registrar")]
-        public async Task<IActionResult> Registrar(UserVendedorDTO user)
+        public async Task<IActionResult> Registrar(UserDTO user)
         {
             var registro = await _authRepo.Registro(user);
             return Ok(registro);

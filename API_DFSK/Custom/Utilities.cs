@@ -45,14 +45,14 @@ namespace API_DFSK.Custom
             }
         }
 
-        public AuthResponse CreateJWT(Vendedore model)
+        public AuthResponse CreateJWT(Usuario model)
         {
             var userClaims = new[]
             {
-                new Claim("user", model.IdVendedor.ToString()),
+                new Claim("user", model.IdUsuario.ToString()),
                 new Claim("mail", model.Email!),
                 new Claim("name", model.Nombre!),
-                new Claim("codigo", model.Codigo!),
+                new Claim("username", model.Username!),
                 new Claim("role", model.IdRolNavigation!.RolName!)
             };
 
@@ -69,7 +69,7 @@ namespace API_DFSK.Custom
             var refreshToken = Guid.NewGuid().ToString();
             var refreshTokenInfo = new RefreshTokenInfo
             {
-                UserId = model.IdVendedor.ToString(),
+                UserId = model.IdUsuario.ToString(),
                 Expiration = DateTime.UtcNow.AddDays(5) // Set refresh token expiration
             };
             _refreshTokens[refreshToken] = refreshTokenInfo;

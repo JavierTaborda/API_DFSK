@@ -61,7 +61,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? new List<RepuestoVehiculoDTO>();
         }
 
-        //consultar codigos e insertarsi no existen
+        //consultar codigos e insertar si no existen
         public async Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos)
         {
             var codigoList = codigos.Select(c => c.Codigo).ToList();
@@ -118,8 +118,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                // Log the exception (ex) here
-                throw;
+                throw ;
             }
         }
 
@@ -127,7 +126,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
             var solicitud = await _context.Solicitudes
-                .Include(ven => ven.IdResumenSolicitudNavigation.IdVendedorNavigation)
+                .Include(ven => ven.IdResumenSolicitudNavigation.IdUsuarioNavigation)
                 .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.IdEstadoNavigation)
                 .FirstOrDefaultAsync(id => id.IdSolicitud == Id);
@@ -137,11 +136,11 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             return _mapper.Map<SolicitudDTO>(solicitud);
         }
-        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor)
+        public async Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int iduser)
         {
 
             IQueryable<Solicitude> query = _context.Solicitudes
-                .Include(ven => ven.IdResumenSolicitudNavigation.IdVendedorNavigation)
+                .Include(ven => ven.IdResumenSolicitudNavigation.IdUsuarioNavigation)
                 .Include(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.IdEstadoNavigation)
                 .AsNoTracking();
@@ -164,18 +163,18 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             //}
 
             query = query.Where(f => f.IdEstado == idestado
-                                     && f.IdResumenSolicitudNavigation.IdVendedor == idvendedor);
+                                     && f.IdResumenSolicitudNavigation.IdUsuario == iduser);
 
             var solicitudes = await query.ToListAsync();
 
             return _mapper.Map<List<SolicitudDTO>>(solicitudes) ?? new List<SolicitudDTO>();
         }
 
-        public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor)
+        public async Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int iduser)
         {
             IQueryable<ResumenSolicitud> query = _context.ResumenSolicituds
                 .AsNoTracking()
-                .Include(ven => ven.IdVendedorNavigation)
+                .Include(ven => ven.IdUsuarioNavigation)
                 .Include(f => f.Solicitudes).ThenInclude(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
                 .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation);
@@ -190,9 +189,9 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                     query = query.Where(f => f.Estatus == esta);
                 }
             }
-            if (idvendedor > 0)
+            if (iduser > 0)
             {
-                query = query.Where(v => v.IdVendedor == idvendedor);
+                query = query.Where(v => v.IdUsuario == iduser);
             }
             var resumen = await query.ToListAsync();
 
@@ -236,7 +235,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
         public async Task<List<RolDTO>> GetRoles()
         {
-            var roles = await _context.Rols.Where(e => e.Estado == true)
+            var roles = await _context.Rols.Where(e => e.Estado == true && e.RolName!="admin")
                 .AsNoTracking()
                 .ToListAsync();
             return _mapper.Map<List<RolDTO>>(roles) ?? new List<RolDTO>();
@@ -364,7 +363,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             if (soli == null)
             {
-                return null;
+                return null!;
             }
 
             var entity = _mapper.Map<Solicitude>(solicitud);
@@ -380,10 +379,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var entity = await _context.Repuestos.FindAsync(repuestos.IdRepuesto);
             if (entity == null)
             {
-                return null;
+                return null!;
             }
             _mapper.Map(repuestos, entity);
-            entity.IdVehiculoNavigation = null;//Limpiar para no insertar 
+            entity.IdVehiculoNavigation = null!;//Limpiar para no insertar 
             _context.Update(entity);
             await _context.SaveChangesAsync();
             var result = _mapper.Map<RepuestoDTO>(entity);
@@ -396,7 +395,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var entity = await _context.Vehiculos.FindAsync(vehiculos.IdVehiculo);
             if (entity == null)
             {
-                return null;
+                return null!;
             }
             _mapper.Map(vehiculos, entity);
             _context.Update(entity);
@@ -432,7 +431,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var entity = await _context.Estados.FindAsync(Estados.IdEstado);
             if (entity == null)
             {
-                return null;
+                return null!;
             }
 
             _mapper.Map(Estados, entity);
@@ -448,7 +447,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var entity = await _context.Vendedores.FindAsync(Vendedores.IdVendedor);
             if (entity == null)
             {
-                return null;
+                return null!;
             }
 
             _mapper.Map(Vendedores, entity);
@@ -458,9 +457,6 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<VendedorDTO>(entity);
             return result;
         }
-
-
-
 
 
 

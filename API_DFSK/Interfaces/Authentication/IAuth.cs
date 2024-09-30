@@ -5,7 +5,7 @@ namespace API_DFSK.Interfaces.Authentication
 {
     public interface IAuth
     {
-        Task<bool> Registro(UserVendedorDTO user);
+        Task<bool> Registro(UserDTO user);
         Task<AuthResponse> Login(LoginDTO login);
         Task<string> RefreshToken(RefreshTokenDTO refreshToken);
     }
