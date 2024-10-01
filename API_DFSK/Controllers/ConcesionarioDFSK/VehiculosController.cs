@@ -10,33 +10,30 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class VehiculosController : ControllerBase
+    public class VehiculosController(IVehiculoRepository vehiculoRepo) : ControllerBase
     {
             
-        private readonly ISolicitudesRepository _solicitudesRepo;       
-        public VehiculosController(ISolicitudesRepository solicitudesRepo)
-            {
-                _solicitudesRepo = solicitudesRepo;
-            }
+        private readonly IVehiculoRepository _vehiculoRepo=vehiculoRepo;       
+   
   
 
         [HttpGet]
         public async Task<IActionResult> GetVehiculos()
         {
-            var vehiculos = await _solicitudesRepo.GetVehiculos();
+            var vehiculos = await _vehiculoRepo.GetVehiculos();
             return !vehiculos.Any() ? BadRequest("Sin Datos") : Ok(vehiculos);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetVehiculoId(int id)
         {
-            var vehiculo = await _solicitudesRepo.GetVehiculoById(id);
+            var vehiculo = await _vehiculoRepo.GetVehiculoById(id);
             return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
         }
          [HttpGet("Codigo/{codigo}")]
         public async Task<IActionResult> GetVehiculoCodigo( string codigo)
         {
-            var vehiculo = await _solicitudesRepo.GetVehiculoByCodigo(codigo);
+            var vehiculo = await _vehiculoRepo.GetVehiculoByCodigo(codigo);
             return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
         }
 
@@ -48,7 +45,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _solicitudesRepo.InsertVehiculo(vehiculos);
+            var result = await _vehiculoRepo.InsertVehiculo(vehiculos);
             return result ? Ok(): BadRequest("Fallo el registro.");
             
         }
@@ -63,7 +60,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _solicitudesRepo.UpdateVehiculo(vehiculo);
+            var result = await _vehiculoRepo.UpdateVehiculo(vehiculo);
             return result == null ? NotFound() : Ok(result);
             
         }
@@ -73,7 +70,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _solicitudesRepo.AddUpdateVehiculo(vehiculo);
+            var result = await _vehiculoRepo.AddUpdateVehiculo(vehiculo);
             return result == null ? NotFound() : Ok(result);
             
         }

@@ -14,19 +14,16 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
     [EnableCors("AllowAnyOrigin")]
     [Authorize]
     [ApiController]
-    public class SolicitudesController : ControllerBase
+    public class SolicitudesController(ISolicitudesRepository solicitudesRepo) : ControllerBase
     {
         //APIS DE SOLICITUDES 
 
-        private readonly ISolicitudesRepository _solicitudesRepo;
-        public SolicitudesController(ISolicitudesRepository solicitudesRepo)
-        {
-            _solicitudesRepo = solicitudesRepo;
-        }
+        private readonly ISolicitudesRepository _solicitudesRepo = solicitudesRepo;
+  
 
         #region GETS
 
-        [HttpGet("{f1}/{f2}/{estado}/{idvendedor:int}")]
+        [HttpGet("{f1}/{f2}/{estado}/{iduser:int}")]
         public async Task<IActionResult> GetResumen(DateTime f1, DateTime f2, string estado, int iduser)
         {
             if (f1 > f2)
@@ -37,7 +34,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return Ok(resumen);
         }
 
-        [HttpGet("List/{f1}/{f2}/{idestado}/{idvendedor}")]
+        [HttpGet("List/{f1}/{f2}/{idestado}/{iduser}")]
         public async Task<IActionResult> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int iduser)
         {
             if (f1 > f2)

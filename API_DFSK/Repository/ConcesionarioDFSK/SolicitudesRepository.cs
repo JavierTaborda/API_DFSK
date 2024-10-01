@@ -17,105 +17,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         //GET
         #region GETS
-        public async Task<EstadoDTO?> GetEstadoById(int Id)
-        {
-
-            var estado = await _context.Estados.FirstOrDefaultAsync(e => e.IdEstado == Id);
-            return _mapper.Map<EstadoDTO?>(estado);
-        }
-
-        public async Task<List<EstadoDTO>> GetEstados()
-        {
-            var estados = await _context.Estados.AsNoTracking().ToListAsync();
-            return _mapper.Map<List<EstadoDTO>>(estados);
-        }
-
-        public async Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id)
-        {
-            var repuesto = await _context.Repuestos
-                .Include(v => v.IdVehiculoNavigation)
-                .FirstOrDefaultAsync(r => r.IdRepuesto == Id);
-            return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
-        }
-
-        public async Task<RepuestoVehiculoDTO?> GetRepuestoCodigo(string codigo)
-        {
-            var repuesto = await _context.Repuestos
-                .Include(v => v.IdVehiculoNavigation)
-                .FirstOrDefaultAsync(r => r.Codigo!.Contains(codigo));
-            return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
-        }
-
-        public async Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
-        {
-            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo!.Contains(codigo))
-                .Include(v => v.IdVehiculoNavigation)
-                .AsNoTracking()
-                .ToListAsync();
-            return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? [];
-        }
-
-        //consultar codigos e insertar si no existen
-        public async Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos)
-        {
-            var codigoList = codigos.Select(c => c.Codigo).ToList();
-
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                var repuestos = await _context.Repuestos
-                    .Where(r => codigoList.Contains(r.Codigo))
-                    //.Include(v => v.IdVehiculoNavigation)
-                    .AsNoTracking()
-                    .ToListAsync();
-
-                var vehiculo = await _context.Vehiculos
-                    .Where(c => c.Modelo!.Contains("Sin Modelo"))
-                    .Select(id => id.IdVehiculo)
-                    .FirstOrDefaultAsync();
-
-                var existingCodigos = repuestos.Select(r => r.Codigo).ToList();
-                var newCodigos = codigoList.Except(existingCodigos).ToList();
-                var insertCodigos = codigos.Where(c => newCodigos.Contains(c.Codigo)).ToList();
-
-                foreach (var c in insertCodigos)
-                {
-                    if (!await _context.Repuestos.AnyAsync(r => r.Codigo == c.Codigo))
-                    {
-                        var newRepuesto = new Repuesto
-                        {
-                            IdRepuesto = 0,
-                            Codigo = c.Codigo,
-                            Nombre = c.Nombre,
-                            Descripcion = "",
-                            Precio = 0,
-                            IdVehiculo = vehiculo,
-                            Estatus = true,
-                            Marca = c.Marca,
-                            EnInventario = true
-                        };
-                        _context.Repuestos.Add(newRepuesto);
-                        repuestos.Add(newRepuesto);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                var result = await _context.Repuestos
-              .Where(r => codigoList.Contains(r.Codigo))
-              //.Include(v => v.IdVehiculoNavigation)
-              .AsNoTracking()
-              .ToListAsync();
-                return _mapper.Map<List<RepuestoDTO>>(result)!;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                throw ;
-            }
-        }
-
+      
+        
 
         public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
@@ -191,29 +94,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<ResumenSolicitudDTO>>(resumen);
         }
 
-        public async Task<VehiculoDTO> GetVehiculoById(int Id)
-        {
-            var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id);
-            return _mapper.Map<VehiculoDTO>(vehiculo);
-        }
-        public async Task<List<VehiculoDTO>> GetVehiculoByCodigo(string codigo)
-        {
-            var vehiculo = await _context.Vehiculos
-                .Where(co => co.Codigo!.Contains(codigo))
-                .AsNoTracking()
-                .ToListAsync();
-            return _mapper.Map<List<VehiculoDTO>>(vehiculo);
-        }
-
-        public async Task<List<VehiculoDTO>> GetVehiculos()
-        {
-            var vehiculos = await _context.Vehiculos
-                .AsNoTracking()
-                .ToListAsync();
-            return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? [];
-        }
-
-  
+       
+ 
 
         public async Task<Dictionary<string, int>> GetIdsSolicitudIncial()
         {
@@ -268,56 +150,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto)
-        {
-            var existingCodigo = await _context.Repuestos
-                .AsNoTracking()
-                .Where(c => c.Codigo == repuesto.Codigo && c.Nombre==repuesto.Nombre && c.Marca==repuesto.Marca && c.IdVehiculo==repuesto.IdVehiculo )
-                .Select(r => r.Codigo)
-                .FirstOrDefaultAsync();
-
-            if (existingCodigo == null)
-            {
-                var insert = _mapper.Map<Repuesto>(repuesto);
-                await _context.Repuestos.AddAsync(insert);
-                await _context.SaveChangesAsync();
-                return _mapper.Map<RepuestoDTO>(insert);
-            }
-            else
-            {
-              
-                throw new InvalidOperationException("Ya existe este código de repuesto.");
-            }
-        }
-
-
-        public async Task<bool> InsertEstado(List<EstadoDTO> Estados)
-        {
-            var insert = _mapper.Map<List<Estado>>(Estados);
-            await _context.Estados.AddRangeAsync(insert);
-            await _context.SaveChangesAsync();
-            return true;
-
-        }
-
-        public async Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos)
-        {
-            var insert = _mapper.Map<List<Vehiculo>>(vehiculos);
-            await _context.Vehiculos.AddRangeAsync(insert);
-            await _context.SaveChangesAsync();
-            return true;
-
-        }
-        public async Task<bool> InsertVendedor(List<VendedorDTO> Vendedores)
-        {
-            var insert = _mapper.Map<List<Vendedore>>(Vendedores);
-            await _context.Vendedores.AddRangeAsync(insert);
-            await _context.SaveChangesAsync();
-            return true;
-
-        }
-
-
+       
 
         #endregion
 
@@ -348,75 +181,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return result;
         }
 
-        public async Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos)
-        {
-            var entity = await _context.Repuestos.FindAsync(repuestos.IdRepuesto);
-            if (entity == null)
-            {
-                return null!;
-            }
-            _mapper.Map(repuestos, entity);
-            entity.IdVehiculoNavigation = null!;//Limpiar para no insertar 
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-            var result = _mapper.Map<RepuestoDTO>(entity);
-
-            return result;
-        }
-
-        public async Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos)
-        {
-            var entity = await _context.Vehiculos.FindAsync(vehiculos.IdVehiculo);
-            if (entity == null)
-            {
-                return null!;
-            }
-            _mapper.Map(vehiculos, entity);
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-            var result = _mapper.Map<VehiculoDTO>(entity);
-            return result;
-        }
-        public async Task<VehiculoDTO> AddUpdateVehiculo(VehiculoDTO vehiculos)
-        {
-            var entity = await _context.Vehiculos.FirstOrDefaultAsync(c => c.Codigo == vehiculos.Codigo);
-            if (entity == null)
-            {
-                entity = _mapper.Map<Vehiculo>(vehiculos);
-            }
-            else
-            {
-                if (entity.IdVehiculo > 0)
-                {
-                    vehiculos.IdVehiculo = entity.IdVehiculo;
-                }
-                _mapper.Map(vehiculos, entity);
-            }
-
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-
-            var result = _mapper.Map<VehiculoDTO>(entity);
-            return result;
-        }
-
-        public async Task<EstadoDTO> UpdateEstado(EstadoDTO Estados)
-        {
-            var entity = await _context.Estados.FindAsync(Estados.IdEstado);
-            if (entity == null)
-            {
-                return null!;
-            }
-
-            _mapper.Map(Estados, entity);
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
-
-            var result = _mapper.Map<EstadoDTO>(entity);
-            return result;
-        }
-
-  
+   
         #endregion
     }
 }

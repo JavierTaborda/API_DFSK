@@ -9,16 +9,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
     {
         //GETS
         #region gets 
-        Task<List<VehiculoDTO>> GetVehiculos();
-        Task<List<VehiculoDTO>> GetVehiculoByCodigo(string Codigo);
-        Task<VehiculoDTO> GetVehiculoById(int Id);
-        Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo);
-        Task<List<RepuestoDTO?>> GetRepuestoList(List<CodigosRepuestosDTO> codigos);
-        Task<RepuestoVehiculoDTO?> GetRepuestoCodigo(string codigo);
-        Task<RepuestoVehiculoDTO?> GetRepuestoById(int Id);
-        Task<List<EstadoDTO>> GetEstados();
-        Task<EstadoDTO?> GetEstadoById(int Id);
-    
+        
         Task<List<ResumenSolicitudDTO>> GetResumenSolicitudes(DateTime f1, DateTime f2, string estado, int idvendedor);
         Task<List<SolicitudDTO>> GetSolicitudes(DateTime f1, DateTime f2, int idestado, int idvendedor);
         Task<SolicitudDTO?> GetSolicitudById(int Id);     
@@ -28,19 +19,12 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         //POST
         Task<bool> InsertSolicitud(List<SolicitudDTO> solicitudes);
         Task<bool> InsertSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
-        Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto);
-        Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
-        Task<bool> InsertEstado(List<EstadoDTO> Estados);
-     
  
         Task<bool> InsertResumenSolicitud(ResumenSolicitudDTO Solicitud);
 
         //PUTS
         Task<bool> UpdateSolicitud(List<SolicitudDTO> solicitudes);
         Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud);
-        Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos);
-        Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos);
-        Task<VehiculoDTO> AddUpdateVehiculo(VehiculoDTO vehiculos);
-        Task<EstadoDTO> UpdateEstado(EstadoDTO Estados);
+
     }
 }

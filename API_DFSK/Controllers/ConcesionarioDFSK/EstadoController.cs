@@ -9,25 +9,22 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EstadoController : ControllerBase
+    public class EstadoController(IEstadoRepository estadoRepo) : ControllerBase
     {
-        private readonly ISolicitudesRepository _solicitudesRepo;
-        public EstadoController(ISolicitudesRepository solicitudesRepo)
-        {
-            _solicitudesRepo = solicitudesRepo;
-        }
+        private readonly IEstadoRepository _estadoRepo=estadoRepo;
+      
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEstadoById(int id)
         {
-            var estado = await _solicitudesRepo.GetEstadoById(id);
+            var estado = await _estadoRepo.GetEstadoById(id);
             return estado == null ? NotFound() : Ok(estado);     
         }
 
         [HttpGet]
         public async Task<IActionResult> GetEstados()
         {
-            var estados = await _solicitudesRepo.GetEstados();    
-            return !estados.Any() ? NotFound() : Ok(estados);
+            var estados = await _estadoRepo.GetEstados();    
+            return estados.Count==0 ? NotFound() : Ok(estados);
         }
         //POST
         [HttpPost]
@@ -36,7 +33,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _solicitudesRepo.InsertEstado(estados);
+            var result = await _estadoRepo.InsertEstado(estados);
             return result  ? Ok(): BadRequest("Fallo el registro.");
 
         }
@@ -48,7 +45,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _solicitudesRepo.UpdateEstado(estado);
+            var result = await _estadoRepo.UpdateEstado(estado);
             return result == null ? NotFound() : Ok(result);
         }
     }

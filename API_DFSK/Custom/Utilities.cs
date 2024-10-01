@@ -12,7 +12,7 @@ namespace API_DFSK.Custom
     public class Utilities
     {
         private readonly IConfiguration _configuration;
-        private readonly ConcurrentDictionary<string, RefreshTokenInfo> _refreshTokens = new ConcurrentDictionary<string, RefreshTokenInfo>();
+        private readonly ConcurrentDictionary<string, RefreshTokenInfo> _refreshTokens = new() ;
 
         public Utilities(IConfiguration configuration)
         {
