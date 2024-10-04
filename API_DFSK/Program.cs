@@ -96,7 +96,7 @@ builder.Services.AddAuthentication(config =>
 //Services
 builder.Services.AddAutoMapper(typeof(Program));
 
-//cors
+//CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAnyOrigin", builder =>
@@ -120,6 +120,6 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAnyOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+app.MapControllers();    
 
 app.Run();

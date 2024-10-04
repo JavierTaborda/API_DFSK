@@ -24,10 +24,15 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<ApiCodigosMarca> ApiCodigosMarcas { get; set; }
 
+    public virtual DbSet<Categoriarepuesto> Categoriarepuestos { get; set; }
+
+    public virtual DbSet<Gruposrepuesto> Gruposrepuestos { get; set; }
+
     public virtual DbSet<Lineatxt> Lineatxts { get; set; }
 
-    public virtual DbSet<Resumentxt> Resumentxts { get; set; }
+    public virtual DbSet<Modelo> Modelos { get; set; }
 
+    public virtual DbSet<Resumentxt> Resumentxts { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -155,6 +160,44 @@ public partial class DfskContext : DbContext
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("TIPO");
+        });
+
+        modelBuilder.Entity<Categoriarepuesto>(entity =>
+        {
+            entity.HasKey(e => e.Idcategoria);
+
+            entity.ToTable("CATEGORIAREPUESTO");
+
+            entity.Property(e => e.Idcategoria).HasColumnName("IDCATEGORIA");
+            entity.Property(e => e.Categoria)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("CATEGORIA");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Idgrupo).HasColumnName("IDGRUPO");
+
+            entity.HasOne(d => d.IdgrupoNavigation).WithMany(p => p.Categoriarepuestos)
+                .HasForeignKey(d => d.Idgrupo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CATEGORIAREPUESTO_GRUPOSREPUESTO");
+        });
+
+        modelBuilder.Entity<Gruposrepuesto>(entity =>
+        {
+            entity.HasKey(e => e.Idgrupo);
+
+            entity.ToTable("GRUPOSREPUESTO");
+
+            entity.Property(e => e.Idgrupo).HasColumnName("IDGRUPO");
+            entity.Property(e => e.Detalle)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DETALLE");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Grupo)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("GRUPO");
         });
 
         modelBuilder.Entity<Lineatxt>(entity =>
@@ -356,6 +399,32 @@ public partial class DfskContext : DbContext
                 .HasForeignKey(d => d.Idresumentxt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LINEATXT_RESUMENTXT");
+        });
+
+        modelBuilder.Entity<Modelo>(entity =>
+        {
+            entity.HasKey(e => e.Idmodelo);
+
+            entity.ToTable("MODELOS");
+
+            entity.Property(e => e.Idmodelo).HasColumnName("IDMODELO");
+            entity.Property(e => e.Ano)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPCION");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Marca)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MARCA");
+            entity.Property(e => e.Modelo1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("MODELO");
         });
 
         modelBuilder.Entity<Resumentxt>(entity =>
