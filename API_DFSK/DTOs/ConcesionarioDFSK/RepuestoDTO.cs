@@ -19,6 +19,7 @@ public partial class RepuestoDTO
     public double? Precio { get; set; }
 
     public int? IdVehiculo { get; set; }   
+    public string? Imagen { get; set; }
     public string? Marca { get; set; }
 
     public bool EnInventario { get; set; }

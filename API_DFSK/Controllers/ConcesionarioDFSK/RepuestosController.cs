@@ -20,6 +20,13 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         //API para repuestos y vehiculos
         #region GETS
 
+        [HttpGet()]
+        public async Task<IActionResult> GetRepuestoId()
+        {
+            var repuesto = await _repuestosRepo.GetRepuestos();
+            return repuesto == null ? BadRequest("Sin Datos") : Ok(repuesto);
+        }    
+        
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetRepuestoId(int id)
         {

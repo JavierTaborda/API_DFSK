@@ -1,4 +1,5 @@
 ﻿using API_DFSK.Context;
+using API_DFSK.DTOs.DFSK;
 using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Models;
 using API_DFSK.Models.DFSK;
@@ -15,7 +16,7 @@ namespace API_DFSK.Repository.DFSK
             _context = context;
         }
 
-    
+
         public async Task<List<ApiArticulosGrupo>> GetAllArticulosBodega()
         {
             var articulos = await _context.ApiArticulosGrupos
@@ -28,7 +29,7 @@ namespace API_DFSK.Repository.DFSK
         public async Task<List<ApiArticulosGrupo>> GetArticulosExistenciaBodega()
         {
             var articulosbodega = await _context.ApiArticulosGrupos
-                .Where(e => e.Existencia >= 0 && ( e.Articulo.StartsWith("8") ||  e.Articulo.StartsWith("9")) && !(e.Marca.Contains("COSTEO")))
+                .Where(e => e.Existencia >= 0 && (e.Articulo.StartsWith("8") || e.Articulo.StartsWith("9")) && !(e.Marca.Contains("COSTEO")))
                 .OrderByDescending(e => e.Existencia)
                 .AsNoTracking()
                 .ToListAsync();
@@ -47,26 +48,26 @@ namespace API_DFSK.Repository.DFSK
         {
             var articulosbodega = await _context.ApiArticulosGrupos.AsNoTracking()
                 .Where(c => c.Articulo.Equals(Codigo) && c.Ano != null).ToListAsync();
-               
+
             return articulosbodega;
         }
 
         public async Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Nombre)
         {
-            string queryMarca="", queryGrupo="", queryNombre="";
-            if(!Marca.Equals("*"))
+            string queryMarca = "", queryGrupo = "", queryNombre = "";
+            if (!Marca.Equals("*"))
             {
                 queryMarca = Marca;
             }
             if (!Grupo.Equals("*"))
             {
                 queryGrupo = Grupo;
-            }           
+            }
             if (!Nombre.Equals("*"))
             {
                 queryNombre = Nombre;
             }
-           
+
             var articulosbodega = await _context.ApiArticulosGrupos
                          .Where(c => c.Marca.Contains(queryMarca) && c.Grupo.Contains(queryGrupo) && (c.Descripcion!.Contains(queryNombre) || c.Articulo.Contains(queryNombre))
                            && !(c.Marca.Contains("COSTEO")) && (c.Articulo.StartsWith("8") || c.Articulo.StartsWith("9")))
@@ -83,7 +84,7 @@ namespace API_DFSK.Repository.DFSK
                   .ToListAsync();
             return articulosbodega;
         }
-     
+
         public async Task<List<ApiCodigosMarca>> GetCodigosByMarca()
         {
             var codigosmarcas = await _context.ApiCodigosMarcas
@@ -97,6 +98,27 @@ namespace API_DFSK.Repository.DFSK
         {
             var codigosgrupos = await _context.ApiCodigosGrupos.AsNoTracking().ToListAsync();
             return codigosgrupos;
+        }
+
+        public async Task<string> UpdateImagenURL(UpdateImagenDTO updateimagen)  
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _context.Database.ExecuteSqlRawAsync(
+                        "EXEC UpdateImagenUrl @Articulo = {0}, @UrlImagen = {1}",
+                        updateimagen.Articulo, updateimagen.UrlImagen);
+
+                    await transaction.CommitAsync();
+                    return "Exitoso";
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
     }
 }

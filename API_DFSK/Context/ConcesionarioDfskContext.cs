@@ -64,6 +64,9 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.Marca)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Imagen)
+                .HasMaxLength(2048)
+                .IsUnicode(false);    
             entity.Property(e => e.Nombre)
                 .HasMaxLength(200)
                 .IsUnicode(false);

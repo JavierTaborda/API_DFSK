@@ -1,4 +1,5 @@
-﻿using API_DFSK.Interfaces.DFSK;
+﻿using API_DFSK.DTOs.DFSK;
+using API_DFSK.Interfaces.DFSK;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,16 @@ namespace API_DFSK.Controllers.Articulos
     public class ArticulosController : ControllerBase
     {
         private readonly IArticulosRepository _articuloRepo;
-        public ArticulosController( IArticulosRepository articulosRepo)
+        public ArticulosController(IArticulosRepository articulosRepo)
         {
             _articuloRepo = articulosRepo;
         }
 
         [AllowAnonymous]
         [HttpGet("Online")]
-        public  IActionResult Online()
+        public IActionResult Online()
         {
-            return   Ok(true);
+            return Ok(true);
         }
 
 
@@ -47,7 +48,7 @@ namespace API_DFSK.Controllers.Articulos
             var result = await _articuloRepo.GetArticuloBodegaByCodigo(Codigo);
             return result == null ? NotFound("Sin Vehiculos.") : Ok(result);
         }
-        
+
         [HttpGet("Bodega/Vehiculos/{Codigo}")]
         public async Task<IActionResult> GetVehiculosBodegaByCodigo(string Codigo)
         {
@@ -85,6 +86,14 @@ namespace API_DFSK.Controllers.Articulos
         {
             var coodigosgrupo = await _articuloRepo.GetCodigosByGrupo();
             return Ok(coodigosgrupo);
+        }
+
+
+        [HttpPost("UpdateImageUrl")]
+        public async Task<IActionResult> UpdateImageUrl([FromBody] UpdateImagenDTO request)
+        {
+            var result =await _articuloRepo.UpdateImagenURL(request);
+            return result == null ? NotFound("No se actualizo la imagen.") : Ok(result);
         }
     }
 }

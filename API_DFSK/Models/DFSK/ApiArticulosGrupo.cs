@@ -24,4 +24,8 @@ public partial class ApiArticulosGrupo
     public string Grupo { get; set; } = null!;
 
     public string? Ano { get; set; }
+
+    public string? Urlimagen { get; set; }
+
+    public string? Aplica { get; set; }
 }

@@ -4,6 +4,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
 {
     public interface IRepuestosRepository
     {
+        Task<List<RepuestoDTO>> GetRepuestos();
         Task<List<RepuestoDTO>> GetRepuestoList(List<CodigosRepuestosDTO> codigos);
         Task<RepuestoVehiculoDTO> GetRepuestoCodigo(string codigo);
         Task<RepuestoVehiculoDTO> GetRepuestoById(int Id);

@@ -13,6 +13,13 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         private readonly ConcesionarioDfskContext _context = context;
 
         #region GETS
+
+        public async Task<List<RepuestoDTO>> GetRepuestos()
+        {
+            var repuestos = await _context.Repuestos.ToListAsync();
+            return _mapper.Map<List<RepuestoDTO>>(repuestos);
+              
+         }
         public async Task<RepuestoVehiculoDTO> GetRepuestoById(int Id)
         {
             var repuesto = await _context.Repuestos
@@ -140,6 +147,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             return result;
         }
+
+    
         #endregion
 
     }

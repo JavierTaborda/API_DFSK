@@ -1,4 +1,5 @@
-﻿using API_DFSK.Models.DFSK;
+﻿using API_DFSK.DTOs.DFSK;
+using API_DFSK.Models.DFSK;
 
 namespace API_DFSK.Interfaces.DFSK
 {
@@ -13,5 +14,7 @@ namespace API_DFSK.Interfaces.DFSK
         Task<List<ApiArticulosGrupo>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Nombre);
         Task<List<ApiCodigosMarca>> GetCodigosByMarca();
         Task<List<ApiCodigosGrupo>> GetCodigosByGrupo();
+
+        Task<string> UpdateImagenURL( UpdateImagenDTO updateimagen);
     }
 }
