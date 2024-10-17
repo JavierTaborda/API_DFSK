@@ -126,7 +126,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             else
             {
 
-                throw new InvalidOperationException("Ya existe este código de repuesto.");
+               return null!;
             }
         }
         #endregion

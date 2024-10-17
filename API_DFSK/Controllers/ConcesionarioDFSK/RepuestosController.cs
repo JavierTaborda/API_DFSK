@@ -61,7 +61,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
                 return BadRequest(ModelState);
 
             var result = await _repuestosRepo.InsertRepuesto(repuesto);
-            return result.IdRepuesto>0  ?  Ok(result):BadRequest(result);
+            return result == null  ? BadRequest("Ya existe una solicitud con este repuesto.") : Ok(result);
         }
         [HttpPost("codigos")]
         public async Task<IActionResult> RecibirCodigos([FromBody] List<CodigosRepuestosDTO> request)
