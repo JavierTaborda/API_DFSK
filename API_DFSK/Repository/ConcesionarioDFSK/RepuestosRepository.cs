@@ -44,6 +44,46 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .ToListAsync();
             return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? [];
         }
+
+        //public async Task<List<RepuestoDTO>> GetRepuestoFiltro(string nombre, string marca, bool inventario, string modelo)
+        //{
+        //    var repuestos = await _context.Repuestos.Where(r => r.Descripcion!.Contains(nombre) 
+        //                                                    && r.Marca!.Contains(marca)
+        //                                                    && r.EnInventario.Equals(inventario)
+        //                                                    && r.IdVehiculoNavigation.Modelo!.Contains(modelo)
+        //                                                    ).ToListAsync();
+        //        return _mapper.Map<List<RepuestoDTO>>(repuestos) ?? [];
+        //}
+        public async Task<List<RepuestoDTO>> GetRepuestoFiltro(string? nombre, string? marca, bool? inventario, string? modelo)
+        {
+            var query = _context.Repuestos.AsQueryable();
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                query = query.Where(r => r.Nombre!.Contains(nombre));
+            }
+
+            if (!string.IsNullOrEmpty(marca))
+            {
+                query = query.Where(r => r.Marca!.Contains(marca));
+            }
+
+            if (inventario.HasValue)
+            {
+                query = query.Where(r => r.EnInventario == inventario.Value);
+            }
+
+            if (!string.IsNullOrEmpty(modelo))
+            {
+                query = query.Where(r => r.IdVehiculoNavigation.Modelo!.Contains(modelo));
+            }
+
+
+            var result = await query.ToListAsync();
+            return _mapper.Map<List<RepuestoDTO>>(result);
+
+        }
+
         #endregion 
 
         //consultar codigos e insertar si no existen
@@ -148,7 +188,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return result;
         }
 
-    
+
         #endregion
 
     }

@@ -48,12 +48,29 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return !repuesto.Any()  ? BadRequest("Sin Datos") : Ok(repuesto);
         }
 
+        [HttpGet("Filtrar")]
+        public async Task<IActionResult> GetRepuestoFiltrados(
+        [FromQuery] string? nombre = null,
+        [FromQuery] string? marca = null,
+        [FromQuery] bool? inventario = null,
+        [FromQuery] string? modelo = null)
+        {
+            var repuesto = await _repuestosRepo.GetRepuestoFiltro(nombre, marca, inventario, modelo);
+
+            if (!repuesto.Any())
+            {
+                return NotFound("Sin Datos");
+            }
+
+            return Ok(repuesto);
+        }
+
 
         #endregion
 
         //POST
 
-       
+
         [HttpPost]
         public async Task<IActionResult> PostRepuestos(RepuestoDTO repuesto)
         {
