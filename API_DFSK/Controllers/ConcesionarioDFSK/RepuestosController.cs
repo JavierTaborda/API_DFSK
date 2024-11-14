@@ -50,8 +50,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
         [HttpGet("Filtrar")]
         public async Task<IActionResult> GetRepuestoFiltrados(
-        [FromQuery] string? nombre = null,
-        [FromQuery] string? marca = null,
+        [FromQuery] string? nombre ,
+        [FromQuery] string? marca ,
         [FromQuery] bool? inventario = null,
         [FromQuery] string? modelo = null)
         {
