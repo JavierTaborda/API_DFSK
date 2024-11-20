@@ -63,14 +63,15 @@ namespace API_DFSK.Controllers.Articulos
             return Ok(articulosbodega);
         }
 
-        [HttpGet("Bodega/Marca/{Marca}/{Grupo}/{Nombre}")]
-        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca, string Grupo, string Nombre)
+        [HttpGet("Bodega/Marca/{Marca}/{Grupo}/{Categoria}/{Nombre}")]
+        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca, string Grupo, string Categoria, string Nombre)
         {
             var marcaDecodificada = WebUtility.UrlDecode(Marca);
             var grupoDecodificada = WebUtility.UrlDecode(Grupo);
+            var catDecodificada = WebUtility.UrlDecode(Categoria);
             var nombreDecodificada = WebUtility.UrlDecode(Nombre);
 
-            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarcayGrupo(marcaDecodificada, grupoDecodificada, nombreDecodificada);
+            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarcayGrupo(marcaDecodificada, grupoDecodificada, catDecodificada, nombreDecodificada);
             return Ok(articulosbodega);
         }
 
@@ -94,6 +95,19 @@ namespace API_DFSK.Controllers.Articulos
         {
             var result =await _articuloRepo.UpdateImagenURL(request);
             return result == null ? NotFound("No se actualizo la imagen.") : Ok(result);
+        }
+
+        [HttpGet("Grupos")]
+        public async Task<IActionResult> GetGrupos()
+        {
+            var grupos = await _articuloRepo.GetGrupos();
+            return Ok(grupos);
+        }
+        [HttpGet("Categorias")]
+        public async Task<IActionResult> GetCategorias()
+        {
+            var categorias = await _articuloRepo.GetCategorias();
+            return Ok(categorias);
         }
     }
 }

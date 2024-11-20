@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace API_DFSK.Models.DFSK;
+
+public partial class ApiRepuestosMostrar
+{
+    public string Articulo { get; set; } = null!;
+
+    public string? Descripcion { get; set; }
+
+    public string? Unidad { get; set; }
+
+    public string? Modelo { get; set; }
+
+    public string Marca { get; set; } = null!;
+
+    public decimal? Existencia { get; set; }
+
+    public decimal? Cif { get; set; }
+
+    public decimal? Venta { get; set; }
+
+    public string? Ano { get; set; }
+
+    public string? Urlimagen { get; set; }
+
+    public string? Aplica { get; set; }
+
+    public string? Caracteristicas { get; set; }
+
+    public string? Numeroparte { get; set; }
+
+    public string? Vehiculo { get; set; }
+
+    public string? Grupo { get; set; }
+
+    public string? Categoria { get; set; }
+}

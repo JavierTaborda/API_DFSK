@@ -24,11 +24,18 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<ApiCodigosMarca> ApiCodigosMarcas { get; set; }
 
+    public virtual DbSet<ApiRepuestosMostrar> ApiRepuestosMostrars { get; set; }
+
+    public virtual DbSet<Categoriarepuesto> Categoriarepuestos { get; set; }
+
+    public virtual DbSet<Gruposrepuesto> Gruposrepuestos { get; set; }
+
     public virtual DbSet<Lineatxt> Lineatxts { get; set; }
 
     public virtual DbSet<Resumentxt> Resumentxts { get; set; }
 
- 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApiArticulosBodega>(entity =>
@@ -160,6 +167,109 @@ public partial class DfskContext : DbContext
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("TIPO");
+        });
+
+        modelBuilder.Entity<ApiRepuestosMostrar>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("API_REPUESTOS_MOSTRAR");
+
+            entity.Property(e => e.Ano)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
+            entity.Property(e => e.Aplica)
+                .IsUnicode(false)
+                .HasColumnName("APLICA");
+            entity.Property(e => e.Articulo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("ARTICULO");
+            entity.Property(e => e.Caracteristicas)
+                .IsUnicode(false)
+                .HasColumnName("CARACTERISTICAS");
+            entity.Property(e => e.Categoria)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("CATEGORIA");
+            entity.Property(e => e.Cif)
+                .HasColumnType("numeric(12, 3)")
+                .HasColumnName("CIF");
+            entity.Property(e => e.Descripcion)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPCION");
+            entity.Property(e => e.Existencia)
+                .HasColumnType("numeric(38, 2)")
+                .HasColumnName("existencia");
+            entity.Property(e => e.Grupo)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("GRUPO");
+            entity.Property(e => e.Marca)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("marca");
+            entity.Property(e => e.Modelo)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MODELO");
+            entity.Property(e => e.Numeroparte)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("NUMEROPARTE");
+            entity.Property(e => e.Unidad)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("UNIDAD");
+            entity.Property(e => e.Urlimagen)
+                .IsUnicode(false)
+                .HasColumnName("URLIMAGEN");
+            entity.Property(e => e.Vehiculo)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("VEHICULO");
+            entity.Property(e => e.Venta)
+                .HasColumnType("numeric(12, 3)")
+                .HasColumnName("VENTA");
+        });
+
+        modelBuilder.Entity<Categoriarepuesto>(entity =>
+        {
+            entity.HasKey(e => e.Idcategoria);
+
+            entity.ToTable("CATEGORIAREPUESTO");
+
+            entity.Property(e => e.Idcategoria).HasColumnName("IDCATEGORIA");
+            entity.Property(e => e.Categoria)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("CATEGORIA");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Idgrupo).HasColumnName("IDGRUPO");
+
+            entity.HasOne(d => d.IdgrupoNavigation).WithMany(p => p.Categoriarepuestos)
+                .HasForeignKey(d => d.Idgrupo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CATEGORIAREPUESTO_GRUPOSREPUESTO");
+        });
+
+        modelBuilder.Entity<Gruposrepuesto>(entity =>
+        {
+            entity.HasKey(e => e.Idgrupo);
+
+            entity.ToTable("GRUPOSREPUESTO");
+
+            entity.Property(e => e.Idgrupo).HasColumnName("IDGRUPO");
+            entity.Property(e => e.Detalle)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("DETALLE");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Grupo)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("GRUPO");
         });
 
         modelBuilder.Entity<Lineatxt>(entity =>
