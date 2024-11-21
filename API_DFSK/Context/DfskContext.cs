@@ -32,6 +32,8 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<Lineatxt> Lineatxts { get; set; }
 
+    public virtual DbSet<Modelos> Modelos { get; set; }
+
     public virtual DbSet<Resumentxt> Resumentxts { get; set; }
 
 
@@ -471,6 +473,32 @@ public partial class DfskContext : DbContext
                 .HasForeignKey(d => d.Idresumentxt)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_LINEATXT_RESUMENTXT");
+        });
+
+        modelBuilder.Entity<Modelos>(entity =>
+        {
+            entity.HasKey(e => e.Idmodelo);
+
+            entity.ToTable("MODELOS");
+
+            entity.Property(e => e.Idmodelo).HasColumnName("IDMODELO");
+            entity.Property(e => e.Ano)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPCION");
+            entity.Property(e => e.Estado).HasColumnName("ESTADO");
+            entity.Property(e => e.Marca)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MARCA");
+            entity.Property(e => e.Modelo1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("MODELO");
         });
 
         modelBuilder.Entity<Resumentxt>(entity =>

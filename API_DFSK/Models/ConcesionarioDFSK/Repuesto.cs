@@ -9,6 +9,8 @@ public partial class Repuesto
 
     public string? Codigo { get; set; }
 
+    public string? NumParte { get; set; }
+
     public string? Nombre { get; set; }
 
     public string? Descripcion { get; set; }
@@ -19,8 +21,9 @@ public partial class Repuesto
 
     public bool Estatus { get; set; }
 
-    public string? Marca { get; set; }
     public string? Imagen { get; set; }
+
+    public string? Marca { get; set; }
 
     public bool EnInventario { get; set; }
 

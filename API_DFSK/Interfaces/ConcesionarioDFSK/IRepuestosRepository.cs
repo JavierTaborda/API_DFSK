@@ -9,7 +9,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<List<RepuestoDTO>> GetRepuestoFiltro(string? nombre, string? marca, bool? inventario, string? modelo );
         Task<RepuestoVehiculoDTO> GetRepuestoCodigo(string codigo);
         Task<RepuestoVehiculoDTO> GetRepuestoById(int Id);
-        Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo);
+        Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string modelo);
 
         Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto);
         Task<RepuestoDTO> UpdateRepuesto(RepuestoDTO repuestos);

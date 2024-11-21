@@ -5,7 +5,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
     public interface IVehiculoRepository
     {
         Task<List<VehiculoDTO>> GetVehiculos();
-        Task<List<VehiculoDTO>> GetVehiculoByCodigo(string Codigo);
+        Task<List<VehiculoDTO>> GetVehiculoByModelo(string modelo);
         Task<VehiculoDTO> GetVehiculoById(int Id);
         Task<bool> InsertVehiculo(List<VehiculoDTO> vehiculos);
         Task<VehiculoDTO> UpdateVehiculo(VehiculoDTO vehiculos);

@@ -18,14 +18,15 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var vehiculo = await _context.Vehiculos.FirstOrDefaultAsync(id => id.IdVehiculo == Id);
             return _mapper.Map<VehiculoDTO>(vehiculo);
         }
-        public async Task<List<VehiculoDTO>> GetVehiculoByCodigo(string codigo)
+        public async Task<List<VehiculoDTO>> GetVehiculoByModelo(string modelo)
         {
             var vehiculo = await _context.Vehiculos
-                .Where(co => co.Codigo!.Contains(codigo))
+                .Where(co => co.Modelo!.Contains(modelo))
                 .AsNoTracking()
                 .ToListAsync();
             return _mapper.Map<List<VehiculoDTO>>(vehiculo);
         }
+
 
         public async Task<List<VehiculoDTO>> GetVehiculos()
         {
@@ -60,7 +61,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
         public async Task<VehiculoDTO> AddUpdateVehiculo(VehiculoDTO vehiculos)
         {
-            var entity = await _context.Vehiculos.FirstOrDefaultAsync(c => c.Codigo == vehiculos.Codigo);
+            var entity = await _context.Vehiculos.FirstOrDefaultAsync(c => c.Modelo == vehiculos.Modelo && c.Anho==vehiculos.Anho && c.Marca==vehiculos.Marca);
             if (entity == null)
             {
                 entity = _mapper.Map<Vehiculo>(vehiculos);

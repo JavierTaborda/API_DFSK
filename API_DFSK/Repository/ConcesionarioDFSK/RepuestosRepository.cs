@@ -36,9 +36,9 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<RepuestoVehiculoDTO>(repuesto);
         }
 
-        public async Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string codigo)
+        public async Task<List<RepuestoVehiculoDTO>> GetRepuestosByVehiculo(int Id, string modelo)
         {
-            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Codigo!.Contains(codigo))
+            var repuestos = await _context.Repuestos.Where(r => r.IdVehiculo == (Id) || r.IdVehiculoNavigation.Modelo!.Contains(modelo))
                 .Include(v => v.IdVehiculoNavigation)
                 .AsNoTracking()
                 .ToListAsync();

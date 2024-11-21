@@ -63,15 +63,16 @@ namespace API_DFSK.Controllers.Articulos
             return Ok(articulosbodega);
         }
 
-        [HttpGet("Bodega/Marca/{Marca}/{Grupo}/{Categoria}/{Nombre}")]
-        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca, string Grupo, string Categoria, string Nombre)
+        [HttpGet("Bodega/Filtros/{Marca}/{Grupo}/{Categoria}/{Nombre}/{Modelo}")]
+        public async Task<IActionResult> GetArticuloBodegaByMarca(string Marca, string Grupo, string Categoria, string Nombre, string Modelo)
         {
             var marcaDecodificada = WebUtility.UrlDecode(Marca);
             var grupoDecodificada = WebUtility.UrlDecode(Grupo);
             var catDecodificada = WebUtility.UrlDecode(Categoria);
             var nombreDecodificada = WebUtility.UrlDecode(Nombre);
+            var modeloDecodificada = WebUtility.UrlDecode(Modelo);
 
-            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarcayGrupo(marcaDecodificada, grupoDecodificada, catDecodificada, nombreDecodificada);
+            var articulosbodega = await _articuloRepo.GetArticuloBodegaByMarcayGrupo(marcaDecodificada, grupoDecodificada, catDecodificada, nombreDecodificada, modeloDecodificada);
             return Ok(articulosbodega);
         }
 
@@ -108,7 +109,28 @@ namespace API_DFSK.Controllers.Articulos
         {
             var categorias = await _articuloRepo.GetCategorias();
             return Ok(categorias);
+        } 
+        
+        [HttpGet("Modelos")]
+        public async Task<IActionResult> GetModelos()
+        {
+            var result = await _articuloRepo.GetModelos();
+            return Ok(result);
+        }
+        [HttpGet("Modelos/{modelo}")]
+        public async Task<IActionResult> GetModelosByModelo(string modelo)
+        {
+            var result = await _articuloRepo.GetModelosByNombre(modelo);
+            return Ok(result);
+        }
+
+        [HttpGet("Modelos/Actualizar/{modelo}/{marca}/{ano}")]
+        public async Task<IActionResult> GetModelosByFilters(string modelo, string marca, string ano)
+        {
+            var result = await _articuloRepo.GetModelosByFilters(modelo, marca,  ano);
+            return Ok(result);
         }
     }
+
 }
 

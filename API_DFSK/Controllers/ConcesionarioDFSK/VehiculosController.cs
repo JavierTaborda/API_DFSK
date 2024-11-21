@@ -30,10 +30,10 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             var vehiculo = await _vehiculoRepo.GetVehiculoById(id);
             return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
         }
-         [HttpGet("Codigo/{codigo}")]
-        public async Task<IActionResult> GetVehiculoCodigo( string codigo)
+         [HttpGet("Modelo/{modelo}")]
+        public async Task<IActionResult> GetVehiculoCodigo( string modelo)
         {
-            var vehiculo = await _vehiculoRepo.GetVehiculoByCodigo(codigo);
+            var vehiculo = await _vehiculoRepo.GetVehiculoByModelo(modelo);
             return vehiculo == null ? BadRequest("Sin Datos") : Ok(vehiculo);
         }
 

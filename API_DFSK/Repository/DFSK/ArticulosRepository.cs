@@ -56,9 +56,9 @@ namespace API_DFSK.Repository.DFSK
             return articulosbodega;
         }
 
-        public async Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Categoria, string Nombre)
+        public async Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Categoria, string Nombre, string Modelo)
         {
-            string queryMarca = "", queryGrupo = "",queryCat="", queryNombre = "";
+            string queryMarca = "", queryGrupo = "",queryCat="", queryNombre = "", queryModelo = "";
             if (!Marca.Equals("*"))
             {
                 queryMarca = Marca;
@@ -75,15 +75,20 @@ namespace API_DFSK.Repository.DFSK
             {
                 queryNombre = Nombre;
             }
+            if (!Modelo.Equals("*"))
+            {
+                queryModelo = Modelo;
+            }
 
             var articulosbodega = await _context.ApiRepuestosMostrars
                          .Where(c => c.Marca.Contains(queryMarca) 
                             && c.Grupo!.Contains(queryGrupo) 
                             && c.Categoria!.Contains(queryCat)
-                            && (c.Descripcion!.Contains(queryNombre) || c.Articulo.Contains(queryNombre) || c.Numeroparte!.Contains(queryNombre))
+                            && (c.Descripcion!.Contains(queryNombre) || c.Articulo.Contains(queryNombre) || c.Numeroparte!.Contains(queryNombre) || c.Aplica!.Contains(queryModelo))
                             && !(c.Marca.Contains("COSTEO")) 
                             && !(c.Descripcion.Contains("OXIDADAS")) 
                             && (c.Articulo.StartsWith("8") || c.Articulo.StartsWith("9"))
+                            && (c.Modelo!.Contains(queryModelo) || c.Aplica!.Contains(queryModelo))
                             && c.Venta>0)
                          .AsNoTracking()
                          .ToListAsync();
@@ -145,6 +150,27 @@ namespace API_DFSK.Repository.DFSK
                     throw;
                 }
             }
+        }
+
+        public async Task<List<Modelos>> GetModelos()
+        {
+            var modelos = await _context.Modelos.AsNoTracking().ToListAsync();
+            return modelos ?? [];
+        }
+
+        public async Task<List<Modelos>> GetModelosByNombre(string Modelo)
+        {
+           var modelos=await _context.Modelos.Where(m=>m.Modelo1!.Contains(Modelo)).AsNoTracking().ToListAsync();
+            return modelos ?? [];
+        }
+    
+        public async Task<List<Modelos>> GetModelosByFilters(string Modelo, string marca, string ano)
+        {
+           var modelos=await _context.Modelos.Where(m=>m.Modelo1!.Equals(Modelo) 
+           && m.Marca!.Equals(marca)
+           && m.Ano!.Equals(ano)
+           ).AsNoTracking().ToListAsync();
+            return modelos ?? [];
         }
     }
 }

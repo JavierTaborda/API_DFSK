@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace API_DFSK.Models.DFSK;
 
-public partial class Modelo
+public partial class Modelos
 {
     public int Idmodelo { get; set; }
 
