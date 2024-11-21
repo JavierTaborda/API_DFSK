@@ -31,8 +31,10 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<List<VehiculoDTO>> GetVehiculos()
         {
             var vehiculos = await _context.Vehiculos
+                .Where(m=>!m.Modelo!.Contains("Sin Modelo"))
                 .AsNoTracking()
                 .ToListAsync();
+
             return _mapper.Map<List<VehiculoDTO>>(vehiculos) ?? [];
         }
 

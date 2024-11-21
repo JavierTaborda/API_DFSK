@@ -45,15 +45,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? [];
         }
 
-        //public async Task<List<RepuestoDTO>> GetRepuestoFiltro(string nombre, string marca, bool inventario, string modelo)
-        //{
-        //    var repuestos = await _context.Repuestos.Where(r => r.Descripcion!.Contains(nombre) 
-        //                                                    && r.Marca!.Contains(marca)
-        //                                                    && r.EnInventario.Equals(inventario)
-        //                                                    && r.IdVehiculoNavigation.Modelo!.Contains(modelo)
-        //                                                    ).ToListAsync();
-        //        return _mapper.Map<List<RepuestoDTO>>(repuestos) ?? [];
-        //}
+        //TODO: programar filtros
+ 
         public async Task<List<RepuestoDTO>> GetRepuestoFiltro(string? nombre, string? marca, bool? inventario, string? modelo)
         {
             var query = _context.Repuestos.AsQueryable();
@@ -70,12 +63,12 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             if (inventario.HasValue)
             {
-                query = query.Where(r => r.EnInventario == inventario.Value);
+                query = query.Where(r => r.EnInventario.Equals(inventario.Value));
             }
 
             if (!string.IsNullOrEmpty(modelo))
             {
-                query = query.Where(r => r.IdVehiculoNavigation.Modelo!.Contains(modelo));
+                query = query.Where(r => r.IdVehiculo.Equals(int.Parse(modelo)));
             }
 
 
@@ -86,7 +79,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         #endregion 
 
-        //consultar codigos e insertar si no existen
+        //OPTIMIZE: consultar codigos e insertar si no existen
         public async Task<List<RepuestoDTO>> GetRepuestoList(List<CodigosRepuestosDTO> codigos)
         {
             var codigoList = codigos.Select(c => c.Codigo).ToList();
@@ -152,7 +145,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         {
             var existingCodigo = await _context.Repuestos
                 .AsNoTracking()
-                .Where(c => c.Codigo == repuesto.Codigo && c.Nombre == repuesto.Nombre && c.Marca == repuesto.Marca && c.IdVehiculo == repuesto.IdVehiculo)
+                .Where(c => c.Codigo == repuesto.Codigo && c.Nombre == repuesto.Nombre && c.Marca == repuesto.Marca && c.IdVehiculo == repuesto.IdVehiculo && c.NumParte==repuesto.NumParte)
                 .Select(r => r.Codigo)
                 .FirstOrDefaultAsync();
 

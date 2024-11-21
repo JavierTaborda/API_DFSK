@@ -11,6 +11,7 @@ public partial class RepuestoDTO
     public int IdRepuesto { get; set; }
 
     public string? Codigo { get; set; }
+    public string? NumParte { get; set; }
 
     public string? Nombre { get; set; }
 

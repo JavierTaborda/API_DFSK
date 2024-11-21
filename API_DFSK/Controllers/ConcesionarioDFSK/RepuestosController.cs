@@ -57,11 +57,6 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             var repuesto = await _repuestosRepo.GetRepuestoFiltro(nombre, marca, inventario, modelo);
 
-            if (!repuesto.Any())
-            {
-                return NotFound("Sin Datos");
-            }
-
             return Ok(repuesto);
         }
 
