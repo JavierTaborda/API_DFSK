@@ -29,7 +29,7 @@ namespace API_DFSK.Repository.DFSK
         public async Task<List<ApiRepuestosMostrar>> GetArticulosExistenciaBodega()
         {
             var articulosbodega = await _context.ApiRepuestosMostrars
-                .Where(e => e.Venta > 0 
+                .Where(e => e.Venta > 0
                 && (e.Articulo.StartsWith("8") || e.Articulo.StartsWith("9"))
                 && !(e.Marca.Contains("COSTEO"))
                 && !(e.Descripcion!.Contains("OXIDADAS"))
@@ -56,42 +56,42 @@ namespace API_DFSK.Repository.DFSK
             return articulosbodega;
         }
 
+
         public async Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Categoria, string Nombre, string Modelo)
         {
-            string queryMarca = "", queryGrupo = "",queryCat="", queryNombre = "", queryModelo = "";
+           
+            var query = _context.ApiRepuestosMostrars.AsQueryable();
+
             if (!Marca.Equals("*"))
             {
-                queryMarca = Marca;
+                query = query.Where(c => c.Marca.Contains(Marca));
             }
             if (!Grupo.Equals("*"))
             {
-                queryGrupo = Grupo;
+                query = query.Where(c => c.Grupo!.Contains(Grupo));
             }
             if (!Categoria.Equals("*"))
             {
-                queryCat = Categoria;
+                query = query.Where(c => c.Categoria!.Contains(Categoria));
             }
             if (!Nombre.Equals("*"))
             {
-                queryNombre = Nombre;
+                query = query.Where(c => c.Descripcion!.Contains(Nombre) || c.Articulo.Contains(Nombre) || c.Numeroparte!.Contains(Nombre) || c.Aplica!.Contains(Nombre));
             }
             if (!Modelo.Equals("*"))
             {
-                queryModelo = Modelo;
+                query = query.Where(c => c.Modelo!.Contains(Modelo) || c.Aplica!.Contains(Modelo));
             }
 
-            var articulosbodega = await _context.ApiRepuestosMostrars
-                         .Where(c => c.Marca.Contains(queryMarca) 
-                            && c.Grupo!.Contains(queryGrupo) 
-                            && c.Categoria!.Contains(queryCat)
-                            && (c.Descripcion!.Contains(queryNombre) || c.Articulo.Contains(queryNombre) || c.Numeroparte!.Contains(queryNombre) || c.Aplica!.Contains(queryModelo))
-                            && !(c.Marca.Contains("COSTEO")) 
-                            && !(c.Descripcion.Contains("OXIDADAS")) 
-                            && (c.Articulo.StartsWith("8") || c.Articulo.StartsWith("9"))
-                            && (c.Modelo!.Contains(queryModelo) || c.Aplica!.Contains(queryModelo))
-                            && c.Venta>0)
-                         .AsNoTracking()
-                         .ToListAsync();
+            query = query.Where(c => !c.Marca.Contains("COSTEO"))
+                         .Where(c => !c.Descripcion!.Contains("OXIDADAS") || c.Descripcion == null)
+                         .Where(c => (c.Articulo.StartsWith("8") || c.Articulo.StartsWith("9")))
+                         .Where(c => c.Venta > 0);
+
+            query = query.OrderByDescending(e => e.Existencia)
+                         .AsNoTracking();
+
+            var articulosbodega = await query.ToListAsync();
             return articulosbodega;
         }
 
@@ -131,7 +131,7 @@ namespace API_DFSK.Repository.DFSK
             return categorias;
         }
 
-        public async Task<string> UpdateImagenURL(UpdateImagenDTO updateimagen)  
+        public async Task<string> UpdateImagenURL(UpdateImagenDTO updateimagen)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
@@ -160,16 +160,16 @@ namespace API_DFSK.Repository.DFSK
 
         public async Task<List<Modelos>> GetModelosByNombre(string Modelo)
         {
-           var modelos=await _context.Modelos.Where(m=>m.Modelo1!.Contains(Modelo)).AsNoTracking().ToListAsync();
+            var modelos = await _context.Modelos.Where(m => m.Modelo1!.Contains(Modelo)).AsNoTracking().ToListAsync();
             return modelos ?? [];
         }
-    
+
         public async Task<List<Modelos>> GetModelosByFilters(string Modelo, string marca, string ano)
         {
-           var modelos=await _context.Modelos.Where(m=>m.Modelo1!.Equals(Modelo) 
-           && m.Marca!.Equals(marca)
-           && m.Ano!.Equals(ano)
-           ).AsNoTracking().ToListAsync();
+            var modelos = await _context.Modelos.Where(m => m.Modelo1!.Equals(Modelo)
+            && m.Marca!.Equals(marca)
+            && m.Ano!.Equals(ano)
+            ).AsNoTracking().ToListAsync();
             return modelos ?? [];
         }
     }

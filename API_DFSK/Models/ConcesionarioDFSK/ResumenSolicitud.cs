@@ -17,6 +17,12 @@ public partial class ResumenSolicitud
 
     public int IdUsuario { get; set; }
 
+    public string? Direccion { get; set; }
+
+    public string? Telefono { get; set; }
+
+    public string? Rif { get; set; }
+
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();

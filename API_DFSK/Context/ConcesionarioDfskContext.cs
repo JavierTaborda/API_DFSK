@@ -46,6 +46,9 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=.\\Prueba;Database=ConcesionarioDFSK;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -167,11 +170,19 @@ public partial class ConcesionarioDfskContext : DbContext
 
             entity.ToTable("ResumenSolicitud");
 
+            entity.Property(e => e.Direccion)
+                .HasMaxLength(250)
+                .IsUnicode(false);
             entity.Property(e => e.FechaCierre).HasColumnType("datetime");
             entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
             entity.Property(e => e.Observacion)
                 .HasMaxLength(500)
                 .IsUnicode(false);
+            entity.Property(e => e.Rif)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RIF");
+            entity.Property(e => e.Telefono).HasMaxLength(20);
 
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.ResumenSolicituds)
                 .HasForeignKey(d => d.IdUsuario)
@@ -190,8 +201,7 @@ public partial class ConcesionarioDfskContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.RolName)
                 .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("Rol");
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Solicitude>(entity =>
