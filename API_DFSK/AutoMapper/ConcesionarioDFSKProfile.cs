@@ -41,6 +41,7 @@ namespace API_DFSK.AutoMapper
 
 
             CreateMap<Estado, EstadoDTO>().ReverseMap();
+            CreateMap<EstadosEntrega, EstadoEntregaDTO>().ReverseMap();
             CreateMap<Repuesto, RepuestoDTO>().ReverseMap();
 
             CreateMap<Repuesto, RepuestoVehiculoDTO>()

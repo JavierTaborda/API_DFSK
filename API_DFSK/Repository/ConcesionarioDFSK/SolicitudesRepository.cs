@@ -109,6 +109,11 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             }
             return ids;
         }
+        public async  Task<List<EstadoEntregaDTO>> GetEstadosEntrega()
+        {
+           var estados=await _context.EstadosEntregas.AsNoTracking().ToListAsync();
+            return _mapper.Map<List<EstadoEntregaDTO>>(estados);
+        }
 
         //Get Tracking with QRCode
         public async Task<ResumenSolicitudDTO> GetSolicitudByCodigoTrack(string codigo)
@@ -195,6 +200,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<SolicitudRepuestoDTO>(entity);
             return result;
         }
+
 
 
 

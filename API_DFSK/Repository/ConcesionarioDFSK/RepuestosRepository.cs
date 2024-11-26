@@ -176,19 +176,17 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             catch (DbUpdateException dbEx)
             {
                 await transaction.RollbackAsync();
-                //errores de actualización de base de datos
+              
                 throw new Exception("Error de actualización en la base de datos.", dbEx);
             }
             catch (TimeoutException timeoutEx)
             {
                 await transaction.RollbackAsync();
-                // errores de tiempo de espera
                 throw new Exception("La operación ha excedido el tiempo de espera.", timeoutEx);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                // Manejo genérico 
                 throw new Exception("Ocurrió un error inesperado.", ex);
             }
         }

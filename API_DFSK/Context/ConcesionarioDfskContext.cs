@@ -48,6 +48,9 @@ public partial class ConcesionarioDfskContext : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
+
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -193,6 +196,11 @@ public partial class ConcesionarioDfskContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("RIF");
             entity.Property(e => e.Telefono).HasMaxLength(20);
+
+            entity.HasOne(d => d.IdEstadosEnvioNavigation).WithMany(p => p.ResumenSolicituds)
+                .HasForeignKey(d => d.IdEstadosEnvio)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ResumenSolicitud_EstadosEntrega");
 
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.ResumenSolicituds)
                 .HasForeignKey(d => d.IdUsuario)

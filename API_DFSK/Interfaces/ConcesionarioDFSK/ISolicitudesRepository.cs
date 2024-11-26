@@ -15,6 +15,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<SolicitudDTO?> GetSolicitudById(int Id);     
         Task<Dictionary<string, int>> GetIdsSolicitudIncial();
         Task<ResumenSolicitudDTO> GetSolicitudByCodigoTrack(string codigo);
+        Task<List<EstadoEntregaDTO>> GetEstadosEntrega();
         #endregion
 
         //POST

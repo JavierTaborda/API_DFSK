@@ -12,4 +12,6 @@ public partial class EstadosEntrega
     public int? Tiempo { get; set; }
 
     public bool? Activo { get; set; }
+
+    public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
 }

@@ -5,6 +5,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
     public class ResumenSolicitudDTO
     {
         public int IdResumenSolicitud { get; set; }
+        public int IdEstadosEnvio { get; set; }
 
         public DateTime? FechaCreacion{ get; set; }
 

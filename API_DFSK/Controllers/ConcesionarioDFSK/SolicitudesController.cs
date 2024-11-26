@@ -59,6 +59,14 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return result == null ? BadRequest("Sin Datos en Estados y Responsable") : Ok(result);
         }
 
+        [AllowAnonymous]
+        [HttpGet("Envios")]
+        public async Task<IActionResult> GetEstadosEntrega()
+        {
+            var result = await _solicitudesRepo.GetEstadosEntrega();
+            return result == null ? BadRequest("Sin Datos") : Ok(result);
+        }
+
         [HttpGet("qrtracking/{codigo}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetTrackByQr(string codigo) 
@@ -81,7 +89,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
             var result = await _solicitudesRepo.InsertResumenSolicitud(solicitud);
 
-            return !result ? BadRequest("Fallo el registro") : Ok();
+            return !result ? BadRequest("Fallo el registro") : Ok(true);
 
         }
 

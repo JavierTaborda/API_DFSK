@@ -25,6 +25,10 @@ public partial class ResumenSolicitud
 
     public string? CodigoUnico { get; set; }
 
+    public int IdEstadosEnvio { get; set; }
+
+    public virtual EstadosEntrega IdEstadosEnvioNavigation { get; set; } = null!;
+
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();
