@@ -7,18 +7,19 @@ using Azure.Core;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.IO.Compression;
 
 namespace API_DFSK.Repository.ConcesionarioDFSK
 {
     public class SolicitudesRepository(ConcesionarioDfskContext context, IMapper mapper) : ISolicitudesRepository
     {
-        private readonly ConcesionarioDfskContext _context=context;
-        private readonly IMapper _mapper=mapper;
+        private readonly ConcesionarioDfskContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         //GET
         #region GETS
-      
-        
+
+
 
         public async Task<SolicitudDTO?> GetSolicitudById(int Id)
         {
@@ -44,21 +45,6 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
             query = query.Where(f => f.FechaSolicitud!.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
 
-            //switch (tipofecha)
-            //{
-            //    case 0:
-            //        query = query.Where(f => f.FechaSolicitud.Value.Date >= f1.Date && f.FechaSolicitud.Value.Date <= f2.Date);
-            //        break;
-            //    case 1:
-            //        query = query.Where(f => f.FechaCompra.Value.Date >= f1.Date && f.FechaCompra.Value.Date <= f2.Date);
-            //        break;
-            //    case 2:
-            //        query = query.Where(f => f.FechaLlegada.Value.Date >= f1.Date && f.FechaLlegada.Value.Date <= f2.Date);
-            //        break;
-            //    default:
-            //        throw new ArgumentException("tipofecha no válido");
-            //}
-
             query = query.Where(f => f.IdEstado == idestado
                                      && f.IdResumenSolicitudNavigation.IdUsuario == iduser);
 
@@ -74,7 +60,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 .Include(ven => ven.IdUsuarioNavigation)
                 .Include(f => f.Solicitudes).ThenInclude(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
                 .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
-                .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation);
+                .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation)
+            .Include(i => i.Solicitudes).ThenInclude(r => r.IdRepuestoNavigation);
 
             query = query.Where(f => f.FechaCreacion!.Value.Date >= f1.Date && f.FechaCreacion!.Value.Date <= f2.Date);
 
@@ -94,8 +81,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<ResumenSolicitudDTO>>(resumen);
         }
 
-       
- 
+
+
 
         public async Task<Dictionary<string, int>> GetIdsSolicitudIncial()
         {
@@ -123,6 +110,26 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return ids;
         }
 
+        //Get Tracking with QRCode
+        public async Task<ResumenSolicitudDTO> GetSolicitudByCodigoTrack(string codigo)
+        {
+
+            var qr = await _context.ResumenSolicituds
+             .AsNoTracking()
+             .Include(ven => ven.IdUsuarioNavigation)
+             .Include(f => f.Solicitudes).ThenInclude(rep => rep.IdRepuestoNavigation).ThenInclude(rep => rep.IdVehiculoNavigation)
+             .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
+             .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation)
+             .Include(i => i.Solicitudes).ThenInclude(r => r.IdRepuestoNavigation)
+             .FirstOrDefaultAsync(i => i.CodigoUnico!.Equals(codigo));
+             
+
+            if (qr == null)
+                return null!;
+
+            return _mapper.Map<ResumenSolicitudDTO>(qr);
+        }
+
         #endregion
 
         // POST
@@ -131,6 +138,8 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<bool> InsertResumenSolicitud(ResumenSolicitudDTO Solicitud)
         {
+            string codigoUnico = Guid.NewGuid().ToString() + "-" + DateTime.UtcNow.ToString("yyMMdd") + Solicitud.IdResumenSolicitud.ToString();
+            Solicitud.CodigoUnico = codigoUnico;
             var insert = _mapper.Map<ResumenSolicitud>(Solicitud);
             await _context.ResumenSolicituds.AddAsync(insert);
             await _context.SaveChangesAsync();
@@ -150,20 +159,26 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             await _context.SaveChangesAsync();
             return true;
         }
-       
+
 
         #endregion
 
         //PUTS
         #region PUTS
-        public async Task<bool> UpdateSolicitud(List<SolicitudDTO> solicitudes)
+        public async Task<bool> UpdateSolicitud(SolicitudDTO solicitud)
         {
-            var entity = _mapper.Map<List<Solicitude>>(solicitudes);
-            _context.UpdateRange(entity);
+            var entity = _mapper.Map<Solicitude>(solicitud);
+            _context.Update(entity);
             await _context.SaveChangesAsync();
             return true;
         }
-
+        public async Task<bool> UpdateResumenSolicitud(ResumenSolicitudDTO resumensolicitudes)
+        {
+            var entity = _mapper.Map<ResumenSolicitud>(resumensolicitudes);
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<SolicitudRepuestoDTO> UpdateSolicitudRepuesto(SolicitudRepuestoDTO solicitud)
         {
             var soli = await _context.Solicitudes.AsNoTracking().FirstOrDefaultAsync(s => s.IdSolicitud == solicitud.IdSolicitud);
@@ -181,7 +196,11 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return result;
         }
 
-   
+
+
+
+
+
         #endregion
     }
 }

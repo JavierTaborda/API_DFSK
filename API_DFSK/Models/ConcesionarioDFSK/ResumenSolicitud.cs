@@ -23,6 +23,8 @@ public partial class ResumenSolicitud
 
     public string? Rif { get; set; }
 
+    public string? CodigoUnico { get; set; }
+
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 
     public virtual ICollection<Solicitude> Solicitudes { get; set; } = new List<Solicitude>();

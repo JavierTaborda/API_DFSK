@@ -16,6 +16,17 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
 
         public int IdUsuario { get; set; }
         public string? Usuario { get; set; }
+        public string? CodigoUnico { get; set; }
+   
+
+        public string? Direccion { get; set; }
+
+        public string? Telefono { get; set; }
+
+        public string? Rif { get; set; }
+
+ 
+
 
         public virtual ICollection<SolicitudDTO> Solicitudes { get; set; } = new List<SolicitudDTO>();
     }

@@ -45,7 +45,6 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             return _mapper.Map<List<RepuestoVehiculoDTO>>(repuestos) ?? [];
         }
 
-        //TODO: programar filtros
  
         public async Task<List<RepuestoDTO>> GetRepuestoFiltro(string? nombre, string? marca, bool? inventario, string? modelo)
         {
@@ -77,9 +76,9 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         }
 
-        #endregion 
+        #endregion
 
-        //OPTIMIZE: consultar codigos e insertar si no existen
+ 
         public async Task<List<RepuestoDTO>> GetRepuestoList(List<CodigosRepuestosDTO> codigos)
         {
             var codigoList = codigos.Select(c => c.Codigo).ToList();
@@ -89,11 +88,11 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             {
                 var repuestos = await _context.Repuestos
                     .Where(r => codigoList.Contains(r.Codigo))
-                    //.Include(v => v.IdVehiculoNavigation)
                     .AsNoTracking()
+                    .AsSplitQuery()
                     .ToListAsync();
 
-                var vehiculo = await _context.Vehiculos
+                var vehiculoId = await _context.Vehiculos
                     .Where(c => c.Modelo!.Contains("Sin Modelo"))
                     .Select(id => id.IdVehiculo)
                     .FirstOrDefaultAsync();
@@ -111,15 +110,56 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                             IdRepuesto = 0,
                             Codigo = c.Codigo,
                             Nombre = c.Nombre,
+                            NumParte = c.NumParte,
                             Descripcion = "",
-                            Precio = 0,
-                            IdVehiculo = vehiculo,
+                            Precio = c.Precio,
+                            IdVehiculo = vehiculoId,
                             Estatus = true,
                             Marca = c.Marca,
                             EnInventario = true
                         };
                         _context.Repuestos.Add(newRepuesto);
-                        repuestos.Add(newRepuesto);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Recargar la lista de repuestos después de la inserción
+                repuestos = await _context.Repuestos
+                    .Where(r => codigoList.Contains(r.Codigo))
+                    .ToListAsync();
+
+                // Actualizar campos si ya existe y hay cambios
+                foreach (var repuesto in repuestos)
+                {
+                    var updateData = codigos.FirstOrDefault(c => c.Codigo == repuesto.Codigo);
+                    if (updateData != null)
+                    {
+                        bool updated = false;
+                        if (repuesto.Nombre != updateData.Nombre)
+                        {
+                            repuesto.Nombre = updateData.Nombre;
+                            updated = true;
+                        }
+                        if (repuesto.NumParte != updateData.NumParte)
+                        {
+                            repuesto.NumParte = updateData.NumParte;
+                            updated = true;
+                        }
+                        if (repuesto.Precio != updateData.Precio)
+                        {
+                            repuesto.Precio = updateData.Precio;
+                            updated = true;
+                        }
+                        if (repuesto.Marca != updateData.Marca)
+                        {
+                            repuesto.Marca = updateData.Marca;
+                            updated = true;
+                        }
+                        if (updated)
+                        {
+                            _context.Repuestos.Update(repuesto);
+                        }
                     }
                 }
 
@@ -127,18 +167,33 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
                 await transaction.CommitAsync();
 
                 var result = await _context.Repuestos
-              .Where(r => codigoList.Contains(r.Codigo))
-              //.Include(v => v.IdVehiculoNavigation)
-              .AsNoTracking()
-              .ToListAsync();
+                    .Where(r => codigoList.Contains(r.Codigo))
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 return _mapper.Map<List<RepuestoDTO>>(result)!;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                await transaction.RollbackAsync();
+                //errores de actualización de base de datos
+                throw new Exception("Error de actualización en la base de datos.", dbEx);
+            }
+            catch (TimeoutException timeoutEx)
+            {
+                await transaction.RollbackAsync();
+                // errores de tiempo de espera
+                throw new Exception("La operación ha excedido el tiempo de espera.", timeoutEx);
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                // Manejo genérico 
+                throw new Exception("Ocurrió un error inesperado.", ex);
             }
         }
+
+
 
         #region POST
         public async Task<RepuestoDTO> InsertRepuesto(RepuestoDTO repuesto)

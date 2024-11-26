@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
-    
+
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
     [Authorize]
@@ -19,7 +19,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         //APIS DE SOLICITUDES 
 
         private readonly ISolicitudesRepository _solicitudesRepo = solicitudesRepo;
-  
+
 
         #region GETS
 
@@ -50,13 +50,21 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         {
             var solictud = await _solicitudesRepo.GetSolicitudById(Id);
             return solictud == null ? BadRequest("Sin Solicitudes") : Ok(solictud);
-        }  
-        
+        }
+
         [HttpGet("DatosIniciales")]
         public async Task<IActionResult> GetDatosIniciales()
         {
             var result = await _solicitudesRepo.GetIdsSolicitudIncial();
             return result == null ? BadRequest("Sin Datos en Estados y Responsable") : Ok(result);
+        }
+
+        [HttpGet("qrtracking/{codigo}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetTrackByQr(string codigo) 
+        { 
+            var codigoUnico = await _solicitudesRepo.GetSolicitudByCodigoTrack(codigo); 
+            return codigoUnico == null ? NotFound("Código no encontrado") : Ok(new { codigoUnico }); 
         }
 
 
@@ -99,6 +107,27 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var result = await _solicitudesRepo.UpdateSolicitudRepuesto(solicitud);
+
+            return result == null ? NotFound() : Ok(result);
+
+        }
+        // editar solicitud
+        [HttpPut]
+        public async Task<IActionResult> PutSolicitud([FromBody] SolicitudDTO solicitud)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _solicitudesRepo.UpdateSolicitud(solicitud);
+
+            return result == null ? NotFound() : Ok(result);
+
+        }
+        [HttpPut("Resumen")]
+        public async Task<IActionResult> PutResumen([FromBody] ResumenSolicitudDTO solicitud)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var result = await _solicitudesRepo.UpdateResumenSolicitud(solicitud);
 
             return result == null ? NotFound() : Ok(result);
 

@@ -7,5 +7,11 @@
         public string? Nombre { get; set; }
 
         public string? Marca { get; set; }
+        public string? NumParte { get; set; }
+
+        public string? Imagen { get; set; }
+        public double? Precio { get; set; }
+
+
     }
 }

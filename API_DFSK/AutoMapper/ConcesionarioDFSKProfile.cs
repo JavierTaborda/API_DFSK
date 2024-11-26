@@ -15,17 +15,19 @@ namespace API_DFSK.AutoMapper
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.IdEstadoNavigation.Nombre))
             .ForMember(dest => dest.Repuesto, opt => opt.MapFrom(src => src.IdRepuestoNavigation.Nombre))
             .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdResumenSolicitudNavigation.IdUsuarioNavigation.Nombre))
-            .ForMember(dest => dest.Vehiculo, opt => opt.MapFrom(src => src.IdRepuestoNavigation.IdVehiculoNavigation.Marca + " " + src.IdRepuestoNavigation.IdVehiculoNavigation.Modelo))
+            .ForMember(dest => dest.Imagen, opt => opt.MapFrom(src => src.IdRepuestoNavigation.Imagen))
+            .ForMember(dest => dest.NumParte, opt => opt.MapFrom(src => src.IdRepuestoNavigation.NumParte))
+            .ForMember(dest => dest.Vehiculo, opt => opt.MapFrom(src =>  src.IdRepuestoNavigation.IdVehiculoNavigation.Modelo))
             ;
 
             //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
             CreateMap<SolicitudDTO, Solicitude>();
             CreateMap<ResumenSolicitud, ResumenSolicitudDTO>()
                             .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdUsuarioNavigation.Nombre));
+
             CreateMap<ResumenSolicitudDTO, ResumenSolicitud>();
 
-
-
+        
             CreateMap<SolicitudRepuestoDTO, Solicitude>()
                 .ForMember(dest => dest.IdRepuesto, opt => opt.MapFrom(src => src.IdRepuesto))
                 .ForPath(dest => dest.IdRepuestoNavigation.IdVehiculo, opt => opt.MapFrom(src => src.IdVehiculo))
