@@ -116,7 +116,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
         //Get Tracking with QRCode
-        public async Task<ResumenSolicitudDTO> GetSolicitudByCodigoTrack(string codigo)
+        public async Task<QrCodeDTO> GetSolicitudByCodigoTrack(string codigo)
         {
 
             var qr = await _context.ResumenSolicituds
@@ -132,7 +132,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             if (qr == null)
                 return null!;
 
-            return _mapper.Map<ResumenSolicitudDTO>(qr);
+            return _mapper.Map<QrCodeDTO>(qr);
         }
 
         #endregion

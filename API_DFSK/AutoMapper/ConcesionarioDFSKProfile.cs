@@ -22,12 +22,16 @@ namespace API_DFSK.AutoMapper
 
             //Mapeos de DTO para Insertar Solicitudes y Solicitud + Repuesto.
             CreateMap<SolicitudDTO, Solicitude>();
+
             CreateMap<ResumenSolicitud, ResumenSolicitudDTO>()
                             .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdUsuarioNavigation.Nombre));
-
+         
             CreateMap<ResumenSolicitudDTO, ResumenSolicitud>();
 
-        
+            //qr info
+            CreateMap<ResumenSolicitud, QrCodeDTO>()
+                     .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdUsuarioNavigation.Nombre));
+
             CreateMap<SolicitudRepuestoDTO, Solicitude>()
                 .ForMember(dest => dest.IdRepuesto, opt => opt.MapFrom(src => src.IdRepuesto))
                 .ForPath(dest => dest.IdRepuestoNavigation.IdVehiculo, opt => opt.MapFrom(src => src.IdVehiculo))
