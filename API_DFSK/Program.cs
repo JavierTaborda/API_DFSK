@@ -67,6 +67,7 @@ builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
 builder.Services.AddScoped<IRepuestosRepository, RepuestosRepository>();
 builder.Services.AddScoped<IEstadoRepository, EstadoRepository>();
 builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+builder.Services.AddScoped<IEntregasRepository, EntregasRepository>();
 builder.Services.AddScoped<ICrearTXTRepository, CrearTXTRepository>();
 builder.Services.AddScoped<IAuth, AuthRepository>();
 

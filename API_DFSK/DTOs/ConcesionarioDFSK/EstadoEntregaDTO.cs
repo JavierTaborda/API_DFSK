@@ -10,6 +10,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
 
         public int? Tiempo { get; set; }
 
-        public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
+        public bool? Activo { get; set; }
+
     }
 }

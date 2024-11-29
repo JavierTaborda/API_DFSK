@@ -15,6 +15,10 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
 
         [Required(ErrorMessage = "Campo  {0} Requerido.")]
         public bool Estatus { get; set; }
-      
+
+
+        [Required(ErrorMessage = "Campo  {0} Requerido.")]
+        public int Orden { get; set; }
+
     }
 }

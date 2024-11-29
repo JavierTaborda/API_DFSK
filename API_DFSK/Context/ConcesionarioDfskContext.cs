@@ -49,8 +49,6 @@ public partial class ConcesionarioDfskContext : DbContext
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
 
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
@@ -100,7 +98,7 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.ToTable("EstadosEntrega");
 
             entity.Property(e => e.Estado)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
         });
 
@@ -227,6 +225,7 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.HasKey(e => e.IdSolicitud).HasName("PK__Solicitu__85E95DA75C3B08DD");
 
             entity.Property(e => e.FechaCompra).HasColumnType("datetime");
+            entity.Property(e => e.FechaListo).HasColumnType("datetime");
             entity.Property(e => e.FechaLlegada).HasColumnType("datetime");
             entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
             entity.Property(e => e.Observacion)

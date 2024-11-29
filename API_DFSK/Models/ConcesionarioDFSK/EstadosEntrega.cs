@@ -7,11 +7,11 @@ public partial class EstadosEntrega
 {
     public int IdEstadosEnvio { get; set; }
 
-    public string? Estado { get; set; }
+    public string Estado { get; set; } = null!;
 
     public int? Tiempo { get; set; }
 
-    public bool? Activo { get; set; }
+    public bool Activo { get; set; }
 
     public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
 }

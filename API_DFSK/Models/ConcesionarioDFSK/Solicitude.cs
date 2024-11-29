@@ -27,6 +27,8 @@ public partial class Solicitude
 
     public double? Precio { get; set; }
 
+    public DateTime? FechaListo { get; set; }
+
     public virtual Estado IdEstadoNavigation { get; set; } = null!;
 
     public virtual Repuesto IdRepuestoNavigation { get; set; } = null!;

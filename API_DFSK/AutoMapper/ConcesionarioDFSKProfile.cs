@@ -30,6 +30,7 @@ namespace API_DFSK.AutoMapper
 
             //qr info
             CreateMap<ResumenSolicitud, QrCodeDTO>()
+                     .ForMember(dest => dest.EstadoEnvio, opt => opt.MapFrom(src => src.IdEstadosEnvioNavigation.Estado))
                      .ForMember(dest => dest.Usuario, opt => opt.MapFrom(src => src.IdUsuarioNavigation.Nombre));
 
             CreateMap<SolicitudRepuestoDTO, Solicitude>()

@@ -17,6 +17,7 @@
         public string? Usuario { get; set; }
         public string? CodigoUnico { get; set; }
 
+        public string? EstadoEnvio { get; set; }
 
 
 

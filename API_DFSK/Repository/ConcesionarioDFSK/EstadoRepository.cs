@@ -27,12 +27,17 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         }
 
         //POST
-        public async Task<bool> InsertEstado(List<EstadoDTO> Estados)
+        public async Task<string> InsertEstado(EstadoDTO Estados)
         {
-            var insert = _mapper.Map<List<Estado>>(Estados);
-            await _context.Estados.AddRangeAsync(insert);
+            if (await CheckOrden(Estados.Orden))
+            {
+                return "Orden no Disponinle";
+            }
+
+            var insert = _mapper.Map<Estado>(Estados);
+            await _context.Estados.AddAsync(insert);
             await _context.SaveChangesAsync();
-            return true;
+            return "Exito";
         }
 
         //PUT
@@ -51,6 +56,14 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
             var result = _mapper.Map<EstadoDTO>(entity);
             return result;
         }
+
+        
+        public async Task<bool> CheckOrden(int orden)
+        {
+            var exists = await _context.Estados.AnyAsync(e => e.Orden == orden && e.Estatus);
+            return exists;
+        }
+
 
     }
 }

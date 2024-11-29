@@ -13,7 +13,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         #endregion
 
         //POST
-        Task<bool> InsertEstado(List<EstadoDTO> Estados);
+        Task<string> InsertEstado(EstadoDTO Estados);
 
         //PUTS
 

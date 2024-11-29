@@ -126,6 +126,7 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
              .Include(rep => rep.Solicitudes).ThenInclude(e => e.IdEstadoNavigation)
              .Include(r => r.Solicitudes).ThenInclude(re => re.IdResponsableSolicitudNavigation)
              .Include(i => i.Solicitudes).ThenInclude(r => r.IdRepuestoNavigation)
+             .Include(i => i.IdEstadosEnvioNavigation)
              .FirstOrDefaultAsync(i => i.CodigoUnico!.Equals(codigo));
              
 

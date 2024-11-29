@@ -72,7 +72,8 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         public async Task<IActionResult> GetTrackByQr(string codigo) 
         { 
             var codigoUnico = await _solicitudesRepo.GetSolicitudByCodigoTrack(codigo); 
-            return codigoUnico == null ? NotFound("Código no encontrado") : Ok(new { codigoUnico }); 
+            return codigoUnico == null ? NotFound("Código no encontrado") : Ok(new { codigoUnico }  
+            ); 
         }
 
 

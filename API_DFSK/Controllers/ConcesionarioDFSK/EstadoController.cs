@@ -28,13 +28,14 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
         //POST
         [HttpPost]
-        public async Task<IActionResult> PostEstados(List<EstadoDTO> estados)
+        public async Task<IActionResult> PostEstados(EstadoDTO estados)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+
             var result = await _estadoRepo.InsertEstado(estados);
-            return result  ? Ok(): BadRequest("Fallo el registro.");
+            return result== "Exito" ? Ok(): BadRequest(result);
 
         }
 
