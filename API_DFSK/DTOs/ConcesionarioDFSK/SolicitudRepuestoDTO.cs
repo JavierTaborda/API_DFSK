@@ -20,6 +20,8 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
         public DateTime? FechaSolicitud { get; set; }
         public DateTime? FechaCompra { get; set; }
         public DateTime? FechaLlegada { get; set; }
+        public DateTime? FechaListo { get; set; }
+
         public string? Observacion { get; set; }
 
         //Repuesto

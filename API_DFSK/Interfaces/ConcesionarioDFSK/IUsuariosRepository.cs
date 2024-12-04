@@ -8,7 +8,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
         Task<List<UsuarioDTO>> GetUsuarios();
         Task<UsuarioDTO> GetusuarioById(int Id);
         Task<List<RolDTO>> GetRoles();
-        Task<UsuarioDTO> UpdateUsuario(UsuarioDTO Usuario);
+        Task<UsuarioDTO> UpdateUsuario(UpdateUsuarioDTO update);
 
     }
 }

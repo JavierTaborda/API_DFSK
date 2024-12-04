@@ -1,4 +1,5 @@
 ﻿using API_DFSK.Context;
+using API_DFSK.Custom;
 using API_DFSK.DTOs.ConcesionarioDFSK;
 using API_DFSK.Interfaces.ConcesionarioDFSK;
 using API_DFSK.Models.ConcesionarioDFSK;
@@ -7,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API_DFSK.Repository.ConcesionarioDFSK
 {
-    public class UsuariosRepository(ConcesionarioDfskContext context, IMapper mapper) : IUsuariosRepository
+    public class UsuariosRepository(ConcesionarioDfskContext context, IMapper mapper, Utilities utilities) : IUsuariosRepository
     {
         private readonly ConcesionarioDfskContext _context = context;
         private readonly IMapper _mapper = mapper;
+        private readonly Utilities _utilities = utilities;
 
         public async Task<List<RolDTO>> GetRoles()
         {
@@ -29,25 +31,33 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
         public async Task<List<UsuarioDTO>> GetUsuarios()
         {
             var users = await _context.Usuarios.Where(e => e.Estatus == true)
-                         .AsNoTracking()
-                         .ToListAsync();
-            return _mapper.Map<List<UsuarioDTO>>(users) ??  [];
+                .Include(r => r.IdRolNavigation)
+                .AsNoTracking()
+                .ToListAsync();
+            return _mapper.Map<List<UsuarioDTO>>(users) ?? [];
         }
-
-        public async Task<UsuarioDTO> UpdateUsuario(UsuarioDTO Usuario)
+        public async Task<UsuarioDTO> UpdateUsuario(UpdateUsuarioDTO request)
         {
-            var entity = await _context.Usuarios.FindAsync(Usuario.IdUsuario);
+            var entity = await _context.Usuarios.FindAsync(request.User.IdUsuario);
             if (entity == null)
             {
                 return null!;
             }
 
-            _mapper.Map(Usuario, entity);
+            if (!string.IsNullOrEmpty(request.NewPass))
+            {
+                entity.Clave = _utilities.EncryptSHA256(request.NewPass);
+            }
+
+            _mapper.Map(request.User, entity);
             _context.Update(entity);
             await _context.SaveChangesAsync();
 
             var result = _mapper.Map<UsuarioDTO>(entity);
             return result;
         }
+
+
+
     }
 }

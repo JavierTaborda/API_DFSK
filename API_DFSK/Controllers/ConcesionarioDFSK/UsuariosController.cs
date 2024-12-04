@@ -23,7 +23,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
         }
 
         [HttpGet("{id:int})")]
-        public async Task<IActionResult> GetVendedor(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
             var user = await _userRepo.GetusuarioById(id);
             return user == null ? BadRequest("Sin Datos") : Ok(user);
@@ -39,17 +39,16 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
 
         //PUTS
-
+        [Authorize(Roles = "admin")]
         [HttpPut]
-        public async Task<IActionResult> PutVendedores(UsuarioDTO user)
+        public async Task<IActionResult> PutUsers(UpdateUsuarioDTO request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var result = await _userRepo.UpdateUsuario(user);
+
+            var result = await _userRepo.UpdateUsuario(request);
             return result == null ? NotFound() : Ok(result);
-           
         }
-
-
+          
     }
 }

@@ -56,7 +56,8 @@ namespace API_DFSK.AutoMapper
 
             CreateMap<Vehiculo, VehiculoDTO>().ReverseMap();
     
-            CreateMap<Usuario, UsuarioDTO>().ReverseMap();
+            CreateMap<Usuario, UsuarioDTO>()
+                .ReverseMap();
             CreateMap<Rol, RolDTO>().ReverseMap();
 
             CreateMap<Resumentxt, ResumentxtDTO>().ReverseMap();
