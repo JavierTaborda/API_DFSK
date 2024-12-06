@@ -7,18 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 namespace API_DFSK.Controllers.ConcesionarioDFSK
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     [ApiController]
     public class UsuariosController(IUsuariosRepository userRepo ) : ControllerBase
     {
         private readonly IUsuariosRepository _userRepo=userRepo;
-   
+
         //GETS
         
         [HttpGet]       
          public async Task<IActionResult> GetUsers()
         {
             var users = await _userRepo.GetUsuarios();
+            return users.Count == 0 ? BadRequest("Sin Datos") : Ok(users);
+        }
+
+        [HttpGet("Edit")]       
+         public async Task<IActionResult> GetUsersEdit()
+        {
+            var users = await _userRepo.GetUsuariosEdit();
             return users.Count == 0 ? BadRequest("Sin Datos") : Ok(users);
         }
 
@@ -29,7 +36,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
             return user == null ? BadRequest("Sin Datos") : Ok(user);
         }
 
-        [Authorize(Roles = "admin")]
+       
         [HttpGet("Roles")]
         public async Task<IActionResult> GetRoles()
         {
@@ -39,7 +46,7 @@ namespace API_DFSK.Controllers.ConcesionarioDFSK
 
 
         //PUTS
-        [Authorize(Roles = "admin")]
+        
         [HttpPut]
         public async Task<IActionResult> PutUsers(UpdateUsuarioDTO request)
         {

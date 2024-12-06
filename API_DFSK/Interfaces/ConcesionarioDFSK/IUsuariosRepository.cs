@@ -6,6 +6,7 @@ namespace API_DFSK.Interfaces.ConcesionarioDFSK
     public interface IUsuariosRepository
     {
         Task<List<UsuarioDTO>> GetUsuarios();
+        Task<List<UsuarioDTO>> GetUsuariosEdit();
         Task<UsuarioDTO> GetusuarioById(int Id);
         Task<List<RolDTO>> GetRoles();
         Task<UsuarioDTO> UpdateUsuario(UpdateUsuarioDTO update);

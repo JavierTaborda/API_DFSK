@@ -30,7 +30,15 @@ namespace API_DFSK.Repository.ConcesionarioDFSK
 
         public async Task<List<UsuarioDTO>> GetUsuarios()
         {
-            var users = await _context.Usuarios.Where(e => e.Estatus == true)
+            var users = await _context.Usuarios.Where(e => e.Estatus == true) 
+                .Include(r => r.IdRolNavigation)
+                .AsNoTracking()
+                .ToListAsync();
+            return _mapper.Map<List<UsuarioDTO>>(users) ?? [];
+        }
+        public async Task<List<UsuarioDTO>> GetUsuariosEdit()
+        {
+            var users = await _context.Usuarios.Where(e => !e.IdRolNavigation.RolName!.Contains("admin") ) 
                 .Include(r => r.IdRolNavigation)
                 .AsNoTracking()
                 .ToListAsync();
