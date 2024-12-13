@@ -39,6 +39,16 @@ namespace API_DFSK.Repository.DFSK
                 .ToListAsync();
             return articulosbodega;
         }
+        public async Task<List<ApiVehiculosBodega>> GetArticulosExistenciaBodegaVehiculos(string bodega)
+        {
+            decimal bod= decimal.Parse(bodega);
+            var articulosbodega = await _context.ApiVehiculosBodegas
+                .Where( b=>b.Bodega==bod )
+                .OrderByDescending(e => e.Existencia)
+                .AsNoTracking()
+                .ToListAsync();
+            return articulosbodega;
+        }
 
         public async Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByCodigo(string Codigo)
         {
@@ -59,7 +69,7 @@ namespace API_DFSK.Repository.DFSK
 
         public async Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Categoria, string Nombre, string Modelo)
         {
-           
+
             var query = _context.ApiRepuestosMostrars.AsQueryable();
 
             if (!Marca.Equals("*"))

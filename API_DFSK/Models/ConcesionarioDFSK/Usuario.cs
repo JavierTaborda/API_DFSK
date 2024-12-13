@@ -21,7 +21,11 @@ public partial class Usuario
 
     public int IdRol { get; set; }
 
+    public int? Bodega { get; set; }
+
     public virtual Rol IdRolNavigation { get; set; } = null!;
+
+    public virtual ICollection<PrecioServicio> PrecioServicios { get; set; } = new List<PrecioServicio>();
 
     public virtual ICollection<ResumenSolicitud> ResumenSolicituds { get; set; } = new List<ResumenSolicitud>();
 }

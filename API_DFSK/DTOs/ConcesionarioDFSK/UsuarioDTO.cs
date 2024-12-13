@@ -14,6 +14,7 @@ namespace API_DFSK.DTOs.ConcesionarioDFSK
         public string Email { get; set; } = null!;
         [Required]
         public string Telefono { get; set; } = null!;
+        public int? Bodega { get; set; }
         public int IdRol { get; set; }
 
   

@@ -8,6 +8,7 @@ namespace API_DFSK.Interfaces.DFSK
 
         Task<List<ApiRepuestosMostrar>> GetAllArticulosBodega();
         Task<List<ApiRepuestosMostrar>> GetArticulosExistenciaBodega();
+        Task<List<ApiVehiculosBodega>> GetArticulosExistenciaBodegaVehiculos(string bodega);
         Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByCodigo(string Codigo);
         Task<List<ApiRepuestosMostrar>> GetVehiculosBodegaByCodigo(string Codigo);
         Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByNombre(string Nombre);

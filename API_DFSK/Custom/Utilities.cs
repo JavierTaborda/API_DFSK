@@ -53,7 +53,8 @@ namespace API_DFSK.Custom
                 new Claim("mail", model.Email!),
                 new Claim("name", model.Nombre!),
                 new Claim("username", model.Username!),
-                new Claim("role", model.IdRolNavigation!.RolName!)
+                new Claim("role", model.IdRolNavigation!.RolName!),
+                new Claim("bodega", model.Bodega.ToString()!)
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));

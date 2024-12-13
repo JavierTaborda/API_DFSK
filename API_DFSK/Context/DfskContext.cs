@@ -26,6 +26,7 @@ public partial class DfskContext : DbContext
 
     public virtual DbSet<ApiRepuestosMostrar> ApiRepuestosMostrars { get; set; }
 
+    public virtual DbSet<ApiVehiculosBodega> ApiVehiculosBodegas { get; set; }
     public virtual DbSet<Categoriarepuesto> Categoriarepuestos { get; set; }
 
     public virtual DbSet<Gruposrepuesto> Gruposrepuestos { get; set; }
@@ -35,8 +36,6 @@ public partial class DfskContext : DbContext
     public virtual DbSet<Modelos> Modelos { get; set; }
 
     public virtual DbSet<Resumentxt> Resumentxts { get; set; }
-
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -217,7 +216,7 @@ public partial class DfskContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("MODELO");
             entity.Property(e => e.Numeroparte)
-                .HasMaxLength(200)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("NUMEROPARTE");
             entity.Property(e => e.Unidad)
@@ -236,6 +235,60 @@ public partial class DfskContext : DbContext
                 .HasColumnName("VENTA");
         });
 
+        modelBuilder.Entity<ApiVehiculosBodega>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("API_VEHICULOS_BODEGA");
+
+            entity.Property(e => e.Ano)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ANO");
+            entity.Property(e => e.Articulo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("ARTICULO");
+            entity.Property(e => e.Bodega)
+                .HasColumnType("numeric(2, 0)")
+                .HasColumnName("BODEGA");
+            entity.Property(e => e.Color)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("COLOR");
+            entity.Property(e => e.Descripcion)
+                .IsUnicode(false)
+                .HasColumnName("DESCRIPCION");
+            entity.Property(e => e.Existencia)
+                .HasColumnType("numeric(38, 2)")
+                .HasColumnName("EXISTENCIA");
+            entity.Property(e => e.Marca)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("MARCA");
+            entity.Property(e => e.Modelo)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MODELO");
+            entity.Property(e => e.Modeloi)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("MODELOI");
+            entity.Property(e => e.Puestos)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("PUESTOS");
+            entity.Property(e => e.Tipoc)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("TIPOC");
+            entity.Property(e => e.Urlimagen)
+                .IsUnicode(false)
+                .HasColumnName("URLIMAGEN");
+            entity.Property(e => e.Venta)
+                .HasColumnType("numeric(12, 3)")
+                .HasColumnName("VENTA");
+        });
         modelBuilder.Entity<Categoriarepuesto>(entity =>
         {
             entity.HasKey(e => e.Idcategoria);

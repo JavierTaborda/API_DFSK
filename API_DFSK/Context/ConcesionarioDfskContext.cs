@@ -16,17 +16,17 @@ public partial class ConcesionarioDfskContext : DbContext
     {
     }
 
-    public virtual DbSet<Cupone> Cupones { get; set; }
+    public virtual DbSet<Cliente> Clientes { get; set; }
 
-    public virtual DbSet<DataUsuario> DataUsuarios { get; set; }
+    public virtual DbSet<Cupone> Cupones { get; set; }
 
     public virtual DbSet<Estado> Estados { get; set; }
 
     public virtual DbSet<EstadosEntrega> EstadosEntregas { get; set; }
 
-    public virtual DbSet<Grupo> Grupos { get; set; }
-
     public virtual DbSet<Oferta> Ofertas { get; set; }
+
+    public virtual DbSet<PrecioServicio> PrecioServicios { get; set; }
 
     public virtual DbSet<Repuesto> Repuestos { get; set; }
 
@@ -37,6 +37,10 @@ public partial class ConcesionarioDfskContext : DbContext
     public virtual DbSet<ResumenSolicitud> ResumenSolicituds { get; set; }
 
     public virtual DbSet<Rol> Rols { get; set; }
+
+    public virtual DbSet<Servicio> Servicios { get; set; }
+
+    public virtual DbSet<SolicitudServicio> SolicitudServicios { get; set; }
 
     public virtual DbSet<Solicitude> Solicitudes { get; set; }
 
@@ -53,6 +57,18 @@ public partial class ConcesionarioDfskContext : DbContext
     {
         modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
+        modelBuilder.Entity<Cliente>(entity =>
+        {
+            entity.HasKey(e => e.IdCliente);
+
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PlacaVehiculo)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Cupone>(entity =>
         {
             entity.HasKey(e => e.IdCupones);
@@ -65,18 +81,6 @@ public partial class ConcesionarioDfskContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false);
             entity.Property(e => e.FechaExpìracion).HasColumnType("datetime");
-        });
-
-        modelBuilder.Entity<DataUsuario>(entity =>
-        {
-            entity.HasKey(e => e.IdDataUsuarios);
-
-            entity.Property(e => e.Direccion)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Estado)
-                .HasMaxLength(50)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Estado>(entity =>
@@ -102,13 +106,6 @@ public partial class ConcesionarioDfskContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<Grupo>(entity =>
-        {
-            entity.HasKey(e => e.IdGrupo);
-
-            entity.ToTable("Grupo");
-        });
-
         modelBuilder.Entity<Oferta>(entity =>
         {
             entity.HasKey(e => e.IdOfertas);
@@ -119,6 +116,23 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.Observacion)
                 .HasMaxLength(250)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<PrecioServicio>(entity =>
+        {
+            entity.HasKey(e => e.IdPrecioServicio);
+
+            entity.ToTable("PrecioServicio");
+
+            entity.HasOne(d => d.IdServiciosNavigation).WithMany(p => p.PrecioServicios)
+                .HasForeignKey(d => d.IdServicios)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PrecioServicio_Servicios");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.PrecioServicios)
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PrecioServicio_Usuarios");
         });
 
         modelBuilder.Entity<Repuesto>(entity =>
@@ -218,6 +232,40 @@ public partial class ConcesionarioDfskContext : DbContext
             entity.Property(e => e.RolName)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Servicio>(entity =>
+        {
+            entity.HasKey(e => e.IdServicios);
+
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Servicio1)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Servicio");
+        });
+
+        modelBuilder.Entity<SolicitudServicio>(entity =>
+        {
+            entity.HasKey(e => e.IdSolicitudServicio);
+
+            entity.ToTable("SolicitudServicio");
+
+            entity.Property(e => e.FechaCita).HasColumnType("datetime");
+            entity.Property(e => e.FechaCulminada).HasColumnType("datetime");
+            entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+
+            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.SolicitudServicios)
+                .HasForeignKey(d => d.IdCliente)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SolicitudServicio_Clientes");
+
+            entity.HasOne(d => d.IdPrecioServicioNavigation).WithMany(p => p.SolicitudServicios)
+                .HasForeignKey(d => d.IdPrecioServicio)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SolicitudServicio_PrecioServicio");
         });
 
         modelBuilder.Entity<Solicitude>(entity =>

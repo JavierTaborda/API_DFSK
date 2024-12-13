@@ -41,6 +41,14 @@ namespace API_DFSK.Controllers.Articulos
             var articulosbodega = await _articuloRepo.GetAllArticulosBodega();
             return Ok(articulosbodega);
         }
+        //vehiculos
+        [Authorize(Roles = "admin, totaluser")]
+        [HttpGet("Bodega/Concesionario/{bodega}")]
+        public async Task<IActionResult> GetArticulosBodegaVehiculos(string bodega)
+        {
+            var articulosbodega = await _articuloRepo.GetArticulosExistenciaBodegaVehiculos( bodega);
+            return Ok(articulosbodega);
+        }
 
         [HttpGet("Bodega/Codigo/{Codigo}")]
         public async Task<IActionResult> GetArticuloBodegaByCodigo(string Codigo)
