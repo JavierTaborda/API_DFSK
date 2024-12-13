@@ -50,6 +50,14 @@ namespace API_DFSK.Controllers.Articulos
             return Ok(articulosbodega);
         }
 
+        [Authorize(Roles = "admin, totaluser")]
+        [HttpGet("Bodega/Seriales/{bodega}/{articulo}")]
+        public async Task<IActionResult> GetSerialesBodegaVehiculos(string bodega, string articulo)
+        {
+            var articulosbodega = await _articuloRepo.GetArticulosExistenciaBodegaVehiculos(bodega);
+            return Ok(articulosbodega);
+        }
+
         [HttpGet("Bodega/Codigo/{Codigo}")]
         public async Task<IActionResult> GetArticuloBodegaByCodigo(string Codigo)
         {
@@ -112,6 +120,7 @@ namespace API_DFSK.Controllers.Articulos
             var grupos = await _articuloRepo.GetGrupos();
             return Ok(grupos);
         }
+
         [HttpGet("Categorias")]
         public async Task<IActionResult> GetCategorias()
         {
@@ -125,12 +134,14 @@ namespace API_DFSK.Controllers.Articulos
             var result = await _articuloRepo.GetModelos();
             return Ok(result);
         }
+
         [HttpGet("Modelos/{modelo}")]
         public async Task<IActionResult> GetModelosByModelo(string modelo)
         {
             var result = await _articuloRepo.GetModelosByNombre(modelo);
             return Ok(result);
         }
+
 
         [HttpGet("Modelos/Actualizar/{modelo}/{marca}/{ano}")]
         public async Task<IActionResult> GetModelosByFilters(string modelo, string marca, string ano)

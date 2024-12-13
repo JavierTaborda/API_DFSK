@@ -4,6 +4,7 @@ using API_DFSK.Interfaces.DFSK;
 using API_DFSK.Models;
 using API_DFSK.Models.DFSK;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API_DFSK.Repository.DFSK
@@ -162,19 +163,19 @@ namespace API_DFSK.Repository.DFSK
             }
         }
 
-        public async Task<List<Modelos>> GetModelos()
+        public async Task<List<Modelo>> GetModelos()
         {
             var modelos = await _context.Modelos.AsNoTracking().ToListAsync();
             return modelos ?? [];
         }
 
-        public async Task<List<Modelos>> GetModelosByNombre(string Modelo)
+        public async Task<List<Modelo>> GetModelosByNombre(string Modelo)
         {
             var modelos = await _context.Modelos.Where(m => m.Modelo1!.Contains(Modelo)).AsNoTracking().ToListAsync();
             return modelos ?? [];
         }
 
-        public async Task<List<Modelos>> GetModelosByFilters(string Modelo, string marca, string ano)
+        public async Task<List<Modelo>> GetModelosByFilters(string Modelo, string marca, string ano)
         {
             var modelos = await _context.Modelos.Where(m => m.Modelo1!.Equals(Modelo)
             && m.Marca!.Equals(marca)
@@ -182,5 +183,34 @@ namespace API_DFSK.Repository.DFSK
             ).AsNoTracking().ToListAsync();
             return modelos ?? [];
         }
+
+        public async Task<List<ApiSerialesBodega>> GetSerialesBodega(string bodega, string articulo)
+        {
+          
+            var query = _context.ApiSerialesBodegas.AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(articulo) && !articulo.Equals("*"))
+            {
+                query = query.Where(c => c.Articulo!.Contains(articulo));
+            }
+           
+            if (!string.IsNullOrWhiteSpace(bodega) && !bodega.Equals("*"))
+            {
+                if (int.TryParse(bodega, out int bodegaInt))
+                {
+                    query = query.Where(c => c.Bodega == bodegaInt);
+                }
+                else
+                {
+                    throw new ArgumentException("El valor de bodega debe ser un número válido.", nameof(bodega));
+                }
+            }
+          
+            query = query.OrderByDescending(e => e.Bodega)
+                         .AsNoTracking();
+
+            return await query.ToListAsync();
+        }
+
     }
 }

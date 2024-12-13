@@ -5,13 +5,11 @@ namespace API_DFSK.Models.DFSK;
 
 public partial class ApiVehiculosBodega
 {
-    public string Articulo { get; set; } = null!;
+    public string? Articulo { get; set; }
 
     public string? Descripcion { get; set; }
 
     public string Marca { get; set; } = null!;
-
-    public decimal? Existencia { get; set; }
 
     public decimal? Venta { get; set; }
 
@@ -27,7 +25,9 @@ public partial class ApiVehiculosBodega
 
     public string? Puestos { get; set; }
 
-    public decimal Bodega { get; set; }
+    public int? Bodega { get; set; }
 
     public string? Urlimagen { get; set; }
+
+    public int? Existencia { get; set; }
 }

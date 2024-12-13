@@ -9,17 +9,18 @@ namespace API_DFSK.Interfaces.DFSK
         Task<List<ApiRepuestosMostrar>> GetAllArticulosBodega();
         Task<List<ApiRepuestosMostrar>> GetArticulosExistenciaBodega();
         Task<List<ApiVehiculosBodega>> GetArticulosExistenciaBodegaVehiculos(string bodega);
+        Task<List<ApiSerialesBodega>> GetSerialesBodega(string bodega, string articulo);
         Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByCodigo(string Codigo);
         Task<List<ApiRepuestosMostrar>> GetVehiculosBodegaByCodigo(string Codigo);
         Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByNombre(string Nombre);
         Task<List<ApiRepuestosMostrar>> GetArticuloBodegaByMarcayGrupo(string Marca, string Grupo, string Categoria, string Nombre, string Modelo);
         Task<List<ApiCodigosMarca>> GetCodigosByMarca();
-        Task<List<ApiCodigosGrupo>> GetCodigosByGrupo();// eliminar
+        Task<List<ApiCodigosGrupo>> GetCodigosByGrupo();
         Task<List<Gruposrepuesto>> GetGrupos();
         Task<List<Categoriarepuesto>> GetCategorias();
-        Task<List<Modelos>> GetModelos();
-        Task<List<Modelos>> GetModelosByNombre(string Modelo); 
-        Task<List<Modelos>> GetModelosByFilters(string Modelo, string marca, string ano);
+        Task<List<Modelo>> GetModelos();
+        Task<List<Modelo>> GetModelosByNombre(string Modelo); 
+        Task<List<Modelo>> GetModelosByFilters(string Modelo, string marca, string ano);
         Task<string> UpdateImagenURL( UpdateImagenDTO updateimagen);
     }
 }
