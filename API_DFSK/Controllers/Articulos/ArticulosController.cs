@@ -54,7 +54,7 @@ namespace API_DFSK.Controllers.Articulos
         [HttpGet("Bodega/Seriales/{bodega}/{articulo}")]
         public async Task<IActionResult> GetSerialesBodegaVehiculos(string bodega, string articulo)
         {
-            var articulosbodega = await _articuloRepo.GetArticulosExistenciaBodegaVehiculos(bodega);
+            var articulosbodega = await _articuloRepo.GetSerialesBodega(bodega,articulo);
             return Ok(articulosbodega);
         }
 
